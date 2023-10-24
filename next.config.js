@@ -4,6 +4,15 @@ const nextConfig = {
         locales: ['en', 'es-ES'],
         defaultLocale: 'es-ES',
     },
+    async redirects() {
+        return [
+            {
+                source: '/',
+                destination: '/dashboard',
+                permanent: true,
+            },
+        ]
+    }
 }
 
 module.exports = nextConfig

@@ -13,11 +13,12 @@ export const toLocaleDate = (date: string) => {
 }
 
 export const toMoney = (value: number | string) => {
-  if (typeof value === "string") {
-    value = parseInt(value)
-  }
+  if (typeof value === "number") value = value.toString()
+
+  value = Number(value.replace(/[^0-9]/g, ""))
   return new Intl.NumberFormat("es-CL", {
     style: "currency",
     currency: "CLP",
   }).format(value)
 }
+
