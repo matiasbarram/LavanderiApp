@@ -1,3 +1,5 @@
+"use client"
+
 import { SelectorOption, formatAs } from "@/lib/types"
 import InputField from "./input"
 import SelectorField from "./selector"

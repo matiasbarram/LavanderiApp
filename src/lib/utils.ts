@@ -12,10 +12,12 @@ export const toLocaleDate = (date: string) => {
   return dateObj.toLocaleDateString("es-CL", { month: "long", day: "numeric" })
 }
 
+export const cleanNums = (value: string) => Number(value.replace(/[^0-9]/g, ""))
+
 export const toMoney = (value: number | string) => {
   if (typeof value === "number") value = value.toString()
 
-  value = Number(value.replace(/[^0-9]/g, ""))
+  value = cleanNums(value)
   return new Intl.NumberFormat("es-CL", {
     style: "currency",
     currency: "CLP",

@@ -1,10 +1,10 @@
 "use client"
 
-import { HomeIcon, UsersIcon } from "@heroicons/react/24/outline";
 import LeftMenuOption from "./leftMenuOption";
 import HeaderLogo from "./headerLogo";
 import { usePathname } from "next/navigation";
 import AvatarMenu from "../Avatar/avatarMenu";
+import { HomeIcon, UsersIcon } from "lucide-react";
 
 export function Aside() {
     const pathname = usePathname()

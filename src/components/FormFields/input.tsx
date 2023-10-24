@@ -1,5 +1,6 @@
+"use client"
+
 import {
-    Form,
     FormControl,
     FormDescription,
     FormField,
@@ -11,8 +12,6 @@ import { Input } from "../ui/input"
 import { InputFieldProps } from "@/lib/types"
 import { toMoney } from "@/lib/utils"
 import { formatRut } from 'rutlib';
-
-
 
 export default function InputField({ form, fieldName, label, placeholder, description, formatAs }: InputFieldProps) {
     const fieldPlaceholder = placeholder ? placeholder : label
@@ -37,13 +36,16 @@ export default function InputField({ form, fieldName, label, placeholder, descri
                                             const formattedValue = toMoney(currentValue)
                                             field.onChange(formattedValue)
                                         }
+                                        break;
                                     case ("rut"):
                                         const formattedValue = formatRut(currentValue)
                                         field.onChange(formattedValue)
+                                        break;
+                                    default:
+                                        field.onChange(currentValue)
+                                        break;
                                 }
-
-                            }
-                            }
+                            }}
                         />
                     </FormControl>
                     {description && <FormDescription>{description}</FormDescription>}

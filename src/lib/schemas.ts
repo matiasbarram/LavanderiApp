@@ -1,54 +1,81 @@
-import { cleanRut } from "rutlib";
+import { cleanRut, validateRut } from "rutlib";
 import { z } from "zod";
+import { cleanNums } from "./utils";
 
 export const sheetSchema = z.object({
-    clientName: z.string().min(2, {
-        message: "El nombre no debe estar vacio.",
+    clientName: z.string({ required_error: "Debe ingresar el nombre del cliente." }).min(2, {
+        message: "Debe ingresar el nombre del cliente.",
     }),
+
     checkin: z.date({
         required_error: "Seleccione la fecha de recepcion.",
     }),
+
     checkout: z.date({
         required_error: "Seleccione la fecha de entrega.",
     }).optional(),
-    deliveryCost: z.coerce.number().min(0, {
-        message: "El costo de entrega no válido.",
-    }),
+
+    deliveryCost: z.string({ required_error: "Debe ingresar el costo de envío." }).refine((value) => {
+        const num = cleanNums(value)
+        return !isNaN(num) && num >= 0
+    }, "Debe ingresar un número válido"),
+
     paymentDate: z.date({
         required_error: "Debe seleccionar la fecha de pago.",
     }).optional(),
+
     status: z.string({
         required_error: "Debe seleccionar el estado del pedido.",
     }),
+
     invoice: z.string({
         required_error: "Debe seleccionar el tipo de facturación.",
     }),
-    voucher: z.string().min(2, {
-        message: "El número de factura no puede estar vacio.",
-    }),
+
+    voucher: z.string().optional(),
 })
 
 
 export const clientSchema = z.object({
-    name: z.string().min(2, {
-        message: "Nombre no puede estar vacio.",
+    firstname: z.string().min(2, {
+        message: "Debe ingresar el nombre del cliente.",
     }),
-    lastName: z.string().min(2, {
-        message: "Apellido no puede estar vacio.",
+
+    lastname: z.string().min(2, {
+        message: "Debe ingresar el apellido del cliente.",
     }),
+
     rut: z.string().min(2, {
-        message: "Rut no puede estar vacio.",
+        message: "Debe ingresar el rut del cliente.",
     }).refine((value) => {
-        return cleanRut(value) !== ""
-    }),
-    phone: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
-    }),
+        const isValid = validateRut(value)
+        return !isValid ? false : true
+    }, "Debe ingresar un rut válido")
+        .transform((value) => {
+            return cleanRut(value)
+        }),
+
+    phone: z.string()
+        .min(2, {
+            message: "Debe ingresar el teléfono del cliente.",
+        })
+        .refine((value) => {
+            const num = cleanNums(value)
+            return !isNaN(num) && num >= 0
+        }, "Debe ingresar un número válido")
+        .transform((value) => {
+            return cleanNums(value).toString()
+        }),
+
     address: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
+        message: "Debe ingresar la dirección del cliente.",
     }),
+
     email: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
-    }).email("Invalid email"),
+        message: "Debe ingresar el email del cliente.",
+    }).email({
+        message: "Debe ingresar un email válido.",
+    }),
+
     description: z.string().optional(),
 })
