@@ -9,23 +9,25 @@ import TextAreaField from "./textarea"
 
 
 interface CustomInputFieldProps {
-    form: any,
+    form: any
     type: "input" | "select" | "calendar" | "textarea"
-    label: string,
-    formFieldName: string,
-    placeholder: string,
+    label: string
+    formFieldName: string
+    placeholder: string
     description?: string
     options?: SelectorOption[]
     setValue?: (value: any) => void
     formatAs?: formatAs
+    readonly?: boolean
+    search?: boolean
 }
 
-export default function CustomInputField({ form, type, label, formFieldName, placeholder, description, options, setValue, formatAs }: CustomInputFieldProps) {
+export default function CustomInputField({ form, type, label, formFieldName, placeholder, description, options, setValue, formatAs, readonly, search }: CustomInputFieldProps) {
     switch (type) {
         case "input":
-            return <InputField form={form} fieldName={formFieldName} label={label} placeholder={placeholder} description={description} formatAs={formatAs} />
+            return <InputField form={form} fieldName={formFieldName} label={label} placeholder={placeholder} description={description} formatAs={formatAs} readonly={readonly} />
         case "select":
-            return options && <SelectorField form={form} options={options} formFieldName={formFieldName} label={label} placeholder={placeholder} description={description} setValue={setValue} />
+            return options && <SelectorField form={form} options={options} formFieldName={formFieldName} label={label} placeholder={placeholder} description={description} setValue={setValue} search={search} />
         case "calendar":
             return <CalendarField form={form} fieldName={formFieldName} label={label} description={description} />
         case "textarea":

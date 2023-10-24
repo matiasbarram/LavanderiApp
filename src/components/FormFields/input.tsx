@@ -13,7 +13,7 @@ import { InputFieldProps } from "@/lib/types"
 import { toMoney } from "@/lib/utils"
 import { formatRut } from 'rutlib';
 
-export default function InputField({ form, fieldName, label, placeholder, description, formatAs }: InputFieldProps) {
+export default function InputField({ form, fieldName, label, placeholder, description, formatAs, readonly }: InputFieldProps) {
     const fieldPlaceholder = placeholder ? placeholder : label
     return (
         <FormField
@@ -27,6 +27,7 @@ export default function InputField({ form, fieldName, label, placeholder, descri
                             className="max-w-[240px]"
                             placeholder={fieldPlaceholder}
                             {...field}
+                            readOnly={readonly}
                             onChange={(e: any) => {
                                 let currentValue = e.target.value
                                 switch (formatAs) {
@@ -48,7 +49,7 @@ export default function InputField({ form, fieldName, label, placeholder, descri
                             }}
                         />
                     </FormControl>
-                    {description && <FormDescription>{description}</FormDescription>}
+                    <FormDescription>{description}</FormDescription>
                     <FormMessage />
                 </FormItem>
             )}

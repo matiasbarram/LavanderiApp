@@ -27,7 +27,7 @@ import { SelectorFieldProps, SelectorOption } from "@/lib/types"
 import { useState } from "react"
 
 
-export default function SelectorField({ form, options, formFieldName, label, placeholder, description, setValue }: SelectorFieldProps) {
+export default function SelectorField({ form, options, formFieldName, label, placeholder, description, setValue, search }: SelectorFieldProps) {
     const [isOpen, setIsOpen] = useState(false);
 
 
@@ -54,13 +54,14 @@ export default function SelectorField({ form, options, formFieldName, label, pla
                                             (option) => option.value === field.value
                                         )?.label
                                         : placeholder ?? "Seleccione una opción"}
+
                                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                 </Button>
                             </FormControl>
                         </PopoverTrigger>
                         <PopoverContent className="w-[240px] p-0">
                             <Command>
-                                <CommandInput placeholder={placeholder} />
+                                {search && <CommandInput placeholder={placeholder} />}
                                 <CommandEmpty>No results</CommandEmpty>
                                 <CommandGroup>
                                     {options.map((option) => (

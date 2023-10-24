@@ -32,11 +32,13 @@ interface CommonFieldProps {
     placeholder?: string;
     description?: string;
     setValue?: (value: any) => void;
+    readonly?: boolean;
 
 }
 
 export interface SelectorFieldProps extends CommonFieldProps {
     formFieldName: string;
+    search?: boolean;
     options: SelectorOption[];
 }
 

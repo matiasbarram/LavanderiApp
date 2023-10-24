@@ -95,7 +95,7 @@ export default function AddClientModal({ title }: AddUserModalProps) {
                             />
                             <CustomInputField form={form} type="input" formFieldName="email" label="Email" placeholder="Email..." />
                         </div>
-                        <CustomInputField form={form} type="textarea" formFieldName="description" label="Descripción" placeholder="Descripción..." />
+                        <CustomInputField form={form} type="textarea" formFieldName="detalle" label="Detalle" placeholder="Este será el detalle por defecto del cliente..." />
                         <SubmitAndCloseBtns />
 
                     </form>
