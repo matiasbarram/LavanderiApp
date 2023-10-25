@@ -22,7 +22,8 @@ import { CalendarIcon } from "lucide-react"
 import { Calendar } from "../ui/calendar"
 import { format } from "date-fns"
 import { useState } from "react"
-import { CalendarFieldProps } from "@/lib/types"
+import { type CalendarFieldProps } from "@/lib/types"
+import es from "date-fns/locale/es"
 
 
 export default function CalendarField({ form, fieldName, label, description }: CalendarFieldProps) {
@@ -46,7 +47,7 @@ export default function CalendarField({ form, fieldName, label, description }: C
                                     )}
                                 >
                                     {field.value ? (
-                                        format(field.value, "PPP")
+                                        format(field.value, "PPP", { locale: es })
                                     ) : (
                                         <span>Seleccione una fecha</span>
                                     )}
@@ -57,6 +58,7 @@ export default function CalendarField({ form, fieldName, label, description }: C
                         <PopoverContent className="w-auto p-0" align="start">
                             <Calendar
                                 mode="single"
+                                locale={es}
                                 selected={field.value}
                                 onSelect={(e) => { field.onChange(e); setIsCalendarOpen(false); }}
                                 // disabled={(date) =>

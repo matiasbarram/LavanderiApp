@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
+import type * as z from "zod"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog"
 
 import { Form } from "@/components/ui/form"
-import { SelectorOption } from "@/lib/types"
+import { type SelectorOption } from "@/lib/types"
 import CustomInputField from "../FormFields/customInputField"
 import { invoiceOptions, statusOptions } from "@/lib/constants"
 import { sheetSchema as formSchema } from "@/lib/schemas"
