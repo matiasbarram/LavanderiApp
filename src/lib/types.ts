@@ -58,3 +58,27 @@ export interface TextAreaFieldProps extends CommonFieldProps {
 
 export type formatAs = "currency" | "rut"
 
+
+export type LastSheet = {
+    checkin: string;
+    checkout: string;
+    deliveryCost: number;
+    paymentDate: string;
+    status: string;
+    invoice: string;
+    voucher: string;
+    [key: string]: string | number;
+}
+
+export type UserData = {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+}
+
+export type ClientData = {
+    name: string;
+    data: UserData;
+    lastSheet: LastSheet;
+}

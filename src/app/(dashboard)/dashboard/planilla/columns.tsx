@@ -4,11 +4,10 @@ import DateBadge from "@/components/Badge/DateBadge"
 import ActionsColum from "@/components/Table/actions"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { sheetCols } from "@/lib/types"
+import { type sheetCols } from "@/lib/types"
 import { toLocaleDate, toMoney } from "@/lib/utils"
-import { ColumnDef } from "@tanstack/react-table"
-import { ArrowDownLeft, ArrowUpDown, ArrowUpRight, MoreHorizontal } from "lucide-react"
+import { type ColumnDef } from "@tanstack/react-table"
+import { ArrowDownLeft, ArrowUpDown, ArrowUpRight } from "lucide-react"
 
 type invoiceVariant = 'default' | 'outline'
 interface invoiceData {
@@ -20,6 +19,11 @@ type statusVariant = 'default' | 'outline' | 'secondary' | 'destructive'
 interface statusData {
     title: string
     variant: statusVariant
+}
+
+type dateRange = {
+    from: string
+    to: string
 }
 
 
@@ -42,7 +46,7 @@ export const columns: ColumnDef<sheetCols>[] = [
         accessorKey: 'dates',
         header: 'Fechas',
         cell: ({ row }) => {
-            const dates = row.getValue('dates') as { from: string, to: string }
+            const dates: dateRange = row.getValue('dates')
             const from = dates.from
             const to = dates.to
             return (
@@ -66,7 +70,7 @@ export const columns: ColumnDef<sheetCols>[] = [
         accessorKey: 'payment',
         header: 'Pago',
         cell: ({ row }) => {
-            const date = row.getValue('payment') as string
+            const date: string = row.getValue('payment')
             const formatted = toLocaleDate(date)
             return formatted
         },
@@ -76,7 +80,7 @@ export const columns: ColumnDef<sheetCols>[] = [
         header: 'Estado',
         cell: ({ row }) => {
             // status: 'paid' | 'pending' | 'unpaid'
-            const status = row.getValue('status') as string
+            const status = row.getValue('status')
             const statusData: statusData = status === 'paid' ? { title: 'Pagado', variant: 'default' } : status === 'pending' ? { title: 'Pendiente', variant: 'secondary' } : { title: 'No pagado', variant: 'destructive' }
             return <Badge variant={statusData.variant}>{statusData.title}</Badge>
         },
@@ -85,7 +89,7 @@ export const columns: ColumnDef<sheetCols>[] = [
         accessorKey: 'invoice',
         header: 'Tipo de comprobante',
         cell: ({ row }) => {
-            const type = row.getValue('invoice') as string
+            const type = row.getValue('invoice')
             const invoiceData: invoiceData = type === 'bill' ? { title: 'Factura', variant: 'default' } : { title: 'Boleta', variant: 'outline' }
             return invoiceData.title
         }
@@ -102,11 +106,14 @@ export const columns: ColumnDef<sheetCols>[] = [
             const formatted = toMoney(amount)
             return formatted
         }
-
     },
     {
         id: 'actions',
         header: 'Acciones',
-        cell: ({ row }) => <ActionsColum />
+        cell: ({ row }) => {
+            return (
+                <ActionsColum />
+            )
+        }
     }
 ]
