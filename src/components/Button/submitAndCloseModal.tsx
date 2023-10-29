@@ -1,11 +1,17 @@
 import { Button } from "../ui/button";
 import { DialogClose, DialogFooter } from "../ui/dialog";
 
-export default function SubmitAndCloseBtns({ setOpen, open }: { setOpen: (open: boolean) => void, open: boolean }) {
+interface Props {
+    setOpen: (open: boolean) => void;
+    open: boolean;
+    isLoading?: boolean;
+}
+
+export default function SubmitAndCloseBtns({ setOpen, open, isLoading }: Props) {
     return (
         <DialogFooter>
             <div className="flex flex-col w-full gap-4">
-                <Button type="submit">Crear Cliente</Button>
+                <Button type="submit">{isLoading ? "Cargando..." : "Guardar"}</Button>
                 <DialogClose
                     onClick={() => setOpen(false)}
                     asChild

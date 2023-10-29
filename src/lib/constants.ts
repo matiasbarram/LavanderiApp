@@ -2,6 +2,8 @@ import { type ClientData, type SelectorOption } from "./types"
 
 export const APPNAME = "Lavandería"
 
+export const PENDING_STATUS = "pending"
+
 export const invoiceOptions: SelectorOption[] = [
     { label: "Boleta", value: "bill" },
     { label: "Factura", value: "invoice" },

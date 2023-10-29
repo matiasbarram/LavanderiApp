@@ -1,6 +1,4 @@
-import { type UseFormReturn, type Control, type FieldValues, type UseFormSetValue } from "react-hook-form/dist/types"
-import { type clientSchema, type sheetSchema } from "./schemas"
-import { type z } from "zod"
+import { type Control, type FieldValues, type UseFormSetValue } from "react-hook-form/dist/types"
 
 export type sheetCols = {
     name: string,
@@ -31,11 +29,11 @@ export type SelectorOption = {
 }
 
 interface CommonFieldProps<T> extends FormFieldsProps {
-    fieldName: T;
+    fieldName: string;
     label: string;
     placeholder?: string;
     description?: string;
-    setValue?: (value: string) => void;
+    setValue?: (value: T) => void;
     readonly?: boolean;
 }
 
@@ -43,7 +41,7 @@ export interface FieldProps extends CommonFieldProps<string> {
     formSetValue?: formSetValue;
 }
 
-export interface SelectFieldProps extends CommonFieldProps<string> {
+export interface SelectFieldProps<T> extends CommonFieldProps<T> {
     options: SelectorOption[];
     search?: boolean;
 }

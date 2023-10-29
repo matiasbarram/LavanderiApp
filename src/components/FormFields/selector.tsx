@@ -20,14 +20,14 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { Button } from "../ui/button"
+import { type SelectFieldProps } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { useState } from "react"
-import { type SelectFieldProps, type FieldProps } from "@/lib/types"
+import { Button } from "../ui/button"
 
 
-export default function SelectorField({ formSetValue, control, options, fieldName, label, placeholder, description, setValue, search }: SelectFieldProps) {
+export default function SelectorField<T>({ formSetValue, control, options, fieldName, label, placeholder, description, setValue, search }: SelectFieldProps<T>) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -69,9 +69,9 @@ export default function SelectorField({ formSetValue, control, options, fieldNam
                                             key={option.value}
                                             onSelect={() => {
                                                 if (formSetValue) {
-                                                    formSetValue(fieldName, option.value)
+                                                    formSetValue(fieldName, option.value as T)
                                                 }
-                                                setValue?.(option.value)
+                                                setValue?.(option.value as T)
                                                 setIsOpen(false)
                                             }}
                                         >

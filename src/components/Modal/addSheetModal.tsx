@@ -14,13 +14,13 @@ import {
 } from "@/components/ui/dialog"
 
 import { Form } from "@/components/ui/form"
-import { clientsData } from "@/lib/constants"
+import { PENDING_STATUS, clientsData } from "@/lib/constants"
 import { sheetSchema as formSchema, sheetSchema } from "@/lib/schemas"
 import { type SelectorOption } from "@/lib/types"
 import { toMoney } from "@/lib/utils"
 import { api } from "@/trpc/react"
 import { type Client } from "@prisma/client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import SubmitAndCloseBtns from "../Button/submitAndCloseModal"
 import CustomInputField from "../FormFields/customInputField"
 import { ReadOnlyInput } from "../FormFields/readOnlyInput"
@@ -30,14 +30,16 @@ import OrderPaymentForm from "../Sections/AddClientModal/orderPayment"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { useToast } from "../ui/use-toast"
 import AddClientModal from "./addClientModal"
+import CloseBtn from "./closeBtn"
 
 
 
 export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     const [selectedClient, setSelectedClient] = useState<Client | null>()
     const [showSeco, setShowSeco] = useState(false)
+    const [paymentStatus, setPaymentStatus] = useState<string>(PENDING_STATUS)
     const { toast } = useToast()
-    const addSheet = api.sheets.create.useMutation()
+    const { mutate: addSheet, isLoading } = api.sheets.create.useMutation()
 
     const getClients = api.clients.getAll.useQuery()
     const allClients = getClients.data ? getClients.data : []
@@ -48,18 +50,18 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
         }
     })
 
-
     const form = useForm<FieldValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            deliveryCost: "5000",
+            deliveryCost: "$5.000",
             voucher: "",
+            status: "pending",
         },
     })
 
     function onSubmit(values: FieldValues) {
         const sheetData = sheetSchema.parse(values)
-        addSheet.mutate(sheetData, {
+        addSheet(sheetData, {
             onError: (error) => {
                 toast({
                     title: "Error",
@@ -84,6 +86,9 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     }
 
     const handleSelectedUser = (client: string) => {
+        setPaymentStatus(PENDING_STATUS)
+        form.setValue("status", PENDING_STATUS)
+
         const clientData = clientsData.find((clientData) => clientData.name === client) // replace for trpc prcedure
         const currentClient = allClients.find((clnt) => client === clnt.email)
 
@@ -115,6 +120,17 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
         })
     }
 
+    useEffect(() => {
+        if (paymentStatus === PENDING_STATUS) {
+            form.setValue("paymentDate", null)
+            form.setValue("paymentMethod", null)
+            form.setValue("voucher", null)
+            form.setValue("paymentDetails", null)
+            form.setValue("invoice", null)
+
+        }
+    }, [form, paymentStatus])
+
     return (
         <Dialog onOpenChange={(open) => cleanModal(open)}>
             <DialogTrigger asChild>
@@ -127,6 +143,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                 }}
             >
                 <DialogHeader>
+                    <CloseBtn setOpen={cleanModal} open={false} />
                     <DialogTitle>Agregar Planilla</DialogTitle>
                     <DialogDescription>
                         Agrega una planilla nueva
@@ -176,12 +193,12 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                                             </div>
                                         </CardHeader>
                                         <CardContent>
-                                            <OrderPaymentForm formSetValue={form.setValue} control={form.control} />
+                                            <OrderPaymentForm formSetValue={form.setValue} control={form.control} isPaid={paymentStatus} setIsPaid={setPaymentStatus} />
                                         </CardContent>
 
                                     </Card>
                                 </div>
-                                <SubmitAndCloseBtns />
+                                <SubmitAndCloseBtns setOpen={cleanModal} open={false} isLoading={isLoading} />
                             </>
                         )}
                     </form>

@@ -43,7 +43,7 @@ export const sheetSchema = z.object({
 
     status: z.string({
         required_error: "Debe seleccionar el estado del pedido.",
-    }).optional(),
+    }),
 
     invoice: z.string({
         required_error: "Debe seleccionar el tipo de facturación.",
