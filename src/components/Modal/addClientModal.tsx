@@ -5,11 +5,13 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { clientSchema } from "@/lib/schemas";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm, type FieldValues } from "react-hook-form";
 import SubmitAndCloseBtns from "../Button/submitAndCloseModal";
 import CustomInputField from "../FormFields/customInputField";
 import { Form } from "../ui/form";
 import { useToast } from "../ui/use-toast";
+import CloseBtn from "./closeBtn";
 
 
 type AddUserModalProps = {
@@ -21,6 +23,7 @@ export default function AddClientModal({ title }: AddUserModalProps) {
     const btnTitle = title ? title : "Agregar cliente"
     const addClient = api.clients.create.useMutation()
     const { toast } = useToast()
+    const [open, setOpen] = useState(false)
 
     const form = useForm<FieldValues>({
         resolver: zodResolver(clientSchema),
@@ -50,24 +53,32 @@ export default function AddClientModal({ title }: AddUserModalProps) {
                     title: "Error al agregar cliente",
                     description: error.message,
                 })
-            }
+            },
+            onSettled: () => setOpen(false)
         })
     }
 
     const cleanModal = (open: boolean) => { if (!open) form.reset() }
 
     return (
-        <Dialog onOpenChange={(open) => cleanModal(open)}>
+        <Dialog
+            onOpenChange={(open) => cleanModal(open)}
+            open={open}
+        >
             <DialogTrigger asChild>
-                <Button variant="default">{btnTitle}</Button>
+                <Button
+                    onClick={() => setOpen(true)}
+                    variant="default">{btnTitle}</Button>
             </DialogTrigger>
             <DialogContent
+
                 className={"lg:max-w-screen-lg overflow-y-auto max-h-screen"}
                 onInteractOutside={(e) => {
                     e.preventDefault();
                 }}
             >
                 <DialogHeader>
+                    <CloseBtn setOpen={setOpen} open={open} />
                     <DialogTitle>Nuevo cliente</DialogTitle>
                     <DialogDescription>
                         Agrega nuevo cliente
@@ -115,8 +126,7 @@ export default function AddClientModal({ title }: AddUserModalProps) {
                             <CustomInputField control={form.control} type="input" formFieldName="email" label="Email" placeholder="Email..." />
                         </div>
                         <CustomInputField control={form.control} type="textarea" formFieldName="detalle" label="Detalle" placeholder="Este será el detalle por defecto del cliente..." />
-                        <SubmitAndCloseBtns />
-
+                        <SubmitAndCloseBtns setOpen={setOpen} open={open} />
                     </form>
                 </Form>
             </DialogContent>

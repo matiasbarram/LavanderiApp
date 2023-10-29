@@ -18,7 +18,10 @@ export const sheetSchema = z.object({
     deliveryCost: z.string({ required_error: "Debe ingresar el costo de envío." }).refine((value) => {
         const num = cleanNums(value)
         return !isNaN(num) && num >= 0
-    }, "Debe ingresar un número válido"),
+    }, "Debe ingresar un número válido")
+        .transform((value) => {
+            return cleanNums(value).toString()
+        }),
 
     paymentDate: z.date({
         required_error: "Debe seleccionar la fecha de pago.",
@@ -27,21 +30,25 @@ export const sheetSchema = z.object({
     total: z.string({ required_error: "Debe ingresar el total." }).refine((value) => {
         const num = cleanNums(value)
         return !isNaN(num) && num >= 0
-    }, "Debe ingresar un número válido"),
+    }, "Debe ingresar un número válido")
+        .transform((value) => {
+            return cleanNums(value).toString()
+        }),
 
     paymentMethod: z.string({
         required_error: "Debe seleccionar el método de pago.",
     }).min(2, {
         message: "Debe seleccionar el método de pago.",
-    }),
+    }).optional(),
 
     status: z.string({
         required_error: "Debe seleccionar el estado del pedido.",
-    }),
+    }).optional(),
 
     invoice: z.string({
         required_error: "Debe seleccionar el tipo de facturación.",
-    }),
+    }).optional(),
+
     voucher: z.string().optional(),
 
     details: z.string().optional(),
