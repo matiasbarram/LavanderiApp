@@ -1,15 +1,15 @@
 "use client"
 
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { z } from "zod";
-import { Form } from "../ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import CustomInputField from "../FormFields/customInputField";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { clientSchema } from "@/lib/schemas";
-import { useState } from "react";
+import { api } from "@/trpc/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type FieldValues } from "react-hook-form";
 import SubmitAndCloseBtns from "../Button/submitAndCloseModal";
+import CustomInputField from "../FormFields/customInputField";
+import { Form } from "../ui/form";
+import { useToast } from "../ui/use-toast";
 
 
 type AddUserModalProps = {
@@ -18,9 +18,11 @@ type AddUserModalProps = {
 
 
 export default function AddClientModal({ title }: AddUserModalProps) {
-    const btnTitle = title || "Agregar"
+    const btnTitle = title ? title : "Agregar cliente"
+    const addClient = api.clients.create.useMutation()
+    const { toast } = useToast()
 
-    const form = useForm<z.infer<typeof clientSchema>>({
+    const form = useForm<FieldValues>({
         resolver: zodResolver(clientSchema),
         defaultValues: {
             firstname: "",
@@ -33,9 +35,25 @@ export default function AddClientModal({ title }: AddUserModalProps) {
         },
     })
 
-    function onSubmit(values: z.infer<typeof clientSchema>) {
-        console.log(values)
+    function onSubmit(values: FieldValues) {
+        const clietData = clientSchema.parse(values)
+        addClient.mutate(clietData, {
+            onSuccess: () => {
+                toast({
+                    title: "Cliente agregado correctamente",
+                    description: "El cliente ha sido agregado correctamente",
+                })
+                form.reset()
+            },
+            onError: (error) => {
+                toast({
+                    title: "Error al agregar cliente",
+                    description: error.message,
+                })
+            }
+        })
     }
+
     const cleanModal = (open: boolean) => { if (!open) form.reset() }
 
     return (
@@ -59,43 +77,44 @@ export default function AddClientModal({ title }: AddUserModalProps) {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <CustomInputField
-                                form={form}
+                                control={form.control}
                                 type="input"
                                 formFieldName="firstname"
                                 label="Nombre"
                                 placeholder="Nombre..."
                             />
                             <CustomInputField
-                                form={form}
+                                control={form.control}
                                 type="input"
                                 formFieldName="lastname"
                                 label="Apellido"
                                 placeholder="Apellido..."
                             />
                             <CustomInputField
-                                form={form} type="input"
+                                control={form.control}
+                                type="input"
                                 formFieldName="rut"
                                 label="Rut"
                                 placeholder="Rut..."
                                 formatAs="rut"
                             />
                             <CustomInputField
-                                form={form}
+                                control={form.control}
                                 type="input"
                                 formFieldName="phone"
                                 label="Telefono"
                                 placeholder="Telefono..."
                             />
                             <CustomInputField
-                                form={form}
+                                control={form.control}
                                 type="input"
                                 formFieldName="address"
                                 label="Dirección"
                                 placeholder="Dirección..."
                             />
-                            <CustomInputField form={form} type="input" formFieldName="email" label="Email" placeholder="Email..." />
+                            <CustomInputField control={form.control} type="input" formFieldName="email" label="Email" placeholder="Email..." />
                         </div>
-                        <CustomInputField form={form} type="textarea" formFieldName="detalle" label="Detalle" placeholder="Este será el detalle por defecto del cliente..." />
+                        <CustomInputField control={form.control} type="textarea" formFieldName="detalle" label="Detalle" placeholder="Este será el detalle por defecto del cliente..." />
                         <SubmitAndCloseBtns />
 
                     </form>

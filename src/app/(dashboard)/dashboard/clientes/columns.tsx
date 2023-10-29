@@ -1,6 +1,7 @@
 import ActionsColum from "@/components/Table/actions";
-import { clientsCols } from "@/lib/types";
-import { ColumnDef } from "@tanstack/react-table";
+import { type clientsCols } from "@/lib/types";
+import { ToRut } from "@/lib/utils";
+import { type ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<clientsCols>[] = [
     {
@@ -10,6 +11,11 @@ export const columns: ColumnDef<clientsCols>[] = [
     {
         accessorKey: 'rut',
         header: 'RUT',
+        cell: ({ row }) => {
+            const rut: string = row.getValue('rut')
+            return ToRut(rut)
+
+        }
     },
     {
         accessorKey: 'phone',

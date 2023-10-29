@@ -1,8 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import type * as z from "zod"
+import { useForm, type FieldValues } from "react-hook-form"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -15,20 +14,22 @@ import {
 } from "@/components/ui/dialog"
 
 import { Form } from "@/components/ui/form"
-import { type UserData, type SelectorOption } from "@/lib/types"
-import CustomInputField from "../FormFields/customInputField"
 import { clientsData } from "@/lib/constants"
-import { sheetSchema as formSchema } from "@/lib/schemas"
+import { sheetSchema as formSchema, sheetSchema } from "@/lib/schemas"
+import { type SelectorOption, type UserData } from "@/lib/types"
+import { toMoney } from "@/lib/utils"
+import { api } from "@/trpc/react"
 import { useState } from "react"
 import SubmitAndCloseBtns from "../Button/submitAndCloseModal"
-import AddClientModal from "./addClientModal"
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
-import { toMoney } from "@/lib/utils"
-import { useToast } from "../ui/use-toast"
+import CustomInputField from "../FormFields/customInputField"
 import NumerIcon from "../Icon/numerIcon"
-import { Label } from "../ui/label"
 import OrderDetailsForm from "../Sections/AddClientModal/orderDetails"
 import OrderPaymentForm from "../Sections/AddClientModal/orderPayment"
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { Label } from "../ui/label"
+import { useToast } from "../ui/use-toast"
+import AddClientModal from "./addClientModal"
+
 
 
 const ReadOnlyInput = ({ label, value }: { label: string, value: string }) => {
@@ -43,21 +44,27 @@ const ReadOnlyInput = ({ label, value }: { label: string, value: string }) => {
 }
 
 
-const clients: SelectorOption[] = [
-    { label: "Juan Perez", value: "juanperez@gmail.com" },
-    { label: "Rodrigo Gonzalez", value: "rodrigogonzales@gmail.com" },
-]
-
-
-
 export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     const [selectedClient, setSelectedClient] = useState("")
     const [userData, setUserData] = useState<UserData | null>(null)
     const [showSeco, setShowSeco] = useState(false)
     const { toast } = useToast()
+    const addSheet = api.sheets.create.useMutation()
+
+    const getClients = api.clients.getAll.useQuery()
+
+    const allClients = getClients.data
+    const clients: SelectorOption[] = allClients ? allClients.map((client) => {
+        return {
+            label: client.fname + " " + client.lname,
+            value: client.email,
+        }
+    }) : []
 
 
-    const form = useForm<z.infer<typeof formSchema>>({
+
+
+    const form = useForm<FieldValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             deliveryCost: "5000",
@@ -65,8 +72,24 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    function onSubmit(values: FieldValues) {
+        const sheetData = sheetSchema.parse(values)
+        addSheet.mutate(sheetData, {
+            onError: (error) => {
+                toast({
+                    title: "Error",
+                    description: "No se pudo agregar la planilla",
+                    duration: 2000,
+                })
+            },
+            onSuccess: (data) => {
+                toast({
+                    title: "Planilla agregada",
+                    description: "Se ha agregado la planilla",
+                    duration: 2000,
+                })
+            }
+        })
     }
 
     const cleanModal = (open: boolean) => {
@@ -126,7 +149,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <div className={"flex items-center gap-4"}>
-                            <CustomInputField form={form} options={clients} formFieldName="clientName" type="select" search={true} label="Cliente" placeholder="Seleccione el cliente..." setValue={handleSelectedUser} />
+                            <CustomInputField formSetValue={form.setValue} control={form.control} options={clients} formFieldName="clientName" type="select" search={true} label="Cliente" placeholder="Seleccione el cliente..." setValue={handleSelectedUser} />
                             {!selectedClient && <AddClientModal title="Nuevo cliente" />}
                             {selectedClient && <Button variant="destructive" type="button" onClick={() => cleanModal(false)} className="float-right" >Limpiar</Button>}
                         </div>
@@ -155,7 +178,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                                             </div>
                                         </CardHeader>
                                         <CardContent>
-                                            <OrderDetailsForm form={form} setShowSeco={setShowSeco} showSeco={showSeco} />
+                                            <OrderDetailsForm formSetValue={form.setValue} control={form.control} setShowSeco={setShowSeco} showSeco={showSeco} />
                                         </CardContent>
 
                                     </Card>
@@ -167,7 +190,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                                             </div>
                                         </CardHeader>
                                         <CardContent>
-                                            <OrderPaymentForm form={form} />
+                                            <OrderPaymentForm formSetValue={form.setValue} control={form.control} />
                                         </CardContent>
 
                                     </Card>

@@ -8,16 +8,18 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { Input } from "../ui/input"
-import { InputFieldProps } from "@/lib/types"
+import { type InputFieldProps } from "@/lib/types"
 import { toMoney } from "@/lib/utils"
-import { formatRut } from 'rutlib';
+import { type ChangeEvent } from "react"
+import { formatRut } from 'rutlib'
+import { Input } from "../ui/input"
 
-export default function InputField({ form, fieldName, label, placeholder, description, formatAs, readonly }: InputFieldProps) {
+
+export default function InputField({ control, fieldName, label, placeholder, description, formatAs, readonly }: InputFieldProps) {
     const fieldPlaceholder = placeholder ? placeholder : label
     return (
         <FormField
-            control={form.control}
+            control={control}
             name={fieldName}
             render={({ field }) => (
                 <FormItem>
@@ -28,8 +30,8 @@ export default function InputField({ form, fieldName, label, placeholder, descri
                             placeholder={fieldPlaceholder}
                             {...field}
                             readOnly={readonly}
-                            onChange={(e: any) => {
-                                let currentValue = e.target.value
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                const currentValue: string = e.target.value
                                 switch (formatAs) {
                                     case ("currency"):
                                         if (currentValue === "$") field.onChange("")

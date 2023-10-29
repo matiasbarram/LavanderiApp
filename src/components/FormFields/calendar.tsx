@@ -22,16 +22,16 @@ import { CalendarIcon } from "lucide-react"
 import { Calendar } from "../ui/calendar"
 import { format } from "date-fns"
 import { useState } from "react"
-import { type CalendarFieldProps } from "@/lib/types"
+import { type FieldProps } from "@/lib/types"
 import es from "date-fns/locale/es"
 
 
-export default function CalendarField({ form, fieldName, label, description }: CalendarFieldProps) {
+export default function CalendarField({ control, fieldName, label, description }: FieldProps) {
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
     return (
         <FormField
-            control={form.control}
+            control={control}
             name={fieldName}
             render={({ field }) => (
                 <FormItem className="flex flex-col">
@@ -46,7 +46,7 @@ export default function CalendarField({ form, fieldName, label, description }: C
                                         !field.value && "text-muted-foreground"
                                     )}
                                 >
-                                    {field.value ? (
+                                    {field.value && field.value instanceof Date ? (
                                         format(field.value, "PPP", { locale: es })
                                     ) : (
                                         <span>Seleccione una fecha</span>
@@ -59,7 +59,7 @@ export default function CalendarField({ form, fieldName, label, description }: C
                             <Calendar
                                 mode="single"
                                 locale={es}
-                                selected={field.value}
+                                selected={field.value instanceof Date ? field.value : undefined}
                                 onSelect={(e) => { field.onChange(e); setIsCalendarOpen(false); }}
                                 // disabled={(date) =>
                                 //     date > new Date() || date < new Date("1900-01-01")

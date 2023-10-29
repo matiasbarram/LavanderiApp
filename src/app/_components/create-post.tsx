@@ -9,18 +9,11 @@ export function CreatePost() {
   const router = useRouter();
   const [name, setName] = useState("");
 
-  const createPost = api.post.create.useMutation({
-    onSuccess: () => {
-      router.refresh();
-      setName("");
-    },
-  });
-
+  const createPost = api.sheets.hello.useQuery({ text: "dfdsfds" })
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        createPost.mutate({ name });
       }}
       className="flex flex-col gap-2"
     >

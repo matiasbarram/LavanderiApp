@@ -3,15 +3,15 @@
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
-    ColumnDef,
+    type ColumnDef,
     flexRender,
-    SortingState,
+    type SortingState,
     getCoreRowModel,
     getSortedRowModel,
     useReactTable,
-    ColumnFiltersState,
+    type ColumnFiltersState,
     getFilteredRowModel,
-    VisibilityState,
+    type VisibilityState,
 } from "@tanstack/react-table"
 import {
     DropdownMenu,

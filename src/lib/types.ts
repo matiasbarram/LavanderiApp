@@ -1,3 +1,7 @@
+import { type UseFormReturn, type Control, type FieldValues, type UseFormSetValue } from "react-hook-form/dist/types"
+import { type clientSchema, type sheetSchema } from "./schemas"
+import { type z } from "zod"
+
 export type sheetCols = {
     name: string,
     dates: {
@@ -26,34 +30,27 @@ export type SelectorOption = {
     value: string
 }
 
-interface CommonFieldProps {
-    form: any;
+interface CommonFieldProps<T> extends FormFieldsProps {
+    fieldName: T;
     label: string;
     placeholder?: string;
     description?: string;
-    setValue?: (value: any) => void;
+    setValue?: (value: string) => void;
     readonly?: boolean;
-
 }
 
-export interface SelectorFieldProps extends CommonFieldProps {
-    formFieldName: string;
-    search?: boolean;
+export interface FieldProps extends CommonFieldProps<string> {
+    formSetValue?: formSetValue;
+}
+
+export interface SelectFieldProps extends CommonFieldProps<string> {
     options: SelectorOption[];
+    search?: boolean;
 }
 
-export interface InputFieldProps extends CommonFieldProps {
-    fieldName: string;
+export interface InputFieldProps extends CommonFieldProps<string> {
     type?: "number";
     formatAs?: formatAs;
-}
-
-export interface CalendarFieldProps extends CommonFieldProps {
-    fieldName: string;
-}
-
-export interface TextAreaFieldProps extends CommonFieldProps {
-    formFieldName: string;
 }
 
 export type formatAs = "currency" | "rut"
@@ -82,3 +79,12 @@ export type ClientData = {
     data: UserData;
     lastSheet: LastSheet;
 }
+
+export type formSetValue = UseFormSetValue<FieldValues>;
+
+export interface FormFieldsProps {
+    control: Control<FieldValues>;
+    formSetValue?: formSetValue;
+}
+
+

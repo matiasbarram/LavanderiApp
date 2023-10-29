@@ -23,18 +23,17 @@ import {
 import { Button } from "../ui/button"
 import { cn } from "@/lib/utils"
 import { Check, ChevronsUpDown } from "lucide-react"
-import { SelectorFieldProps, SelectorOption } from "@/lib/types"
 import { useState } from "react"
+import { type SelectFieldProps, type FieldProps } from "@/lib/types"
 
 
-export default function SelectorField({ form, options, formFieldName, label, placeholder, description, setValue, search }: SelectorFieldProps) {
+export default function SelectorField({ formSetValue, control, options, fieldName, label, placeholder, description, setValue, search }: SelectFieldProps) {
     const [isOpen, setIsOpen] = useState(false);
-
 
     return (
         <FormField
-            control={form.control}
-            name={formFieldName}
+            control={control}
+            name={fieldName}
             render={({ field }) => (
                 <FormItem className="flex flex-col">
                     <FormLabel>{label}</FormLabel>
@@ -69,8 +68,10 @@ export default function SelectorField({ form, options, formFieldName, label, pla
                                             value={option.label}
                                             key={option.value}
                                             onSelect={() => {
-                                                form.setValue(formFieldName, option.value)
-                                                setValue && setValue(option.value)
+                                                if (formSetValue) {
+                                                    formSetValue(fieldName, option.value)
+                                                }
+                                                setValue?.(option.value)
                                                 setIsOpen(false)
                                             }}
                                         >

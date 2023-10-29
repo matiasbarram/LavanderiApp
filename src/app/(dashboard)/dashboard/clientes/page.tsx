@@ -1,24 +1,27 @@
 "use client"
 
-import Datatable from "@/components/Table/dataTable";
-import { columns } from "./columns";
-import { Button } from "@/components/ui/button";
 import AddClientModal from "@/components/Modal/addClientModal";
+import Datatable from "@/components/Table/dataTable";
+import { Button } from "@/components/ui/button";
+import { toClientTable } from "@/lib/utils";
+import { api } from "@/trpc/react";
+import { columns } from "./columns";
 
 export default function ClientesPage() {
+    const useClients = api.clients.getAll.useQuery()
+    const clients = useClients.data
 
-    const initialData = [
-        { name: 'Juan Perez', rut: '12345678-9', phone: '123456789', address: 'Calle 123', email: 'email@gmail.com' }
-    ]
+    const initialData = clients ? toClientTable(clients) : []
+    console.log("initial data: ", initialData)
 
     return (
         <>
             <div className="flex items-center gap-4">
                 <h1 className="text-2xl font-semibold">Clientes</h1>
-                <AddClientModal btnVariant="default" />
+                <AddClientModal />
                 <Button variant="secondary" size="sm">Exportar</Button>
             </div>
-            <Datatable columns={columns} data={initialData} />
+            {initialData && <Datatable columns={columns} data={initialData} />}
         </>
     )
 }

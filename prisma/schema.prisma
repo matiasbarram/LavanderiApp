@@ -39,7 +39,6 @@ model Client {
 
 model Order {
     id             String        @id @default(cuid())
-    client         Client        @relation(fields: [clientId], references: [id])
     clientId       String
     createdAt      DateTime      @default(now())
     updatedAt      DateTime      @updatedAt
@@ -47,37 +46,35 @@ model Order {
     OrderPayment   OrderPayment? @relation(fields: [orderPaymentId], references: [id])
     orderDataId    String?
     orderPaymentId String?
+    Client         Client        @relation(fields: [clientId], references: [id])
 }
 
 model OrderDetail {
-    id              String   @id @default(cuid())
-    orderId         String
+    id              String    @id @default(cuid())
+    // orderId         String
     checkin         DateTime
-    checkout        DateTime
+    checkout        DateTime?
     ticket          String
-    details         String
-    external        Boolean
-    externalDetails String
-    createdAt       DateTime @default(now())
-    updatedAt       DateTime @updatedAt
-    updatedBy       String
-    orderDataId     String   @unique
+    details         String?
+    external        Boolean   @default(false)
+    externalDetails String?
+    createdAt       DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
     Order           Order[]
 }
 
 model OrderPayment {
-    id             String   @id @default(cuid())
-    orderId        String
+    id             String    @id @default(cuid())
+    // orderId        String
     amount         Int
-    shippingCost   Int
-    paymentDate    DateTime
-    paymentMethod  String
-    paymentType    String
+    shippingCost   Int?
+    paymentDate    DateTime?
+    paymentMethod  String?
+    paymentType    String?
     status         String
-    invoiceNumber  String
-    paymentDetails String
-    createdAt      DateTime @default(now())
-    updatedAt      DateTime @updatedAt
-    orderPaymentId String   @unique
+    invoiceNumber  String?
+    paymentDetails String?
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
     Order          Order[]
 }

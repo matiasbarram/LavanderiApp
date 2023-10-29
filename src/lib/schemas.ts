@@ -44,9 +44,13 @@ export const sheetSchema = z.object({
     }),
     voucher: z.string().optional(),
 
-    detalle: z.string().optional(),
+    details: z.string().optional(),
 
-    ticket: z.string().optional(),
+    ticket: z.string(),
+
+    secoDetails: z.string().optional(),
+
+    paymentDetails: z.string().optional(),
 })
 
 

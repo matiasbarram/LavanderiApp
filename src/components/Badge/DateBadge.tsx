@@ -1,4 +1,5 @@
 import { toLocaleDate } from "@/lib/utils";
+import { type LucideIcon } from "lucide-react";
 import { Badge } from "../ui/badge";
 
 const dateOptions = {
@@ -8,7 +9,7 @@ const dateOptions = {
     day: "numeric"
 };
 
-export default function DateBadge({ date, Icon }: { date: string, Icon?: any }) {
+export default function DateBadge({ date, Icon }: { date: string, Icon?: LucideIcon }) {
     return (
         <>
             <Badge variant="outline" className="border border-gray-300 w-fit">

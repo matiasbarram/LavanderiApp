@@ -1,36 +1,34 @@
 "use client"
 
-import { SelectorOption, formatAs } from "@/lib/types"
+import { type formSetValue, type FormFieldsProps, type SelectorOption, type formatAs } from "@/lib/types"
 import InputField from "./input"
 import SelectorField from "./selector"
 import CalendarField from "./calendar"
 import TextAreaField from "./textarea"
 
-
-
-interface CustomInputFieldProps {
-    form: any
+interface CustomInputFieldProps extends FormFieldsProps {
     type: "input" | "select" | "calendar" | "textarea"
     label: string
     formFieldName: string
     placeholder: string
     description?: string
     options?: SelectorOption[]
-    setValue?: (value: any) => void
+    setValue?: (value: string) => void
     formatAs?: formatAs
     readonly?: boolean
     search?: boolean
+    formSetValue?: formSetValue
 }
 
-export default function CustomInputField({ form, type, label, formFieldName, placeholder, description, options, setValue, formatAs, readonly, search }: CustomInputFieldProps) {
+export default function CustomInputField({ formSetValue, control, type, label, formFieldName, placeholder, description, options, setValue, formatAs, readonly, search }: CustomInputFieldProps) {
     switch (type) {
         case "input":
-            return <InputField form={form} fieldName={formFieldName} label={label} placeholder={placeholder} description={description} formatAs={formatAs} readonly={readonly} />
+            return <InputField control={control} fieldName={formFieldName} label={label} placeholder={placeholder} description={description} formatAs={formatAs} readonly={readonly} />
         case "select":
-            return options && <SelectorField form={form} options={options} formFieldName={formFieldName} label={label} placeholder={placeholder} description={description} setValue={setValue} search={search} />
+            return options && <SelectorField formSetValue={formSetValue} control={control} options={options} fieldName={formFieldName} label={label} placeholder={placeholder} description={description} setValue={setValue} search={search} />
         case "calendar":
-            return <CalendarField form={form} fieldName={formFieldName} label={label} description={description} />
+            return <CalendarField control={control} fieldName={formFieldName} label={label} description={description} />
         case "textarea":
-            return <TextAreaField form={form} formFieldName={formFieldName} label={label} placeholder={placeholder} description={description} />
+            return <TextAreaField control={control} fieldName={formFieldName} label={label} placeholder={placeholder} description={description} />
     }
 }
