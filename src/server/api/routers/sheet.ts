@@ -53,6 +53,7 @@ async function createOrderDetail({ prisma, input }: { prisma: PrismaClient, inpu
       checkout: input.checkout,
       details: input.secoDetails,
       ticket: input.ticket,
+      external: input.seco,
       externalDetails: input.secoDetails,
     },
   });

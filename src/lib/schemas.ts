@@ -33,6 +33,8 @@ export const sheetSchema = z.object({
             return cleanNums(value).toString()
         }),
 
+    seco: z.boolean(),
+
     paymentMethod: z.string({
         required_error: "Debe seleccionar el método de pago.",
     }).optional(),
