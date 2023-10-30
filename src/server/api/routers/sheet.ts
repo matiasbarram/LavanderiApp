@@ -1,17 +1,11 @@
-import { z } from "zod";
+import { type z } from "zod";
 
 import { sheetSchema } from "@/lib/schemas";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { type PrismaClient } from "@prisma/client";
 
 export const sheetRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
+
 
   create: publicProcedure
     .input(sheetSchema)
@@ -35,7 +29,19 @@ export const sheetRouter = createTRPCRouter({
 
         return createOrder({ prisma: ctx.db, clientId: client.id, orderDataId: orderData.id, orderPaymentId: orderPayment.id });
       })
+    }),
+
+  rows: publicProcedure
+    .query(async ({ ctx }) => {
+      return ctx.db.order.findMany({
+        include: {
+          OrderData: true,
+          OrderPayment: true,
+          Client: true,
+        }
+      })
     })
+
 });
 
 

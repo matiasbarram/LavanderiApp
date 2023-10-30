@@ -23,9 +23,7 @@ export const sheetSchema = z.object({
             return cleanNums(value).toString()
         }),
 
-    paymentDate: z.date({
-        required_error: "Debe seleccionar la fecha de pago.",
-    }).optional(),
+    paymentDate: z.date().optional(),
 
     total: z.string({ required_error: "Debe ingresar el total." }).refine((value) => {
         const num = cleanNums(value)
@@ -37,8 +35,6 @@ export const sheetSchema = z.object({
 
     paymentMethod: z.string({
         required_error: "Debe seleccionar el método de pago.",
-    }).min(2, {
-        message: "Debe seleccionar el método de pago.",
     }).optional(),
 
     status: z.string({

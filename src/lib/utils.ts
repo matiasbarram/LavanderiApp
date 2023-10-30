@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const toClientTable = (clients: Client[]) => {
+export const toClientList = (clients: Client[]) => {
   return clients.map((client) => {
     return {
       id: client.id,
@@ -27,10 +27,9 @@ export const ToRut = (rut: string) => {
   return formatRut(rut)
 }
 
-export const toLocaleDate = (date: string) => {
+export function toLocaleDate(date: string | Date): string {
   const dateObj = new Date(date);
-  // dont show year
-  return dateObj.toLocaleDateString("es-CL", { month: "long", day: "numeric" })
+  return dateObj.toLocaleDateString("es-CL", { month: "long", day: "numeric" });
 }
 
 export const cleanNums = (value: string) => Number(value.replace(/[^0-9]/g, ""))

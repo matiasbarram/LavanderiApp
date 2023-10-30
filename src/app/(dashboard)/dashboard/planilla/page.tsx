@@ -3,14 +3,34 @@ import NavIcon from "@/components/Navigation/NavIcon";
 import Datatable from "@/components/Table/dataTable";
 import { Button } from "@/components/ui/button";
 import { type sheetCols } from "@/lib/types";
+import { api } from "@/trpc/server";
+import { type Client, type OrderDetail, type OrderPayment } from "@prisma/client";
 import { columns } from "./columns";
 
-export default function PlanillaPage() {
+interface row {
+    Client: Client,
+    OrderData: OrderDetail,
+    OrderPayment: OrderPayment
+}
 
-    const initialData: sheetCols[] = [
-        { name: 'Juan Perez', dates: { from: '01/01/2021', to: '01/02/2021' }, delivery: 5000, payment: '01/02/2021', status: 'paid', invoice: 'bill', nInvoice: '001', washingDry: '250' },
-        { name: 'Rodrigo Gonzalees', dates: { from: '01/01/2021', to: '02/04/2021' }, delivery: 5000, payment: '01/13/2021', status: 'pending', invoice: 'invoice', nInvoice: '321', washingDry: '600' },
-    ]
+export default async function PlanillaPage() {
+
+    const rows = await api.sheets.rows.query() as row[]
+
+    const initialData: sheetCols[] = rows.map((row: row) => {
+        const name: string = row.Client.fname + " " + row.Client.lname
+        return {
+            name: name,
+            dates: { from: row.OrderData.checkin, to: row.OrderData.checkout },
+            delivery: row.OrderPayment.shippingCost,
+            payment: row.OrderPayment.paymentDate,
+            paymentTotal: row.OrderPayment.amount,
+            status: row.OrderPayment.status,
+            invoice: row.OrderPayment.paymentType,
+            nInvoice: row.OrderPayment.invoiceNumber,
+            washingDry: row.OrderData.external
+        }
+    })
 
     return (
         <>

@@ -22,8 +22,8 @@ interface statusData {
 }
 
 type dateRange = {
-    from: string
-    to: string
+    from: Date
+    to: Date
 }
 
 
@@ -47,8 +47,8 @@ export const columns: ColumnDef<sheetCols>[] = [
         header: 'Fechas',
         cell: ({ row }) => {
             const dates: dateRange = row.getValue('dates')
-            const from = dates.from
-            const to = dates.to
+            const from = toLocaleDate(dates.from)
+            const to = toLocaleDate(dates.to)
             return (
                 <div className="flex flex-col gap-1">
                     <DateBadge date={from} Icon={ArrowDownLeft} />
@@ -72,6 +72,16 @@ export const columns: ColumnDef<sheetCols>[] = [
         cell: ({ row }) => {
             const date: string = row.getValue('payment')
             const formatted = toLocaleDate(date)
+            return formatted
+        },
+    },
+    {
+        accessorKey: 'paymentTotal',
+        header: 'Total pagado',
+        cell: ({ row }) => {
+            const amount: number | null = row.getValue('paymentTotal')
+            if (!amount) return 'Pago pendiente'
+            const formatted = toMoney(amount)
             return formatted
         },
     },
@@ -100,11 +110,11 @@ export const columns: ColumnDef<sheetCols>[] = [
     },
     {
         accessorKey: 'washingDry',
-        header: 'Lavado y secado',
+        header: '¿Va al seco?',
         cell: ({ row }) => {
-            const amount = parseFloat(row.getValue('washingDry'))
-            const formatted = toMoney(amount)
-            return formatted
+            const seco: boolean = row.getValue('washingDry')
+            return seco ? 'Si' : 'No'
+
         }
     },
     {

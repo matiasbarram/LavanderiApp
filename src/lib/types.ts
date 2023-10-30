@@ -3,15 +3,16 @@ import { type Control, type FieldValues, type UseFormSetValue } from "react-hook
 export type sheetCols = {
     name: string,
     dates: {
-        from: string,
-        to: string
+        from: Date,
+        to: Date | null
     },
-    delivery: number,
-    payment: string,
+    delivery: number | null,
+    payment: Date | null,
+    paymentTotal: number | null,
     status: string,
-    invoice: "invoice" | "bill"
-    nInvoice: string,
-    washingDry: string
+    invoice: string | null,
+    nInvoice: string | null,
+    washingDry: boolean
 }
 
 

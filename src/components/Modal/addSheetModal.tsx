@@ -75,6 +75,9 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                     description: "Se ha agregado la planilla",
                     duration: 2000,
                 })
+            },
+            onSettled: () => {
+                cleanModal(false)
             }
         })
     }
@@ -89,7 +92,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
         setPaymentStatus(PENDING_STATUS)
         form.setValue("status", PENDING_STATUS)
 
-        const clientData = clientsData.find((clientData) => clientData.name === client) // replace for trpc prcedure
+        const clientData = clientsData.find((clientData) => clientData.name === client)
         const currentClient = allClients.find((clnt) => client === clnt.email)
 
         if (clientData) {
@@ -122,11 +125,12 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
 
     useEffect(() => {
         if (paymentStatus === PENDING_STATUS) {
-            form.setValue("paymentDate", null)
-            form.setValue("paymentMethod", null)
-            form.setValue("voucher", null)
-            form.setValue("paymentDetails", null)
-            form.setValue("invoice", null)
+            form.setValue("paymentMethod", "")
+            form.setValue("voucher", "")
+            form.setValue("paymentDetails", "")
+            form.setValue("invoice", "")
+            form.resetField("paymentDate")
+            form.clearErrors()
 
         }
     }, [form, paymentStatus])

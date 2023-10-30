@@ -42,8 +42,8 @@ model Order {
     clientId       String
     createdAt      DateTime      @default(now())
     updatedAt      DateTime      @updatedAt
-    OrderData      OrderDetail?  @relation(fields: [orderDataId], references: [id])
-    OrderPayment   OrderPayment? @relation(fields: [orderPaymentId], references: [id])
+    OrderData      OrderDetail?  @relation(fields: [orderDataId], references: [id], onDelete: Cascade)
+    OrderPayment   OrderPayment? @relation(fields: [orderPaymentId], references: [id], onDelete: Cascade)
     orderDataId    String?
     orderPaymentId String?
     Client         Client        @relation(fields: [clientId], references: [id])
