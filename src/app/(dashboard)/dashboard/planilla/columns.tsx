@@ -4,7 +4,7 @@ import DateBadge from "@/components/Badge/DateBadge"
 import ActionsColum from "@/components/Table/actions"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { type sheetCols } from "@/lib/types"
+import { type paymentMethods, type sheetCols } from "@/lib/types"
 import { toLocaleDate, toMoney } from "@/lib/utils"
 import { type ColumnDef } from "@tanstack/react-table"
 import { ArrowDownLeft, ArrowUpDown, ArrowUpRight } from "lucide-react"
@@ -58,8 +58,18 @@ export const columns: ColumnDef<sheetCols>[] = [
         }
     },
     {
+        accessorKey: 'status',
+        header: 'Estado',
+        cell: ({ row }) => {
+            // status: 'paid' | 'pending' | 'unpaid'
+            const status = row.getValue('status')
+            const statusData: statusData = status === 'paid' ? { title: 'Pagado', variant: 'default' } : status === 'pending' ? { title: 'Pendiente', variant: 'secondary' } : { title: 'No pagado', variant: 'destructive' }
+            return <Badge variant={statusData.variant}>{statusData.title}</Badge>
+        },
+    },
+    {
         accessorKey: 'delivery',
-        header: 'Entrega',
+        header: 'Costo de envío',
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue('delivery'))
             const formatted = toMoney(amount)
@@ -71,6 +81,7 @@ export const columns: ColumnDef<sheetCols>[] = [
         header: 'Pago',
         cell: ({ row }) => {
             const date: string = row.getValue('payment')
+            if (!date) return null
             const formatted = toLocaleDate(date)
             return formatted
         },
@@ -86,13 +97,22 @@ export const columns: ColumnDef<sheetCols>[] = [
         },
     },
     {
-        accessorKey: 'status',
-        header: 'Estado',
+        accessorKey: 'paymentMethod',
+        header: 'Forma de pago',
         cell: ({ row }) => {
-            // status: 'paid' | 'pending' | 'unpaid'
-            const status = row.getValue('status')
-            const statusData: statusData = status === 'paid' ? { title: 'Pagado', variant: 'default' } : status === 'pending' ? { title: 'Pendiente', variant: 'secondary' } : { title: 'No pagado', variant: 'destructive' }
-            return <Badge variant={statusData.variant}>{statusData.title}</Badge>
+            const method: paymentMethods = row.getValue('paymentMethod')
+            switch (method) {
+                case 'cash':
+                    return 'Efectivo'
+                case 'creditCard':
+                    return 'Crédito'
+                case 'transfer':
+                    return 'Transferencia'
+                case 'debitCard':
+                    return 'Débito'
+                default:
+                    return null
+            }
         },
     },
     {
@@ -100,6 +120,7 @@ export const columns: ColumnDef<sheetCols>[] = [
         header: 'Tipo de comprobante',
         cell: ({ row }) => {
             const type = row.getValue('invoice')
+            if (!type) return null
             const invoiceData: invoiceData = type === 'bill' ? { title: 'Factura', variant: 'default' } : { title: 'Boleta', variant: 'outline' }
             return invoiceData.title
         }

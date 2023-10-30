@@ -55,7 +55,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
         defaultValues: {
             deliveryCost: "$5.000",
             voucher: "",
-            status: "pending",
+            status: PENDING_STATUS,
         },
     })
 
@@ -131,7 +131,6 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
             form.setValue("invoice", "")
             form.resetField("paymentDate")
             form.clearErrors()
-
         }
     }, [form, paymentStatus])
 

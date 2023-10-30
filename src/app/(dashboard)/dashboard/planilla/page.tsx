@@ -25,6 +25,7 @@ export default async function PlanillaPage() {
             delivery: row.OrderPayment.shippingCost,
             payment: row.OrderPayment.paymentDate,
             paymentTotal: row.OrderPayment.amount,
+            paymentMethod: row.OrderPayment.paymentMethod,
             status: row.OrderPayment.status,
             invoice: row.OrderPayment.paymentType,
             nInvoice: row.OrderPayment.invoiceNumber,
@@ -45,7 +46,9 @@ export default async function PlanillaPage() {
                     <NavIcon direction="right" />
                 </div>
             </div>
-            <Datatable data={initialData} columns={columns} />
+            <div className="w-full overflow-x-auto whitespace-nowrap">
+                <Datatable data={initialData} columns={columns} />
+            </div>
         </>
     )
 }

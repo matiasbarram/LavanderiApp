@@ -53,6 +53,7 @@ async function createOrderDetail({ prisma, input }: { prisma: PrismaClient, inpu
       checkout: input.checkout,
       details: input.secoDetails,
       ticket: input.ticket,
+      externalDetails: input.secoDetails,
     },
   });
 }
@@ -66,7 +67,8 @@ async function createOrderPayment({ prisma, input }: { prisma: PrismaClient, inp
       paymentDate: input.paymentDate,
       paymentMethod: input.paymentMethod,
       status: input.status,
-      invoiceNumber: input.invoice,
+      paymentType: input.invoice,
+      invoiceNumber: input.voucher,
       paymentDetails: input.paymentDetails,
     },
   });

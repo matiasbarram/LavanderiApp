@@ -1,4 +1,4 @@
-import { type ClientData, type SelectorOption } from "./types"
+import { type ClientData, type paymentMethods as IPaymentMethods, type SelectorOption } from "./types"
 
 export const APPNAME = "Lavandería"
 
@@ -53,7 +53,13 @@ export const clientsData = [
     }
 ] as ClientData[]
 
-export const paymentMethods: SelectorOption[] = [
+
+interface PaymentOptions {
+    label: string;
+    value: IPaymentMethods
+}
+
+export const paymentMethods: PaymentOptions[] = [
     { label: "Efectivo", value: "cash" },
     { label: "Tarjeta de Crédito", value: "creditCard" },
     { label: "Tarjeta de Débito", value: "debitCard" },

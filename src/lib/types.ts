@@ -86,4 +86,4 @@ export interface FormFieldsProps {
     formSetValue?: formSetValue;
 }
 
-
+export type paymentMethods = "cash" | "creditCard" | "debitCard" | "transfer"

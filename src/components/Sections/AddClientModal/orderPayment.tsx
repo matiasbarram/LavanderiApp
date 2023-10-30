@@ -14,15 +14,15 @@ interface Props extends FormFieldsProps {
 export default function OrderPaymentForm({ formSetValue, control, isPaid, setIsPaid }: Props) {
     return (
         <>
-            <CustomInputField formSetValue={formSetValue} control={control} type="select" options={statusOptions} formFieldName="status" label="Estado" placeholder="Seleccione el estado..." setValue={setIsPaid} />
+            <CustomInputField formFieldName="status" formSetValue={formSetValue} control={control} type="select" options={statusOptions} label="Estado" placeholder="Seleccione el estado..." setValue={setIsPaid} />
             {
                 isPaid != PENDING_STATUS && (
                     <>
-                        <CustomInputField control={control} type="calendar" formFieldName="paymentDate" label="Fecha de pago" placeholder="Ingrese la fecha..." />
-                        <CustomInputField formSetValue={formSetValue} control={control} type="select" options={paymentMethods} formFieldName="paymentMethod" label="Forma de pago" placeholder="Seleccione la forma..." />
-                        <CustomInputField formSetValue={formSetValue} control={control} type="select" options={invoiceOptions} formFieldName="invoice" label="Tipo de factura" placeholder="Seleccione el tipo..." />
-                        <CustomInputField control={control} type="input" formFieldName="voucher" label="N° de comprobante" placeholder="Ingrese el N° de comprobante..." />
-                        <CustomInputField control={control} type="textarea" formFieldName="paymentDetails" label="Detalles del pago" placeholder="Ingrese los detelles..." />
+                        <CustomInputField formFieldName="paymentDate" control={control} type="calendar" label="Fecha de pago" placeholder="Ingrese la fecha..." />
+                        <CustomInputField formFieldName="paymentMethod" formSetValue={formSetValue} control={control} type="select" options={paymentMethods} label="Forma de pago" placeholder="Seleccione la forma..." />
+                        <CustomInputField formFieldName="invoice" formSetValue={formSetValue} control={control} type="select" options={invoiceOptions} label="Tipo de factura" placeholder="Seleccione el tipo..." />
+                        <CustomInputField formFieldName="voucher" control={control} type="input" label="N° de comprobante" placeholder="Ingrese el N° de comprobante..." />
+                        <CustomInputField formFieldName="paymentDetails" control={control} type="textarea" label="Detalles del pago" placeholder="Ingrese los detelles..." />
                     </>
                 )
             }
