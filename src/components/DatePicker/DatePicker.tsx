@@ -31,23 +31,31 @@ export function DatePickerWithRange({
 
     const [date, setDate] = React.useState<DateRange | undefined>({ from, to })
     const [isOpen, setIsOpen] = React.useState<boolean>(false)
-    const [dateRange, setDateRange] = React.useState<DateRange | undefined>(undefined)
+    const [showToday, setShowToday] = React.useState<boolean>(false)
     const router = useRouter()
     const pathname = usePathname()
 
+    const addPageParam = (e: { from: Date; to: Date }) => {
+        setShowToday(true)
+        const [from, to] = [e.from, e.to].map((date) => {
+            return format(date, URL_DATE_FORMAT)
+        })
+        router.push(pathname + `?range=${from}${URL_SPLITTER}${to}`)
+    }
+
     const setToday = () => {
-        const today = new Date();
-        const { firstDay: fday, lastDay: lday } = firstAndLastDayOfMonth(today)
-        setDateRange({ from: fday, to: lday })
-        setDate({ from: fday, to: lday })
-        router.push(pathname + `?range=${format(fday, URL_DATE_FORMAT)}${URL_SPLITTER}${format(lday, URL_DATE_FORMAT)}`)
+        router.push(pathname)
+        const today = new Date()
+        const { firstDay, lastDay } = firstAndLastDayOfMonth(today)
+        setDate({ from: firstDay, to: lastDay })
+        setShowToday(false)
     }
 
     return (
         <div className="flex items-center gap-2">
-            <Button variant={"outline"} onClick={() => setToday()}>
+            {showToday && (<Button variant={"outline"} onClick={() => setToday()}>
                 Mes actual completo
-            </Button>
+            </Button>)}
             <div className={cn("grid gap-2", className)}>
                 <Popover open={isOpen} onOpenChange={setIsOpen}>
                     <PopoverTrigger asChild>
@@ -85,11 +93,7 @@ export function DatePickerWithRange({
                                 setDate(e);
                                 if (e?.from && e.to) {
                                     setIsOpen(false);
-                                    setDateRange(e);
-                                    const [from, to] = [e.from, e.to].map((date) => {
-                                        return format(date, URL_DATE_FORMAT)
-                                    })
-                                    router.push(pathname + `?range=${from}${URL_SPLITTER}${to}`)
+                                    addPageParam(e as { from: Date; to: Date });
                                 }
 
                             }}

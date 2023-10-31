@@ -23,7 +23,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { type SheetRow } from "@/lib/types";
-import { getDatesFromRange, transformRowsToSheetCols } from "@/lib/utils";
+import { firstAndLastDayOfMonth, getDatesFromRange, transformRowsToSheetCols } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { MoreHorizontal } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -61,10 +61,17 @@ export default function Datatable<TData, TValue>({
     useEffect(() => {
         if (params.toString() !== prevParams.current) {
             const range = params.get("range");
-            if (range) {
+            if (range !== null) {
                 const dates = getDatesFromRange(range);
                 updateSheets({
                     ...dates,
+                });
+            } else if (prevParams.current !== null) {
+                const currentDate = new Date();
+                const { firstDay, lastDay } = firstAndLastDayOfMonth(currentDate);
+                updateSheets({
+                    from: firstDay,
+                    to: lastDay,
                 });
             }
             prevParams.current = params.toString();
