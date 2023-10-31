@@ -14,10 +14,9 @@ import {
 } from "@/components/ui/dialog"
 
 import { Form } from "@/components/ui/form"
-import { PENDING_STATUS, clientsData } from "@/lib/constants"
+import { PENDING_STATUS } from "@/lib/constants"
 import { sheetSchema as formSchema, sheetSchema } from "@/lib/schemas"
 import { type SelectorOption } from "@/lib/types"
-import { toMoney } from "@/lib/utils"
 import { api } from "@/trpc/react"
 import { type Client } from "@prisma/client"
 import { useEffect, useState } from "react"
@@ -56,6 +55,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
             deliveryCost: "$5.000",
             voucher: "",
             status: PENDING_STATUS,
+            seco: false,
         },
     })
 
@@ -91,30 +91,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     const handleSelectedUser = (client: string) => {
         setPaymentStatus(PENDING_STATUS)
         form.setValue("status", PENDING_STATUS)
-
-        const clientData = clientsData.find((clientData) => clientData.name === client)
         const currentClient = allClients.find((clnt) => client === clnt.email)
-
-        if (clientData) {
-            Object.keys(clientData.lastSheet).forEach((key: keyof typeof clientData.lastSheet) => {
-                switch (key) {
-                    case "checkin":
-                        const today = new Date()
-                        form.setValue("checkin", today)
-                        break;
-                    case "deliveryCost":
-                        const formatCost = toMoney(clientData.lastSheet.deliveryCost)
-                        form.setValue("deliveryCost", formatCost)
-                        break;
-                    case "status":
-                        form.setValue("status", clientData.lastSheet.status)
-                        break;
-                    case "invoice":
-                        form.setValue("invoice", clientData.lastSheet.invoice)
-                        break;
-                }
-            })
-        }
         setSelectedClient(currentClient)
         toast({
             title: "Cliente seleccionado",
@@ -130,6 +107,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
             form.setValue("paymentDetails", "")
             form.setValue("invoice", "")
             form.resetField("paymentDate")
+            form.resetField("seco")
             form.clearErrors()
         }
     }, [form, paymentStatus])
