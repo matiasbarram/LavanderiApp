@@ -95,3 +95,9 @@ export interface SheetRow {
     OrderData: OrderDetail,
     OrderPayment: OrderPayment
 }
+
+
+export interface PaymentOptions {
+    label: string;
+    value: paymentMethods
+}

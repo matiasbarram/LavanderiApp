@@ -1,20 +1,35 @@
 import { DatePickerWithRange } from "@/components/DatePicker/DatePicker";
-import NavIcon from "@/components/Navigation/NavIcon";
 import SheetInfo from "@/components/Sections/Plantilla/SheetInfo";
 import Datatable from "@/components/Table/dataTable";
+import { URL_SPLITTER } from "@/lib/constants";
 import { type SheetRow } from "@/lib/types";
-import { transformRowsToSheetCols } from "@/lib/utils";
+import { firstAndLastDayOfMonth, rangeUrlFormat, toLocaleDate, transformRowsToSheetCols } from "@/lib/utils";
 import { api } from "@/trpc/server";
 import { columns } from "./columns";
 
 
-export default async function PlanillaPage() {
+export default async function PlanillaPage({ searchParams }: { searchParams: { range: string } }) {
+    let dateInWords: null | string = null
+    let firstDay: Date | null = null
+    let lastDay: Date | null = null
 
-    const today = new Date();
-    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    let dateInWords = new Intl.DateTimeFormat('es-CL', { year: 'numeric', month: 'long' }).format(today)
-    dateInWords = dateInWords.charAt(0).toUpperCase() + dateInWords.slice(1)
+    if (searchParams.range) {
+        console.log("Founded!!", searchParams.range)
+        dateInWords = rangeUrlFormat({ range: searchParams.range, defaultMonth: "null" })
+        const [from, to] = searchParams.range.split(URL_SPLITTER)
+        if (!from || !to) {
+            throw new Error("Invalid range")
+        }
+        firstDay = new Date(from)
+        lastDay = new Date(to)
+    }
+    else {
+        const today = new Date();
+        dateInWords = toLocaleDate(today)
+        const { firstDay: fday, lastDay: lday } = firstAndLastDayOfMonth(today)
+        firstDay = fday
+        lastDay = lday
+    }
 
 
     const rows = await api.sheets.rowsByDateRange.query({ from: firstDay, to: lastDay }) as SheetRow[]
@@ -27,8 +42,6 @@ export default async function PlanillaPage() {
                 <SheetInfo month={dateInWords} />
                 <div className="flex items-center gap-2">
                     <DatePickerWithRange from={firstDay} to={lastDay} />
-                    <NavIcon direction="left" />
-                    <NavIcon direction="right" />
                 </div>
             </div>
             <div className="w-full overflow-x-auto whitespace-nowrap">

@@ -23,16 +23,32 @@ export const toClientList = (clients: Client[]) => {
   })
 }
 
-
-
 export const ToRut = (rut: string) => {
   return formatRut(rut)
 }
 
 export function toLocaleDate(date: string | Date): string {
   const dateObj = new Date(date);
-  return dateObj.toLocaleDateString("es-CL", { month: "long", day: "numeric" });
+  const dateInWords = dateObj.toLocaleDateString("es-CL", { month: "long", day: "numeric", timeZone: "UTC" });
+  return dateInWords.charAt(0).toUpperCase() + dateInWords.slice(1);
 }
+
+export function firstAndLastDayOfMonth(date: Date): { firstDay: Date, lastDay: Date } {
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  return { firstDay, lastDay };
+}
+
+export const rangeUrlFormat = ({ range, defaultMonth }: { range: string, defaultMonth: string }) => {
+  const [from, to] = range.split(URL_SPLITTER)
+  if (!from || !to) return defaultMonth
+
+  const fromFormated = from ? toLocaleDate(from) : ''
+  const toFormated = to ? toLocaleDate(to) : ''
+
+  return `${fromFormated} - ${toFormated}`
+}
+
 
 export const cleanNums = (value: string) => Number(value.replace(/[^0-9]/g, ""))
 

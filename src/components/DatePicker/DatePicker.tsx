@@ -13,7 +13,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { DATE_FORMAT, PICK_A_DATE, URL_DATE_FORMAT, URL_SPLITTER } from "@/lib/constants"
-import { cn } from "@/lib/utils"
+import { cn, firstAndLastDayOfMonth } from "@/lib/utils"
 import { es } from "date-fns/locale"
 import { usePathname, useRouter } from "next/navigation"
 
@@ -35,58 +35,71 @@ export function DatePickerWithRange({
     const router = useRouter()
     const pathname = usePathname()
 
+    const setToday = () => {
+        const today = new Date();
+        const { firstDay: fday, lastDay: lday } = firstAndLastDayOfMonth(today)
+        setDateRange({ from: fday, to: lday })
+        setDate({ from: fday, to: lday })
+        router.push(pathname + `?range=${format(fday, URL_DATE_FORMAT)}${URL_SPLITTER}${format(lday, URL_DATE_FORMAT)}`)
+    }
+
     return (
-        <div className={cn("grid gap-2", className)}>
-            <Popover open={isOpen} onOpenChange={setIsOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        id="date"
-                        variant={"outline"}
-                        className={cn(
-                            "w-[300px] justify-start text-left font-normal",
-                            !date && "text-muted-foreground"
-                        )}
-                    >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {date?.from ? (
-                            date.to ? (
-                                <>
-                                    {format(date.from, DATE_FORMAT)} -{" "}
-                                    {format(date.to, DATE_FORMAT)}
-                                </>
+        <div className="flex items-center gap-2">
+            <Button variant={"outline"} onClick={() => setToday()}>
+                Mes actual completo
+            </Button>
+            <div className={cn("grid gap-2", className)}>
+                <Popover open={isOpen} onOpenChange={setIsOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            id="date"
+                            variant={"outline"}
+                            className={cn(
+                                "w-[300px] justify-start text-left font-normal",
+                                !date && "text-muted-foreground"
+                            )}
+                        >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {date?.from ? (
+                                date.to ? (
+                                    <>
+                                        {format(date.from, DATE_FORMAT)} -{" "}
+                                        {format(date.to, DATE_FORMAT)}
+                                    </>
+                                ) : (
+                                    format(date.from, DATE_FORMAT)
+                                )
                             ) : (
-                                format(date.from, DATE_FORMAT)
-                            )
-                        ) : (
-                            <span>{PICK_A_DATE}</span>
-                        )}
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                        locale={es}
-                        initialFocus
-                        mode="range"
-                        defaultMonth={date?.from}
-                        selected={date}
-                        onSelect={(e: DateRange | undefined) => {
-                            setDate(e);
-                            if (e?.from && e.to) {
-                                setIsOpen(false);
-                                setDateRange(e);
-                                const [from, to] = [e.from, e.to].map((date) => {
-                                    return format(date, URL_DATE_FORMAT)
-                                })
-                                router.push(pathname + `?range=${from}${URL_SPLITTER}${to}`)
-                            }
+                                <span>{PICK_A_DATE}</span>
+                            )}
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                            locale={es}
+                            initialFocus
+                            mode="range"
+                            defaultMonth={date?.from}
+                            selected={date}
+                            onSelect={(e: DateRange | undefined) => {
+                                setDate(e);
+                                if (e?.from && e.to) {
+                                    setIsOpen(false);
+                                    setDateRange(e);
+                                    const [from, to] = [e.from, e.to].map((date) => {
+                                        return format(date, URL_DATE_FORMAT)
+                                    })
+                                    router.push(pathname + `?range=${from}${URL_SPLITTER}${to}`)
+                                }
 
-                        }}
-                        numberOfMonths={2}
+                            }}
+                            numberOfMonths={2}
 
-                    />
-                </PopoverContent>
-            </Popover>
-        </div>
+                        />
+                    </PopoverContent>
+                </Popover>
+            </div>
+        </div >
     )
 
 }
