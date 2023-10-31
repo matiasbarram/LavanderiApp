@@ -5,7 +5,7 @@ import UserInfoCard from "@/components/HoverCard/userInfoCard"
 import ActionsColum from "@/components/Table/actions"
 import { DataTableColumnHeader } from "@/components/Table/dataTableColumnHeader"
 import { Badge } from "@/components/ui/badge"
-import { PAID_LABEL, PAID_VALUE, PENDING_LABEL, PENDING_VALUE, invoiceOptions } from "@/lib/constants"
+import { NEGATIVE_BOOLEAN, PAID_LABEL, PAID_VALUE, PENDING_LABEL, PENDING_VALUE, POSITIVE_BOOLEAN, invoiceOptions } from "@/lib/constants"
 import { type SelectorOption, type paymentMethods, type sheetCols } from "@/lib/types"
 import { toLocaleDate, toMoney } from "@/lib/utils"
 import { type ColumnDef } from "@tanstack/react-table"
@@ -164,6 +164,20 @@ export const columns: ColumnDef<sheetCols>[] = [
     {
         accessorKey: 'washingDry',
         header: '¿Va al seco?',
+        filterFn: (row, id, value: unknown[]) => {
+            const findValue: boolean[] = []
+            const posibleValues = [NEGATIVE_BOOLEAN, POSITIVE_BOOLEAN]
+            const currentRow: boolean = row.getValue(id)
+            value.forEach((val) => {
+                const vl = val === POSITIVE_BOOLEAN ? true : false
+                if (vl === currentRow) {
+                    findValue.push(vl)
+                }
+            })
+            return findValue.includes(currentRow)
+
+
+        },
         cell: ({ row }) => {
             const seco: boolean = row.getValue('washingDry')
             return seco ? 'Si' : 'No'

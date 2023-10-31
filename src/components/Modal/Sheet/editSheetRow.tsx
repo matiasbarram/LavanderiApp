@@ -68,9 +68,9 @@ export default function EditSheetRow({ isEditDialogOpen, setIsEditDialogOpen, ro
             <DialogContent className={"lg:max-w-screen-lg overflow-y-auto max-h-screen"}>
                 <DialogHeader>
                     <CloseBtn setOpen={setIsEditDialogOpen} open={false} />
-                    <DialogTitle>Edit profile</DialogTitle>
+                    <DialogTitle>Editar</DialogTitle>
                     <DialogDescription>
-                        Make changes to your profile here. Click save when youu&apos;re done.
+                        Edita los datos de la orden
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>

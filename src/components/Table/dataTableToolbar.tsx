@@ -1,6 +1,6 @@
 "use client"
 
-import { invoiceOptions, paymentMethods, statusOptions } from "@/lib/constants"
+import { CLEAR_FILTERS, booleanOptions, invoiceOptions, paymentMethods, statusOptions } from "@/lib/constants"
 import { type Table } from "@tanstack/react-table"
 import { X } from "lucide-react"
 import { Button } from "../ui/button"
@@ -56,14 +56,23 @@ export function DataTableToolbar<TData>({
                             />
                         )
                     }
+                    {
+                        table.getColumn("washingDry") && (
+                            <DataTableFacetedFilter
+                                column={table.getColumn("washingDry")}
+                                title="¿Va a seco?"
+                                options={booleanOptions}
+                            />
+                        )
+                    }
 
                     {isFiltered && (
                         <Button
-                            variant="ghost"
+                            variant="destructive"
                             onClick={() => table.resetColumnFilters()}
                             className="h-8 px-2 lg:px-3"
                         >
-                            Reset
+                            <span className="text-sm">{CLEAR_FILTERS}</span>
                             <X className="ml-2 h-4 w-4" />
                         </Button>
                     )}

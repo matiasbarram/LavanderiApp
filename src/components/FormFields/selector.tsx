@@ -20,6 +20,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { NONE_RESULTS } from "@/lib/constants"
 import { type SelectFieldProps } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { Check, ChevronsUpDown } from "lucide-react"
@@ -61,7 +62,7 @@ export default function SelectorField<T>({ formSetValue, control, options, field
                         <PopoverContent className="w-[240px] p-0">
                             <Command>
                                 {search && <CommandInput placeholder={placeholder} />}
-                                <CommandEmpty>No results</CommandEmpty>
+                                <CommandEmpty>{NONE_RESULTS}</CommandEmpty>
                                 <CommandGroup>
                                     {options.map((option) => (
                                         <CommandItem

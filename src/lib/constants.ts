@@ -28,11 +28,20 @@ export const invoiceOptions: SelectorOption[] = [
     { label: "Factura", value: "invoice" },
 ]
 
+export const NEGATIVE_BOOLEAN = "false"
+export const POSITIVE_BOOLEAN = "true"
+export const booleanOptions: SelectorOption[] = [
+    { label: "Sí", value: POSITIVE_BOOLEAN },
+    { label: "No", value: NEGATIVE_BOOLEAN },
+]
 
 export const PAID_VALUE = "paid"
 export const PENDING_VALUE = "pending"
 export const PAID_LABEL = "Pagado"
 export const PENDING_LABEL = "Pendiente"
+export const NONE_RESULTS = "No hay resultados"
+export const CLEAR_FILTERS = "Limpiar filtros"
+export const RESET_FILTERS = "Reiniciar filtros"
 
 export const statusOptions: SelectorOption[] = [
     { label: PAID_LABEL, value: PAID_VALUE },

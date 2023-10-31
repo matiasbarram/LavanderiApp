@@ -17,6 +17,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { CLEAR_FILTERS, NONE_RESULTS } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import { CheckIcon, PlusCircleIcon } from "lucide-react"
 import { Separator } from "../ui/separator"
@@ -24,6 +25,7 @@ import { Separator } from "../ui/separator"
 interface DataTableFacetedFilterProps<TData, TValue> {
     column?: Column<TData, TValue>
     title?: string
+    searcheable?: boolean
     options: {
         label: string
         value: string
@@ -35,6 +37,7 @@ export function DataTableFacetedFilter<TData, TValue>({
     column,
     title,
     options,
+    searcheable = false,
 }: DataTableFacetedFilterProps<TData, TValue>) {
     const facets = column?.getFacetedUniqueValues()
     const selectedValues = new Set(column?.getFilterValue() as string[])
@@ -82,9 +85,9 @@ export function DataTableFacetedFilter<TData, TValue>({
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0" align="start">
                 <Command>
-                    <CommandInput placeholder={title} />
+                    {searcheable && <CommandInput placeholder={title} />}
                     <CommandList>
-                        <CommandEmpty>No results found.</CommandEmpty>
+                        <CommandEmpty>{NONE_RESULTS}</CommandEmpty>
                         <CommandGroup>
                             {options.map((option) => {
                                 const isSelected = selectedValues.has(option.value)
@@ -134,7 +137,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                                         onSelect={() => column?.setFilterValue(undefined)}
                                         className="justify-center text-center"
                                     >
-                                        Clear filters
+                                        {CLEAR_FILTERS}
                                     </CommandItem>
                                 </CommandGroup>
                             </>

@@ -14,6 +14,7 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
+import { NONE_RESULTS } from "@/lib/constants";
 import SavingToast from "../Alert/saving";
 import { DataTableToolbar } from "./dataTableToolbar";
 
@@ -96,7 +97,7 @@ export default function Datatable<TData, TValue>({
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results.
+                                    {NONE_RESULTS}
                                 </TableCell>
                             </TableRow>
                         )}
