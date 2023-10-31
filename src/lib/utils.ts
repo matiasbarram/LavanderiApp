@@ -23,7 +23,7 @@ export const toClientList = (clients: Client[]) => {
   })
 }
 
-export const ToRut = (rut: string) => {
+export const toRut = (rut: string) => {
   return formatRut(rut)
 }
 

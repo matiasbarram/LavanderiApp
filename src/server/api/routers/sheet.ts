@@ -50,9 +50,12 @@ export const sheetRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return ctx.db.order.findMany({
         where: {
-          createdAt: {
-            gte: input.from,
-            lte: input.to,
+          OrderData:
+          {
+            checkin: {
+              gte: input.from,
+              lte: input.to,
+            }
           }
         },
         include: {
@@ -71,9 +74,12 @@ export const sheetRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return ctx.db.order.findMany({
         where: {
-          createdAt: {
-            gte: input.from,
-            lte: input.to,
+          OrderData:
+          {
+            checkin: {
+              gte: input.from,
+              lte: input.to,
+            }
           }
         },
         include: {

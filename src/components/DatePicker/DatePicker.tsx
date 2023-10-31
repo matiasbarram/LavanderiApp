@@ -16,6 +16,7 @@ import { DATE_FORMAT, PICK_A_DATE, URL_DATE_FORMAT, URL_SPLITTER } from "@/lib/c
 import { cn, firstAndLastDayOfMonth } from "@/lib/utils"
 import { es } from "date-fns/locale"
 import { usePathname, useRouter } from "next/navigation"
+import CustomTooltip from "../Tooltip/tooltip"
 
 interface DatePickerWithRangeProps {
     className?: string
@@ -58,30 +59,32 @@ export function DatePickerWithRange({
             </Button>)}
             <div className={cn("grid gap-2", className)}>
                 <Popover open={isOpen} onOpenChange={setIsOpen}>
-                    <PopoverTrigger asChild>
-                        <Button
-                            id="date"
-                            variant={"outline"}
-                            className={cn(
-                                "w-[300px] justify-start text-left font-normal",
-                                !date && "text-muted-foreground"
-                            )}
-                        >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {date?.from ? (
-                                date.to ? (
-                                    <>
-                                        {format(date.from, DATE_FORMAT)} -{" "}
-                                        {format(date.to, DATE_FORMAT)}
-                                    </>
+                    <CustomTooltip msg="Selecciona un rango de fechas para filtrar la planilla">
+                        <PopoverTrigger asChild>
+                            <Button
+                                id="date"
+                                variant={"outline"}
+                                className={cn(
+                                    "w-[300px] justify-start text-left font-normal",
+                                    !date && "text-muted-foreground"
+                                )}
+                            >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {date?.from ? (
+                                    date.to ? (
+                                        <>
+                                            {format(date.from, DATE_FORMAT)} -{" "}
+                                            {format(date.to, DATE_FORMAT)}
+                                        </>
+                                    ) : (
+                                        format(date.from, DATE_FORMAT)
+                                    )
                                 ) : (
-                                    format(date.from, DATE_FORMAT)
-                                )
-                            ) : (
-                                <span>{PICK_A_DATE}</span>
-                            )}
-                        </Button>
-                    </PopoverTrigger>
+                                    <span>{PICK_A_DATE}</span>
+                                )}
+                            </Button>
+                        </PopoverTrigger>
+                    </CustomTooltip>
                     <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                             locale={es}

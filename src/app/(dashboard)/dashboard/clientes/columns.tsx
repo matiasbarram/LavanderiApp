@@ -1,7 +1,8 @@
-import ActionsColum from "@/components/Table/actions";
+import { Button } from "@/components/ui/button";
 import { type clientsCols } from "@/lib/types";
-import { ToRut } from "@/lib/utils";
+import { toRut } from "@/lib/utils";
 import { type ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
 
 export const columns: ColumnDef<clientsCols>[] = [
     {
@@ -13,7 +14,7 @@ export const columns: ColumnDef<clientsCols>[] = [
         header: 'RUT',
         cell: ({ row }) => {
             const rut: string = row.getValue('rut')
-            return ToRut(rut)
+            return toRut(rut)
 
         }
     },
@@ -32,6 +33,11 @@ export const columns: ColumnDef<clientsCols>[] = [
     {
         id: 'actions',
         header: 'Acciones',
-        cell: ({ row }) => <ActionsColum />
+        cell: ({ row }) => {
+            return (
+                <Button variant="ghost">
+                    <MoreHorizontal />
+                </Button>)
+        }
     }
 ]

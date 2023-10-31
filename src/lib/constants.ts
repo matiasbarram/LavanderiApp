@@ -28,11 +28,22 @@ export const invoiceOptions: SelectorOption[] = [
     { label: "Factura", value: "invoice" },
 ]
 
+
+export const PAID_VALUE = "paid"
+export const PENDING_VALUE = "pending"
+export const PAID_LABEL = "Pagado"
+export const PENDING_LABEL = "Pendiente"
+
 export const statusOptions: SelectorOption[] = [
-    { label: "Pagado", value: "paid" },
-    { label: "Pendiente", value: "pending" },
+    { label: PAID_LABEL, value: PAID_VALUE },
+    { label: PENDING_LABEL, value: PENDING_VALUE },
 ]
 
+
+export const statusVariant: SelectorOption[] = [
+    { label: PAID_LABEL, value: PAID_VALUE },
+    { label: PENDING_LABEL, value: PENDING_VALUE },
+]
 
 export const paymentMethods: PaymentOptions[] = [
     { label: "Efectivo", value: "cash" },

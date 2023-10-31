@@ -3,12 +3,13 @@
 import DateBadge from "@/components/Badge/DateBadge"
 import UserInfoCard from "@/components/HoverCard/userInfoCard"
 import ActionsColum from "@/components/Table/actions"
+import { DataTableColumnHeader } from "@/components/Table/dataTableColumnHeader"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { type paymentMethods, type sheetCols } from "@/lib/types"
+import { PAID_LABEL, PAID_VALUE, PENDING_LABEL, PENDING_VALUE, invoiceOptions } from "@/lib/constants"
+import { type SelectorOption, type paymentMethods, type sheetCols } from "@/lib/types"
 import { toLocaleDate, toMoney } from "@/lib/utils"
 import { type ColumnDef } from "@tanstack/react-table"
-import { ArrowDownLeft, ArrowUpDown, ArrowUpRight } from "lucide-react"
+import { ArrowDownLeft, ArrowUpRight } from "lucide-react"
 
 type invoiceVariant = 'default' | 'outline'
 interface invoiceData {
@@ -17,10 +18,6 @@ interface invoiceData {
 }
 
 type statusVariant = 'default' | 'outline' | 'secondary' | 'destructive'
-interface statusData {
-    title: string
-    variant: statusVariant
-}
 
 type dateRange = {
     from: Date
@@ -32,15 +29,8 @@ export const columns: ColumnDef<sheetCols>[] = [
     {
         accessorKey: 'name',
         header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Nombre
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
+            return <DataTableColumnHeader column={column} title="Nombre" />
+
         },
         cell: ({ row }) => {
             const name: string = row.getValue('name')
@@ -49,7 +39,7 @@ export const columns: ColumnDef<sheetCols>[] = [
     },
     {
         accessorKey: 'dates',
-        header: 'Fechas',
+        header: 'Fechas de ingreso y entrega',
         cell: ({ row }) => {
             const dates: dateRange = row.getValue('dates')
             const from = toLocaleDate(dates.from)
@@ -65,10 +55,33 @@ export const columns: ColumnDef<sheetCols>[] = [
     {
         accessorKey: 'status',
         header: 'Estado de pago',
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id))
+        },
         cell: ({ row }) => {
-            const status = row.getValue('status')
-            const statusData: statusData = status === 'paid' ? { title: 'Pagado', variant: 'default' } : status === 'pending' ? { title: 'Pendiente', variant: 'secondary' } : { title: 'No pagado', variant: 'destructive' }
-            return <Badge variant={statusData.variant}>{statusData.title}</Badge>
+            const status = row.getValue('status');
+            const statusData: { title: string, variant: statusVariant | null }
+                = { title: '', variant: null };
+
+            switch (status) {
+                case PAID_VALUE:
+                    statusData.title = PAID_LABEL;
+                    statusData.variant = 'default';
+                    break;
+                case PENDING_VALUE:
+                    statusData.title = PENDING_LABEL;
+                    statusData.variant = 'secondary';
+                    break;
+                default:
+                    statusData.title = 'No pagado';
+                    statusData.variant = 'destructive';
+                    break;
+            }
+            return (
+                <Badge variant={statusData.variant}>
+                    {statusData.title}
+                </Badge>
+            )
         },
     },
     {
@@ -82,7 +95,9 @@ export const columns: ColumnDef<sheetCols>[] = [
     },
     {
         accessorKey: 'payment',
-        header: 'Pago',
+        header: ({ column }) => {
+            return <DataTableColumnHeader column={column} title="Fecha de pago" />
+        },
         cell: ({ row }) => {
             const date: string = row.getValue('payment')
             if (!date) return null
@@ -91,8 +106,11 @@ export const columns: ColumnDef<sheetCols>[] = [
         },
     },
     {
+
         accessorKey: 'paymentTotal',
-        header: 'Total pagado',
+        header: ({ column }) => {
+            return <DataTableColumnHeader column={column} title="Total" />
+        },
         cell: ({ row }) => {
             const amount: number | null = row.getValue('paymentTotal')
             if (!amount) return 'Pago pendiente'
@@ -103,6 +121,9 @@ export const columns: ColumnDef<sheetCols>[] = [
     {
         accessorKey: 'paymentMethod',
         header: 'Forma de pago',
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id))
+        },
         cell: ({ row }) => {
             const method: paymentMethods = row.getValue('paymentMethod')
             switch (method) {
@@ -122,11 +143,18 @@ export const columns: ColumnDef<sheetCols>[] = [
     {
         accessorKey: 'invoice',
         header: 'Tipo de comprobante',
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id))
+        },
         cell: ({ row }) => {
             const type = row.getValue('invoice')
             if (!type) return null
-            const invoiceData: invoiceData = type === 'bill' ? { title: 'Factura', variant: 'default' } : { title: 'Boleta', variant: 'outline' }
-            return invoiceData.title
+            const option = invoiceOptions.find((option: SelectorOption) => {
+                if (option.value === type) {
+                    return option
+                }
+            })
+            return option?.label
         }
     },
     {
