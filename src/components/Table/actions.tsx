@@ -1,14 +1,17 @@
 "use client"
 
+import { type sheetCols } from "@/lib/types";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
+import DeleteSheetRow from "../Modal/Sheet/deleteSheet";
+import EditSheetRow from "../Modal/Sheet/editSheetRow";
 import { Button } from "../ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 
-export default function ActionsColum({ }) {
+export default function ActionsColum({ row }: { row: sheetCols }) {
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
     return (
         <div>
@@ -21,37 +24,21 @@ export default function ActionsColum({ }) {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
                         Editar
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                         Ver detalles
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive" onClick={() => setIsEditDialogOpen(true)}>
+                    <DropdownMenuItem className="text-destructive" onClick={() => setIsDeleteDialogOpen(true)}>
                         Eliminar
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <Dialog
-                open={isEditDialogOpen}
-            >
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>¿Estás seguro?</DialogTitle>
-                        <DialogDescription>
-                            ¿Quieres eliminar la entrada? Eliminar esta entrada no se puede
-                            deshacer.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                        <DialogClose asChild onClick={() => setIsEditDialogOpen(false)}>
-                            <Button variant="outline">Cancelar</Button>
-                        </DialogClose>
-                        <Button>Eliminar entrada</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+            <DeleteSheetRow isEditDialogOpen={isDeleteDialogOpen} setIsEditDialogOpen={setIsDeleteDialogOpen} />
+            <EditSheetRow isEditDialogOpen={isEditDialogOpen} setIsEditDialogOpen={setIsEditDialogOpen} row={row} />
+
         </div>
     )
 }

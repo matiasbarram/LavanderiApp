@@ -1,3 +1,4 @@
+import { type Client, type OrderDetail, type OrderPayment } from "@prisma/client"
 import { type Control, type FieldValues, type UseFormSetValue } from "react-hook-form/dist/types"
 
 export type sheetCols = {
@@ -87,3 +88,10 @@ export interface FormFieldsProps {
 }
 
 export type paymentMethods = "cash" | "creditCard" | "debitCard" | "transfer"
+
+
+export interface SheetRow {
+    Client: Client,
+    OrderData: OrderDetail,
+    OrderPayment: OrderPayment
+}

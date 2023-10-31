@@ -1,4 +1,4 @@
-import { type z } from "zod";
+import { z } from "zod";
 
 import { sheetSchema } from "@/lib/schemas";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
@@ -40,7 +40,50 @@ export const sheetRouter = createTRPCRouter({
           Client: true,
         }
       })
+    }),
+
+  rowsByDateRange: publicProcedure
+    .input(z.object({
+      from: z.date(),
+      to: z.date(),
+    }))
+    .query(async ({ ctx, input }) => {
+      return ctx.db.order.findMany({
+        where: {
+          createdAt: {
+            gte: input.from,
+            lte: input.to,
+          }
+        },
+        include: {
+          OrderData: true,
+          OrderPayment: true,
+          Client: true,
+        }
+      })
+    }),
+
+  updateRows: publicProcedure
+    .input(z.object({
+      from: z.date(),
+      to: z.date(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.order.findMany({
+        where: {
+          createdAt: {
+            gte: input.from,
+            lte: input.to,
+          }
+        },
+        include: {
+          OrderData: true,
+          OrderPayment: true,
+          Client: true,
+        }
+      })
     })
+
 
 });
 

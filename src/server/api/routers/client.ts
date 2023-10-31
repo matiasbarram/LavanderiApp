@@ -18,7 +18,7 @@ export const clientRouter = createTRPCRouter({
                 },
             });
         }),
-    get: publicProcedure.input(z.object({ id: z.string() }))
+    getById: publicProcedure.input(z.object({ id: z.string() }))
         .query(async ({ ctx, input }) => {
             return ctx.db.client.findUnique({
                 where: {
@@ -26,6 +26,17 @@ export const clientRouter = createTRPCRouter({
                 },
             });
         }),
+
+    getByName: publicProcedure.input(z.object({ fname: z.string(), lname: z.string() }))
+        .query(async ({ ctx, input }) => {
+            return ctx.db.client.findMany({
+                where: {
+                    fname: input.fname,
+                    lname: input.lname,
+                },
+            });
+        }),
+
     getByEmail: publicProcedure.input(z.object({ email: z.string() }))
         .query(async ({ ctx, input }) => {
             return ctx.db.client.findUnique({

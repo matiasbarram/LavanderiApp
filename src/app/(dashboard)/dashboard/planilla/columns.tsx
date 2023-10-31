@@ -1,6 +1,7 @@
 "use client"
 
 import DateBadge from "@/components/Badge/DateBadge"
+import UserInfoCard from "@/components/HoverCard/userInfoCard"
 import ActionsColum from "@/components/Table/actions"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -41,6 +42,10 @@ export const columns: ColumnDef<sheetCols>[] = [
                 </Button>
             )
         },
+        cell: ({ row }) => {
+            const name: string = row.getValue('name')
+            return <UserInfoCard name={name} />
+        },
     },
     {
         accessorKey: 'dates',
@@ -59,9 +64,8 @@ export const columns: ColumnDef<sheetCols>[] = [
     },
     {
         accessorKey: 'status',
-        header: 'Estado',
+        header: 'Estado de pago',
         cell: ({ row }) => {
-            // status: 'paid' | 'pending' | 'unpaid'
             const status = row.getValue('status')
             const statusData: statusData = status === 'paid' ? { title: 'Pagado', variant: 'default' } : status === 'pending' ? { title: 'Pendiente', variant: 'secondary' } : { title: 'No pagado', variant: 'destructive' }
             return <Badge variant={statusData.variant}>{statusData.title}</Badge>
@@ -142,8 +146,9 @@ export const columns: ColumnDef<sheetCols>[] = [
         id: 'actions',
         header: 'Acciones',
         cell: ({ row }) => {
+            const currentRow = row.original
             return (
-                <ActionsColum />
+                <ActionsColum row={currentRow} />
             )
         }
     }

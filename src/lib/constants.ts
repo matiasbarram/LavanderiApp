@@ -1,8 +1,11 @@
 import { type ClientData, type paymentMethods as IPaymentMethods, type SelectorOption } from "./types"
 
 export const APPNAME = "Lavandería"
-
 export const PENDING_STATUS = "pending"
+export const PICK_A_DATE = "Selecciona una fecha"
+export const DATE_FORMAT = "dd LLL y"
+export const URL_DATE_FORMAT = "yyyy-MM-dd"
+export const URL_SPLITTER = "/"
 
 export const invoiceOptions: SelectorOption[] = [
     { label: "Boleta", value: "bill" },

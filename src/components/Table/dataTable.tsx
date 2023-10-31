@@ -1,28 +1,33 @@
 "use client"
 
-import { useState } from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
-    type ColumnDef,
-    flexRender,
-    type SortingState,
-    getCoreRowModel,
-    getSortedRowModel,
-    useReactTable,
-    type ColumnFiltersState,
-    getFilteredRowModel,
-    type VisibilityState,
-} from "@tanstack/react-table"
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    useReactTable,
+    type ColumnDef,
+    type ColumnFiltersState,
+    type SortingState,
+    type VisibilityState,
+} from "@tanstack/react-table";
+import { useEffect, useRef, useState } from "react";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { type SheetRow } from "@/lib/types";
+import { getDatesFromRange, transformRowsToSheetCols } from "@/lib/utils";
+import { api } from "@/trpc/react";
 import { MoreHorizontal } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import SavingToast from "../Alert/saving";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -38,9 +43,36 @@ export default function Datatable<TData, TValue>({
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+    const [tableData, setTableData] = useState<TData[]>(data)
+    const params = useSearchParams()
+    const utils = api.useUtils();
+
+    const { isLoading, mutate: updateSheets } = api.sheets.updateRows.useMutation({
+        onSuccess: (data) => {
+            const newRows = transformRowsToSheetCols(data as SheetRow[]) as TData[]
+            setTableData(newRows)
+        },
+        onError: (error) => {
+            console.log(error)
+        }
+    })
+
+    const prevParams = useRef(params.toString());
+    useEffect(() => {
+        if (params.toString() !== prevParams.current) {
+            const range = params.get("range");
+            if (range) {
+                const dates = getDatesFromRange(range);
+                updateSheets({
+                    ...dates,
+                });
+            }
+            prevParams.current = params.toString();
+        }
+    }, [params, updateSheets]);
 
     const table = useReactTable({
-        data,
+        data: tableData,
         columns,
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
@@ -55,9 +87,9 @@ export default function Datatable<TData, TValue>({
         },
     })
 
-
     return (
         <>
+            <SavingToast saving={isLoading} title="Actualizando..." />
 
             <div className="flex items-center py-4">
                 <Input

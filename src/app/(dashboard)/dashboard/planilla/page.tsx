@@ -1,47 +1,32 @@
-import AddPlanilla from "@/components/Modal/addSheetModal";
+import { DatePickerWithRange } from "@/components/DatePicker/DatePicker";
 import NavIcon from "@/components/Navigation/NavIcon";
+import SheetInfo from "@/components/Sections/Plantilla/SheetInfo";
 import Datatable from "@/components/Table/dataTable";
-import { Button } from "@/components/ui/button";
-import { type sheetCols } from "@/lib/types";
+import { type SheetRow } from "@/lib/types";
+import { transformRowsToSheetCols } from "@/lib/utils";
 import { api } from "@/trpc/server";
-import { type Client, type OrderDetail, type OrderPayment } from "@prisma/client";
 import { columns } from "./columns";
 
-interface row {
-    Client: Client,
-    OrderData: OrderDetail,
-    OrderPayment: OrderPayment
-}
 
 export default async function PlanillaPage() {
 
-    const rows = await api.sheets.rows.query() as row[]
+    const today = new Date();
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    let dateInWords = new Intl.DateTimeFormat('es-CL', { year: 'numeric', month: 'long' }).format(today)
+    dateInWords = dateInWords.charAt(0).toUpperCase() + dateInWords.slice(1)
 
-    const initialData: sheetCols[] = rows.map((row: row) => {
-        const name: string = row.Client.fname + " " + row.Client.lname
-        return {
-            name: name,
-            dates: { from: row.OrderData.checkin, to: row.OrderData.checkout },
-            delivery: row.OrderPayment.shippingCost,
-            payment: row.OrderPayment.paymentDate,
-            paymentTotal: row.OrderPayment.amount,
-            paymentMethod: row.OrderPayment.paymentMethod,
-            status: row.OrderPayment.status,
-            invoice: row.OrderPayment.paymentType,
-            nInvoice: row.OrderPayment.invoiceNumber,
-            washingDry: row.OrderData.external
-        }
-    })
+
+    const rows = await api.sheets.rowsByDateRange.query({ from: firstDay, to: lastDay }) as SheetRow[]
+
+    const initialData = transformRowsToSheetCols(rows)
 
     return (
         <>
             <div className="mb-4 flex justify-between items-center">
-                <div className="flex items-center gap-4">
-                    <h1 className="text-2xl font-semibold">Planilla Octubre 2023</h1>
-                    <AddPlanilla btnTitle="Agregar" />
-                    <Button variant="secondary" size="sm">Exportar</Button>
-                </div>
+                <SheetInfo month={dateInWords} />
                 <div className="flex items-center gap-2">
+                    <DatePickerWithRange from={firstDay} to={lastDay} />
                     <NavIcon direction="left" />
                     <NavIcon direction="right" />
                 </div>
