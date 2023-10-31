@@ -1,11 +1,10 @@
 import { DatePickerWithRange } from "@/components/DatePicker/DatePicker";
+import ClientDataTable from "@/components/Sections/Plantilla/ClientTable";
 import SheetInfo from "@/components/Sections/Plantilla/SheetInfo";
-import Datatable from "@/components/Table/dataTable";
 import { URL_SPLITTER } from "@/lib/constants";
 import { type SheetRow } from "@/lib/types";
 import { firstAndLastDayOfMonth, rangeUrlFormat, toLocaleDate, transformRowsToSheetCols } from "@/lib/utils";
 import { api } from "@/trpc/server";
-import { columns } from "./columns";
 
 
 export default async function PlanillaPage({ searchParams }: { searchParams: { range: string } }) {
@@ -44,9 +43,8 @@ export default async function PlanillaPage({ searchParams }: { searchParams: { r
                     <DatePickerWithRange from={firstDay} to={lastDay} />
                 </div>
             </div>
-            <div className="w-full overflow-x-auto whitespace-nowrap">
-                <Datatable data={initialData} columns={columns} />
-            </div>
+            <ClientDataTable data={initialData} />
+
         </>
     )
 }

@@ -18,69 +18,33 @@ import {
     type SortingState,
     type VisibilityState,
 } from "@tanstack/react-table";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { type SheetRow } from "@/lib/types";
-import { firstAndLastDayOfMonth, getDatesFromRange, transformRowsToSheetCols } from "@/lib/utils";
-import { api } from "@/trpc/react";
 import { MoreHorizontal } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import SavingToast from "../Alert/saving";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    isLoading?: boolean
 }
 
 
 export default function Datatable<TData, TValue>({
     columns,
     data,
+    isLoading = false,
 }: DataTableProps<TData, TValue>) {
 
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-    const [tableData, setTableData] = useState<TData[]>(data)
-    const params = useSearchParams()
-    const utils = api.useUtils();
-
-    const { isLoading, mutate: updateSheets } = api.sheets.updateRows.useMutation({
-        onSuccess: (data) => {
-            const newRows = transformRowsToSheetCols(data as SheetRow[]) as TData[]
-            setTableData(newRows)
-        },
-        onError: (error) => {
-            console.log(error)
-        }
-    })
-
-    const prevParams = useRef(params.toString());
-    useEffect(() => {
-        if (params.toString() !== prevParams.current) {
-            const range = params.get("range");
-            if (range !== null) {
-                const dates = getDatesFromRange(range);
-                updateSheets({
-                    ...dates,
-                });
-            } else if (prevParams.current !== null) {
-                const currentDate = new Date();
-                const { firstDay, lastDay } = firstAndLastDayOfMonth(currentDate);
-                updateSheets({
-                    from: firstDay,
-                    to: lastDay,
-                });
-            }
-            prevParams.current = params.toString();
-        }
-    }, [params, updateSheets]);
 
 
     const table = useReactTable({
-        data: tableData,
+        data: data,
         columns,
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
