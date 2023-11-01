@@ -46,8 +46,8 @@ export default function EditSheetRow({ isEditDialogOpen, setIsEditDialogOpen, ro
             total: row.paymentTotal ? toMoney(row.paymentTotal) : "",
             paymentDate: row.payment,
             invoice: row.invoice,
+            ticket: row.ticket
             // paymentMethod
-            // ticket
             // secoDetails
             // paymentDetails
 

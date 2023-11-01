@@ -13,7 +13,8 @@ export type sheetCols = {
     status: string,
     invoice: string | null,
     nInvoice: string | null,
-    washingDry: boolean
+    washingDry: boolean,
+    ticket: string
 }
 
 

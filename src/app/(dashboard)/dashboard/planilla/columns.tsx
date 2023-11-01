@@ -85,6 +85,10 @@ export const columns: ColumnDef<sheetCols>[] = [
         },
     },
     {
+        accessorKey: "ticket",
+        header: "Ticket",
+    },
+    {
         accessorKey: 'delivery',
         header: 'Costo de envío',
         cell: ({ row }) => {

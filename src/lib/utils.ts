@@ -86,6 +86,10 @@ export function transformRowToSheetCols(row: SheetRow) {
     invoice: row.OrderPayment.paymentType,
     nInvoice: row.OrderPayment.invoiceNumber,
     washingDry: row.OrderData.external,
+    ticket: row.OrderData.ticket,
+    secoDetails: row.OrderData.externalDetails,
+    paymentDetails: row.OrderPayment.paymentDetails,
+
   };
 }
 

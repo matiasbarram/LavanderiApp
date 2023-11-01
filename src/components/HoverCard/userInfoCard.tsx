@@ -23,10 +23,7 @@ export default function UserInfoCard({ name }: { name: string }) {
                 lname
             })
         }
-
     }, [getUsers, fname, lname, open, data])
-
-
 
     return (
         <HoverCard open={open} onOpenChange={setOpen}>
