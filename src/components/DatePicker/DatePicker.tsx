@@ -15,7 +15,7 @@ import {
 import { DATE_FORMAT, PICK_A_DATE, URL_DATE_FORMAT, URL_SPLITTER } from "@/lib/constants"
 import { cn, firstAndLastDayOfMonth } from "@/lib/utils"
 import { es } from "date-fns/locale"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import CustomTooltip from "../Tooltip/tooltip"
 
 interface DatePickerWithRangeProps {
@@ -30,9 +30,12 @@ export function DatePickerWithRange({
     to,
 }: DatePickerWithRangeProps) {
 
+    const params = useSearchParams()
+    const range = params.get("range") ? true : false
+
     const [date, setDate] = React.useState<DateRange | undefined>({ from, to })
     const [isOpen, setIsOpen] = React.useState<boolean>(false)
-    const [showToday, setShowToday] = React.useState<boolean>(false)
+    const [showToday, setShowToday] = React.useState<boolean>(range)
     const router = useRouter()
     const pathname = usePathname()
 

@@ -55,7 +55,7 @@ export const columns: ColumnDef<sheetCols>[] = [
     {
         accessorKey: 'status',
         header: 'Estado de pago',
-        filterFn: (row, id, value) => {
+        filterFn: (row, id, value: unknown[]) => {
             return value.includes(row.getValue(id))
         },
         cell: ({ row }) => {
@@ -121,7 +121,7 @@ export const columns: ColumnDef<sheetCols>[] = [
     {
         accessorKey: 'paymentMethod',
         header: 'Forma de pago',
-        filterFn: (row, id, value) => {
+        filterFn: (row, id, value: unknown[]) => {
             return value.includes(row.getValue(id))
         },
         cell: ({ row }) => {
@@ -143,7 +143,7 @@ export const columns: ColumnDef<sheetCols>[] = [
     {
         accessorKey: 'invoice',
         header: 'Tipo de comprobante',
-        filterFn: (row, id, value) => {
+        filterFn: (row, id, value: unknown[]) => {
             return value.includes(row.getValue(id))
         },
         cell: ({ row }) => {
