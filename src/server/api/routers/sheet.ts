@@ -88,9 +88,23 @@ export const sheetRouter = createTRPCRouter({
           Client: true,
         }
       })
-    })
+    }),
 
-
+  userInfo: publicProcedure
+    .input(
+      z.object({
+        fname: z.string(),
+        lname: z.string()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.client.findMany({
+        where: {
+          fname: input.fname,
+          lname: input.lname,
+        },
+      })
+    }),
 });
 
 
