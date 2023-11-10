@@ -1,15 +1,27 @@
-"use client"
+'use client'
 
-import DateBadge from "@/components/Badge/DateBadge"
-import UserInfoCard from "@/components/HoverCard/userInfoCard"
-import ActionsColum from "@/components/Table/actions"
-import { DataTableColumnHeader } from "@/components/Table/dataTableColumnHeader"
-import { Badge } from "@/components/ui/badge"
-import { NEGATIVE_BOOLEAN, PAID_LABEL, PAID_VALUE, PENDING_LABEL, PENDING_VALUE, POSITIVE_BOOLEAN, invoiceOptions } from "@/lib/constants"
-import { type SelectorOption, type paymentMethods, type sheetCols } from "@/lib/types"
-import { toLocaleDate, toMoney } from "@/lib/utils"
-import { type ColumnDef } from "@tanstack/react-table"
-import { ArrowDownLeft, ArrowUpRight } from "lucide-react"
+import DateBadge from '@/components/Badge/DateBadge'
+import UserInfoCard from '@/components/HoverCard/userInfoCard'
+import ActionsColum from '@/components/Table/actions'
+import { DataTableColumnHeader } from '@/components/Table/dataTableColumnHeader'
+import { Badge } from '@/components/ui/badge'
+import {
+    NEGATIVE_BOOLEAN,
+    PAID_LABEL,
+    PAID_VALUE,
+    PENDING_LABEL,
+    PENDING_VALUE,
+    POSITIVE_BOOLEAN,
+    invoiceOptions,
+} from '@/lib/constants'
+import {
+    type SelectorOption,
+    type paymentMethods,
+    type sheetCols,
+} from '@/lib/types'
+import { toLocaleDate, toMoney } from '@/lib/utils'
+import { type ColumnDef } from '@tanstack/react-table'
+import { ArrowDownLeft, ArrowUpRight } from 'lucide-react'
 
 type invoiceVariant = 'default' | 'outline'
 interface invoiceData {
@@ -24,13 +36,11 @@ type dateRange = {
     to: Date
 }
 
-
 export const columns: ColumnDef<sheetCols>[] = [
     {
         accessorKey: 'name',
         header: ({ column }) => {
             return <DataTableColumnHeader column={column} title="Nombre" />
-
         },
         cell: ({ row }) => {
             const name: string = row.getValue('name')
@@ -50,7 +60,7 @@ export const columns: ColumnDef<sheetCols>[] = [
                     <DateBadge date={to} Icon={ArrowUpRight} />
                 </div>
             )
-        }
+        },
     },
     {
         accessorKey: 'status',
@@ -59,34 +69,32 @@ export const columns: ColumnDef<sheetCols>[] = [
             return value.includes(row.getValue(id))
         },
         cell: ({ row }) => {
-            const status = row.getValue('status');
-            const statusData: { title: string, variant: statusVariant | null }
-                = { title: '', variant: null };
+            const status = row.getValue('status')
+            const statusData: { title: string; variant: statusVariant | null } =
+                { title: '', variant: null }
 
             switch (status) {
                 case PAID_VALUE:
-                    statusData.title = PAID_LABEL;
-                    statusData.variant = 'default';
-                    break;
+                    statusData.title = PAID_LABEL
+                    statusData.variant = 'default'
+                    break
                 case PENDING_VALUE:
-                    statusData.title = PENDING_LABEL;
-                    statusData.variant = 'secondary';
-                    break;
+                    statusData.title = PENDING_LABEL
+                    statusData.variant = 'secondary'
+                    break
                 default:
-                    statusData.title = 'No pagado';
-                    statusData.variant = 'destructive';
-                    break;
+                    statusData.title = 'No pagado'
+                    statusData.variant = 'destructive'
+                    break
             }
             return (
-                <Badge variant={statusData.variant}>
-                    {statusData.title}
-                </Badge>
+                <Badge variant={statusData.variant}>{statusData.title}</Badge>
             )
         },
     },
     {
-        accessorKey: "ticket",
-        header: "Ticket",
+        accessorKey: 'ticket',
+        header: 'Ticket',
     },
     {
         accessorKey: 'delivery',
@@ -95,12 +103,14 @@ export const columns: ColumnDef<sheetCols>[] = [
             const amount = parseFloat(row.getValue('delivery'))
             const formatted = toMoney(amount)
             return formatted
-        }
+        },
     },
     {
         accessorKey: 'payment',
         header: ({ column }) => {
-            return <DataTableColumnHeader column={column} title="Fecha de pago" />
+            return (
+                <DataTableColumnHeader column={column} title="Fecha de pago" />
+            )
         },
         cell: ({ row }) => {
             const date: string = row.getValue('payment')
@@ -110,7 +120,6 @@ export const columns: ColumnDef<sheetCols>[] = [
         },
     },
     {
-
         accessorKey: 'paymentTotal',
         header: ({ column }) => {
             return <DataTableColumnHeader column={column} title="Total" />
@@ -159,7 +168,7 @@ export const columns: ColumnDef<sheetCols>[] = [
                 }
             })
             return option?.label
-        }
+        },
     },
     {
         accessorKey: 'nInvoice',
@@ -179,23 +188,18 @@ export const columns: ColumnDef<sheetCols>[] = [
                 }
             })
             return findValue.includes(currentRow)
-
-
         },
         cell: ({ row }) => {
             const seco: boolean = row.getValue('washingDry')
             return seco ? 'Si' : 'No'
-
-        }
+        },
     },
     {
         id: 'actions',
         header: 'Acciones',
         cell: ({ row }) => {
             const currentRow = row.original
-            return (
-                <ActionsColum row={currentRow} />
-            )
-        }
-    }
+            return <ActionsColum row={currentRow} />
+        },
+    },
 ]

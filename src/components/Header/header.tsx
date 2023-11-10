@@ -1,12 +1,11 @@
-"use client"
+'use client'
 
-import AvatarMenu from "../Avatar/avatarMenu"
+import AvatarMenu from '../Avatar/avatarMenu'
 
 export default function Header() {
     return (
-        <header className="container mx-auto w-full h-12 flex items-center justify-between px-4 pt-4 mb-8">
-            <div>
-            </div>
+        <header className="container mx-auto mb-8 flex h-12 w-full items-center justify-between px-4 pt-4">
+            <div></div>
             <AvatarMenu />
         </header>
     )

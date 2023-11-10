@@ -1,51 +1,63 @@
-import { cleanRut, validateRut } from "rutlib";
-import { z } from "zod";
-import { cleanNums } from "./utils";
+import { cleanRut, validateRut } from 'rutlib'
+import { z } from 'zod'
+import { cleanNums } from './utils'
 
 export const sheetSchema = z.object({
-    clientName: z.string({ required_error: "Debe ingresar el nombre del cliente." }).min(2, {
-        message: "Debe ingresar el nombre del cliente.",
-    }),
+    clientName: z
+        .string({ required_error: 'Debe ingresar el nombre del cliente.' })
+        .min(2, {
+            message: 'Debe ingresar el nombre del cliente.',
+        }),
 
     checkin: z.date({
-        required_error: "Seleccione la fecha de recepcion.",
+        required_error: 'Seleccione la fecha de recepcion.',
     }),
 
-    checkout: z.date({
-        required_error: "Seleccione la fecha de entrega.",
-    }).optional(),
+    checkout: z
+        .date({
+            required_error: 'Seleccione la fecha de entrega.',
+        })
+        .optional(),
 
-    deliveryCost: z.string({ required_error: "Debe ingresar el costo de envío." }).refine((value) => {
-        const num = cleanNums(value)
-        return !isNaN(num) && num >= 0
-    }, "Debe ingresar un número válido")
+    deliveryCost: z
+        .string({ required_error: 'Debe ingresar el costo de envío.' })
+        .refine((value) => {
+            const num = cleanNums(value)
+            return !isNaN(num) && num >= 0
+        }, 'Debe ingresar un número válido')
         .transform((value) => {
             return cleanNums(value).toString()
         }),
 
     paymentDate: z.date().optional(),
 
-    total: z.string({ required_error: "Debe ingresar el total." }).refine((value) => {
-        const num = cleanNums(value)
-        return !isNaN(num) && num >= 0
-    }, "Debe ingresar un número válido")
+    total: z
+        .string({ required_error: 'Debe ingresar el total.' })
+        .refine((value) => {
+            const num = cleanNums(value)
+            return !isNaN(num) && num >= 0
+        }, 'Debe ingresar un número válido')
         .transform((value) => {
             return cleanNums(value).toString()
         }),
 
     seco: z.boolean(),
 
-    paymentMethod: z.string({
-        required_error: "Debe seleccionar el método de pago.",
-    }).optional(),
+    paymentMethod: z
+        .string({
+            required_error: 'Debe seleccionar el método de pago.',
+        })
+        .optional(),
 
     status: z.string({
-        required_error: "Debe seleccionar el estado del pedido.",
+        required_error: 'Debe seleccionar el estado del pedido.',
     }),
 
-    invoice: z.string({
-        required_error: "Debe seleccionar el tipo de facturación.",
-    }).optional(),
+    invoice: z
+        .string({
+            required_error: 'Debe seleccionar el tipo de facturación.',
+        })
+        .optional(),
 
     voucher: z.string().optional(),
 
@@ -58,47 +70,53 @@ export const sheetSchema = z.object({
     paymentDetails: z.string().optional(),
 })
 
-
 export const clientSchema = z.object({
     firstname: z.string().min(2, {
-        message: "Debe ingresar el nombre del cliente.",
+        message: 'Debe ingresar el nombre del cliente.',
     }),
 
     lastname: z.string().min(2, {
-        message: "Debe ingresar el apellido del cliente.",
+        message: 'Debe ingresar el apellido del cliente.',
     }),
 
-    rut: z.string().min(2, {
-        message: "Debe ingresar el rut del cliente.",
-    }).refine((value) => {
-        const isValid = validateRut(value)
-        return !isValid ? false : true
-    }, "Debe ingresar un rut válido")
+    rut: z
+        .string()
+        .min(2, {
+            message: 'Debe ingresar el rut del cliente.',
+        })
+        .refine((value) => {
+            const isValid = validateRut(value)
+            return !isValid ? false : true
+        }, 'Debe ingresar un rut válido')
         .transform((value) => {
             return cleanRut(value)
         }),
 
-    phone: z.string()
+    phone: z
+        .string()
         .min(2, {
-            message: "Debe ingresar el teléfono del cliente.",
+            message: 'Debe ingresar el teléfono del cliente.',
         })
         .refine((value) => {
             const num = cleanNums(value)
             return !isNaN(num) && num >= 0
-        }, "Debe ingresar un número válido")
+        }, 'Debe ingresar un número válido')
         .transform((value) => {
             return cleanNums(value).toString()
         }),
 
     address: z.string().min(2, {
-        message: "Debe ingresar la dirección del cliente.",
+        message: 'Debe ingresar la dirección del cliente.',
     }),
 
-    email: z.string().min(2, {
-        message: "Debe ingresar el email del cliente.",
-    }).email({
-        message: "Debe ingresar un email válido.",
-    }),
+    email: z
+        .string()
+        .min(2, {
+            message: 'Debe ingresar el email del cliente.',
+        })
+        .email({
+            message: 'Debe ingresar un email válido.',
+        }),
 
     description: z.string().optional(),
 })

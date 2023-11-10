@@ -1,6 +1,13 @@
-"use client"
+'use client'
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table'
 import {
     flexRender,
     getCoreRowModel,
@@ -11,12 +18,12 @@ import {
     type ColumnFiltersState,
     type SortingState,
     type VisibilityState,
-} from "@tanstack/react-table";
-import { useState } from "react";
+} from '@tanstack/react-table'
+import { useState } from 'react'
 
-import { NONE_RESULTS } from "@/lib/constants";
-import SavingToast from "../Alert/saving";
-import { DataTableToolbar } from "./dataTableToolbar";
+import { NONE_RESULTS } from '@/lib/constants'
+import SavingToast from '../Alert/saving'
+import { DataTableToolbar } from './dataTableToolbar'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -24,17 +31,16 @@ interface DataTableProps<TData, TValue> {
     isLoading?: boolean
 }
 
-
 export default function Datatable<TData, TValue>({
     columns,
     data,
     isLoading = false,
 }: DataTableProps<TData, TValue>) {
-
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+        {}
+    )
 
     const table = useReactTable({
         data: data,
@@ -58,7 +64,6 @@ export default function Datatable<TData, TValue>({
 
             <div className="flex items-center py-4">
                 <DataTableToolbar table={table} />
-
             </div>
             <div className="rounded-md border">
                 <Table>
@@ -71,9 +76,10 @@ export default function Datatable<TData, TValue>({
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
+                                                      header.column.columnDef
+                                                          .header,
+                                                      header.getContext()
+                                                  )}
                                         </TableHead>
                                     )
                                 })}
@@ -85,18 +91,26 @@ export default function Datatable<TData, TValue>({
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
+                                    data-state={
+                                        row.getIsSelected() && 'selected'
+                                    }
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
                                         </TableCell>
                                     ))}
                                 </TableRow>
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="h-24 text-center"
+                                >
                                     {NONE_RESULTS}
                                 </TableCell>
                             </TableRow>

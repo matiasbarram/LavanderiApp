@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { type clientsCols } from "@/lib/types";
-import { toRut } from "@/lib/utils";
-import { type ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { Button } from '@/components/ui/button'
+import { type clientsCols } from '@/lib/types'
+import { toRut } from '@/lib/utils'
+import { type ColumnDef } from '@tanstack/react-table'
+import { MoreHorizontal } from 'lucide-react'
 
 export const columns: ColumnDef<clientsCols>[] = [
     {
@@ -15,8 +15,7 @@ export const columns: ColumnDef<clientsCols>[] = [
         cell: ({ row }) => {
             const rut: string = row.getValue('rut')
             return toRut(rut)
-
-        }
+        },
     },
     {
         accessorKey: 'phone',
@@ -37,7 +36,8 @@ export const columns: ColumnDef<clientsCols>[] = [
             return (
                 <Button variant="ghost">
                     <MoreHorizontal />
-                </Button>)
-        }
-    }
+                </Button>
+            )
+        },
+    },
 ]

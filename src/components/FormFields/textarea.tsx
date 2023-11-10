@@ -1,9 +1,21 @@
-import { type FieldProps } from "@/lib/types";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { Textarea } from "../ui/textarea";
+import { type FieldProps } from '@/lib/types'
+import {
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '../ui/form'
+import { Textarea } from '../ui/textarea'
 
-
-export default function TextAreaField({ control, fieldName, label, placeholder, description }: FieldProps) {
+export default function TextAreaField({
+    control,
+    fieldName,
+    label,
+    placeholder,
+    description,
+}: FieldProps) {
     return (
         <FormField
             control={control}
@@ -18,9 +30,7 @@ export default function TextAreaField({ control, fieldName, label, placeholder, 
                             className="resize-none"
                         />
                     </FormControl>
-                    <FormDescription>
-                        {description}
-                    </FormDescription>
+                    <FormDescription>{description}</FormDescription>
                     <FormMessage />
                 </FormItem>
             )}

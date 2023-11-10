@@ -1,10 +1,10 @@
-import Header from "@/components/Header/header";
-import { Aside } from "@/components/Header/asideMenu";
+import Header from '@/components/Header/header'
+import { Aside } from '@/components/Header/asideMenu'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     return (
         <>
-            <div className="flex mx-auto w-full">
+            <div className="mx-auto flex w-full">
                 <Aside />
                 <div className="flex-1">
                     <Header />

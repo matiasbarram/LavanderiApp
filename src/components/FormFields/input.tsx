@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import {
     FormControl,
@@ -7,15 +7,22 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
-import { type InputFieldProps } from "@/lib/types"
-import { toMoney } from "@/lib/utils"
-import { type ChangeEvent } from "react"
+} from '@/components/ui/form'
+import { type InputFieldProps } from '@/lib/types'
+import { toMoney } from '@/lib/utils'
+import { type ChangeEvent } from 'react'
 import { formatRut } from 'rutlib'
-import { Input } from "../ui/input"
+import { Input } from '../ui/input'
 
-
-export default function InputField({ control, fieldName, label, placeholder, description, formatAs, readonly }: InputFieldProps) {
+export default function InputField({
+    control,
+    fieldName,
+    label,
+    placeholder,
+    description,
+    formatAs,
+    readonly,
+}: InputFieldProps) {
     const fieldPlaceholder = placeholder ? placeholder : label
     return (
         <FormField
@@ -33,20 +40,23 @@ export default function InputField({ control, fieldName, label, placeholder, des
                             onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                 const currentValue: string = e.target.value
                                 switch (formatAs) {
-                                    case ("currency"):
-                                        if (currentValue === "$") field.onChange("")
+                                    case 'currency':
+                                        if (currentValue === '$')
+                                            field.onChange('')
                                         else {
-                                            const formattedValue = toMoney(currentValue)
+                                            const formattedValue =
+                                                toMoney(currentValue)
                                             field.onChange(formattedValue)
                                         }
-                                        break;
-                                    case ("rut"):
-                                        const formattedValue = formatRut(currentValue)
+                                        break
+                                    case 'rut':
+                                        const formattedValue =
+                                            formatRut(currentValue)
                                         field.onChange(formattedValue)
-                                        break;
+                                        break
                                     default:
                                         field.onChange(currentValue)
-                                        break;
+                                        break
                                 }
                             }}
                         />

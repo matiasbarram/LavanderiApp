@@ -5,7 +5,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
+} from '@/components/ui/form'
 
 import {
     Command,
@@ -13,23 +13,32 @@ import {
     CommandGroup,
     CommandInput,
     CommandItem,
-} from "@/components/ui/command"
+} from '@/components/ui/command'
 
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"
-import { NONE_RESULTS } from "@/lib/constants"
-import { type SelectFieldProps } from "@/lib/types"
-import { cn } from "@/lib/utils"
-import { Check, ChevronsUpDown } from "lucide-react"
-import { useState } from "react"
-import { Button } from "../ui/button"
+} from '@/components/ui/popover'
+import { NONE_RESULTS } from '@/lib/constants'
+import { type SelectFieldProps } from '@/lib/types'
+import { cn } from '@/lib/utils'
+import { Check, ChevronsUpDown } from 'lucide-react'
+import { useState } from 'react'
+import { Button } from '../ui/button'
 
-
-export default function SelectorField<T>({ formSetValue, control, options, fieldName, label, placeholder, description, setValue, search }: SelectFieldProps<T>) {
-    const [isOpen, setIsOpen] = useState(false);
+export default function SelectorField<T>({
+    formSetValue,
+    control,
+    options,
+    fieldName,
+    label,
+    placeholder,
+    description,
+    setValue,
+    search,
+}: SelectFieldProps<T>) {
+    const [isOpen, setIsOpen] = useState(false)
 
     return (
         <FormField
@@ -45,15 +54,17 @@ export default function SelectorField<T>({ formSetValue, control, options, field
                                     variant="outline"
                                     role="combobox"
                                     className={cn(
-                                        "w-[240px] justify-between",
-                                        !field.value && "text-muted-foreground"
+                                        'w-[240px] justify-between',
+                                        !field.value && 'text-muted-foreground'
                                     )}
                                 >
                                     {field.value
                                         ? options.find(
-                                            (option) => option.value === field.value
-                                        )?.label
-                                        : placeholder ?? "Seleccione una opción"}
+                                              (option) =>
+                                                  option.value === field.value
+                                          )?.label
+                                        : placeholder ??
+                                          'Seleccione una opción'}
 
                                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                 </Button>
@@ -61,7 +72,9 @@ export default function SelectorField<T>({ formSetValue, control, options, field
                         </PopoverTrigger>
                         <PopoverContent className="w-[240px] p-0">
                             <Command>
-                                {search && <CommandInput placeholder={placeholder} />}
+                                {search && (
+                                    <CommandInput placeholder={placeholder} />
+                                )}
                                 <CommandEmpty>{NONE_RESULTS}</CommandEmpty>
                                 <CommandGroup>
                                     {options.map((option) => (
@@ -70,7 +83,10 @@ export default function SelectorField<T>({ formSetValue, control, options, field
                                             key={option.value}
                                             onSelect={() => {
                                                 if (formSetValue) {
-                                                    formSetValue(fieldName, option.value as T)
+                                                    formSetValue(
+                                                        fieldName,
+                                                        option.value as T
+                                                    )
                                                 }
                                                 setValue?.(option.value as T)
                                                 setIsOpen(false)
@@ -78,10 +94,10 @@ export default function SelectorField<T>({ formSetValue, control, options, field
                                         >
                                             <Check
                                                 className={cn(
-                                                    "mr-2 h-4 w-4",
+                                                    'mr-2 h-4 w-4',
                                                     option.value === field.value
-                                                        ? "opacity-100"
-                                                        : "opacity-0"
+                                                        ? 'opacity-100'
+                                                        : 'opacity-0'
                                                 )}
                                             />
                                             {option.label}
@@ -91,11 +107,9 @@ export default function SelectorField<T>({ formSetValue, control, options, field
                             </Command>
                         </PopoverContent>
                     </Popover>
-                    <FormDescription>
-                        {description}
-                    </FormDescription>
+                    <FormDescription>{description}</FormDescription>
                     <FormMessage />
-                </ FormItem>
+                </FormItem>
             )}
         />
     )

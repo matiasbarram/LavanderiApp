@@ -3,15 +3,19 @@ import {
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from '@/components/ui/tooltip'
 
-export default function CustomTooltip({ children, msg }: { children: React.ReactNode, msg: string }) {
+export default function CustomTooltip({
+    children,
+    msg,
+}: {
+    children: React.ReactNode
+    msg: string
+}) {
     return (
-        <TooltipProvider delayDuration={400} >
+        <TooltipProvider delayDuration={400}>
             <Tooltip>
-                <TooltipTrigger asChild>
-                    {children}
-                </TooltipTrigger>
+                <TooltipTrigger asChild>{children}</TooltipTrigger>
                 <TooltipContent>
                     <p>{msg}</p>
                 </TooltipContent>

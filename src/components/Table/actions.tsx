@@ -1,13 +1,19 @@
-"use client"
+'use client'
 
-import { type sheetCols } from "@/lib/types";
-import { MoreHorizontal } from "lucide-react";
-import { useState } from "react";
-import DeleteSheetRow from "../Modal/Sheet/deleteSheet";
-import EditSheetRow from "../Modal/Sheet/editSheetRow";
-import { Button } from "../ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
-
+import { type sheetCols } from '@/lib/types'
+import { MoreHorizontal } from 'lucide-react'
+import { useState } from 'react'
+import DeleteSheetRow from '../Modal/Sheet/deleteSheet'
+import EditSheetRow from '../Modal/Sheet/editSheetRow'
+import { Button } from '../ui/button'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '../ui/dropdown-menu'
 
 export default function ActionsColum({ row }: { row: sheetCols }) {
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
@@ -17,7 +23,7 @@ export default function ActionsColum({ row }: { row: sheetCols }) {
         <div>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" >
+                    <Button variant="ghost">
                         <MoreHorizontal className="h-5 w-5" />
                     </Button>
                 </DropdownMenuTrigger>
@@ -27,19 +33,25 @@ export default function ActionsColum({ row }: { row: sheetCols }) {
                     <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
                         Editar
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Ver detalles
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive" onClick={() => setIsDeleteDialogOpen(true)}>
+                    <DropdownMenuItem>Ver detalles</DropdownMenuItem>
+                    <DropdownMenuItem
+                        className="text-destructive"
+                        onClick={() => setIsDeleteDialogOpen(true)}
+                    >
                         Eliminar
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <DeleteSheetRow isEditDialogOpen={isDeleteDialogOpen} setIsEditDialogOpen={setIsDeleteDialogOpen} />
-            <EditSheetRow isEditDialogOpen={isEditDialogOpen} setIsEditDialogOpen={setIsEditDialogOpen} row={row} />
-
+            <DeleteSheetRow
+                isEditDialogOpen={isDeleteDialogOpen}
+                setIsEditDialogOpen={setIsDeleteDialogOpen}
+            />
+            <EditSheetRow
+                isEditDialogOpen={isEditDialogOpen}
+                setIsEditDialogOpen={setIsEditDialogOpen}
+                row={row}
+            />
         </div>
     )
 }
-

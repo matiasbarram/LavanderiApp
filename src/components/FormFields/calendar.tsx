@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import {
     Form,
@@ -8,26 +8,30 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
+} from '@/components/ui/form'
 
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"
+} from '@/components/ui/popover'
 
-import { Button } from "../ui/button"
-import { cn } from "@/lib/utils"
-import { CalendarIcon } from "lucide-react"
-import { Calendar } from "../ui/calendar"
-import { format } from "date-fns"
-import { useState } from "react"
-import { type FieldProps } from "@/lib/types"
-import es from "date-fns/locale/es"
+import { Button } from '../ui/button'
+import { cn } from '@/lib/utils'
+import { CalendarIcon } from 'lucide-react'
+import { Calendar } from '../ui/calendar'
+import { format } from 'date-fns'
+import { useState } from 'react'
+import { type FieldProps } from '@/lib/types'
+import es from 'date-fns/locale/es'
 
-
-export default function CalendarField({ control, fieldName, label, description }: FieldProps) {
-    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+export default function CalendarField({
+    control,
+    fieldName,
+    label,
+    description,
+}: FieldProps) {
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false)
 
     return (
         <FormField
@@ -36,18 +40,24 @@ export default function CalendarField({ control, fieldName, label, description }
             render={({ field }) => (
                 <FormItem className="flex flex-col">
                     <FormLabel>{label}</FormLabel>
-                    <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                    <Popover
+                        open={isCalendarOpen}
+                        onOpenChange={setIsCalendarOpen}
+                    >
                         <PopoverTrigger asChild>
                             <FormControl>
                                 <Button
-                                    variant={"outline"}
+                                    variant={'outline'}
                                     className={cn(
-                                        "w-[240px] pl-3 text-left font-normal",
-                                        !field.value && "text-muted-foreground"
+                                        'w-[240px] pl-3 text-left font-normal',
+                                        !field.value && 'text-muted-foreground'
                                     )}
                                 >
-                                    {field.value && field.value instanceof Date ? (
-                                        format(field.value, "PPP", { locale: es })
+                                    {field.value &&
+                                    field.value instanceof Date ? (
+                                        format(field.value, 'PPP', {
+                                            locale: es,
+                                        })
                                     ) : (
                                         <span>Seleccione una fecha</span>
                                     )}
@@ -59,8 +69,15 @@ export default function CalendarField({ control, fieldName, label, description }
                             <Calendar
                                 mode="single"
                                 locale={es}
-                                selected={field.value instanceof Date ? field.value : undefined}
-                                onSelect={(e) => { field.onChange(e); setIsCalendarOpen(false); }}
+                                selected={
+                                    field.value instanceof Date
+                                        ? field.value
+                                        : undefined
+                                }
+                                onSelect={(e) => {
+                                    field.onChange(e)
+                                    setIsCalendarOpen(false)
+                                }}
                                 // disabled={(date) =>
                                 //     date > new Date() || date < new Date("1900-01-01")
                                 // }
@@ -68,9 +85,7 @@ export default function CalendarField({ control, fieldName, label, description }
                             />
                         </PopoverContent>
                     </Popover>
-                    <FormDescription>
-                        {description}
-                    </FormDescription>
+                    <FormDescription>{description}</FormDescription>
                     <FormMessage />
                 </FormItem>
             )}
