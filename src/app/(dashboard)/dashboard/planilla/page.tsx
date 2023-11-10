@@ -3,7 +3,7 @@ import ClientDataTable from "@/components/Sections/Plantilla/ClientTable";
 import SheetInfo from "@/components/Sections/Plantilla/SheetInfo";
 import { URL_SPLITTER } from "@/lib/constants";
 import { type SheetRow } from "@/lib/types";
-import { firstAndLastDayOfMonth, rangeUrlFormat, toLocaleDate, transformRowsToSheetCols } from "@/lib/utils";
+import { last30Days, rangeUrlFormat, transformRowsToSheetCols } from "@/lib/utils";
 import { api } from "@/trpc/server";
 
 
@@ -13,7 +13,6 @@ export default async function PlanillaPage({ searchParams }: { searchParams: { r
     let lastDay: Date | null = null
 
     if (searchParams.range) {
-        console.log("Founded!!", searchParams.range)
         dateInWords = rangeUrlFormat({ range: searchParams.range, defaultMonth: "null" })
         const [from, to] = searchParams.range.split(URL_SPLITTER)
         if (!from || !to) {
@@ -23,11 +22,10 @@ export default async function PlanillaPage({ searchParams }: { searchParams: { r
         lastDay = new Date(to)
     }
     else {
-        const today = new Date();
-        dateInWords = toLocaleDate(today)
-        const { firstDay: fday, lastDay: lday } = firstAndLastDayOfMonth(today)
-        firstDay = fday
-        lastDay = lday
+        const { from, to, title } = last30Days()
+        firstDay = from
+        lastDay = to
+        dateInWords = title
     }
 
 

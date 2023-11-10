@@ -2,7 +2,7 @@
 
 import AddPlanilla from "@/components/Modal/Sheet/addSheetModal";
 import { Button } from "@/components/ui/button";
-import { rangeUrlFormat, toLocaleDate } from "@/lib/utils";
+import { last30Days, rangeUrlFormat } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -12,7 +12,6 @@ export default function SheetInfo({ month }: { month: string }) {
 
 
     const prevParams = useRef(params.toString());
-
     useEffect(() => {
         if (params.toString() !== prevParams.current) {
             const range = params.get('range')
@@ -20,8 +19,8 @@ export default function SheetInfo({ month }: { month: string }) {
                 setSearchMonth(rangeUrlFormat({ range, defaultMonth: month }))
             }
             else if (prevParams.current !== null && params.get("range") === null) {
-                const currentDate = new Date();
-                setSearchMonth(toLocaleDate(currentDate))
+                const { title } = last30Days()
+                setSearchMonth(title)
             }
             prevParams.current = params.toString();
         }

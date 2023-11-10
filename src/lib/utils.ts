@@ -2,13 +2,17 @@ import { type Client } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import { formatRut } from "rutlib";
 import { twMerge } from "tailwind-merge";
-import { URL_SPLITTER } from "./constants";
+import { LAST_30_DAYS, URL_SPLITTER } from "./constants";
 import { type SheetRow, type sheetCols } from "./types";
 
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+
+export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
+
 
 export const toClientList = (clients: Client[]) => {
   return clients.map((client) => {
@@ -21,6 +25,26 @@ export const toClientList = (clients: Client[]) => {
       address: client.address,
     }
   })
+}
+
+type action = "add" | "substract"
+interface modifyDatesProps {
+  date: Date
+  days: number
+  action: action
+}
+export const modifyDates = ({ date, days, action }: modifyDatesProps) => {
+  const newDate = new Date(date)
+  if (action === "add") newDate.setDate(newDate.getDate() + days)
+  if (action === "substract") newDate.setDate(newDate.getDate() - days)
+  return newDate
+}
+
+export const last30Days = () => {
+  const today = new Date();
+  const thirtyDaysAgo = modifyDates({ date: today, days: 30, action: "substract" })
+  const dateInWords = LAST_30_DAYS
+  return { from: thirtyDaysAgo, to: today, title: dateInWords }
 }
 
 export const toRut = (rut: string) => {

@@ -84,6 +84,8 @@ export type ClientData = {
 export type formSetValue = UseFormSetValue<FieldValues>;
 
 export interface FormFieldsProps {
+    number?: number;
+    className?: string;
     control: Control<FieldValues>;
     formSetValue?: formSetValue;
 }
@@ -101,4 +103,22 @@ export interface SheetRow {
 export interface PaymentOptions {
     label: string;
     value: paymentMethods
+}
+
+export interface ItemData {
+    name: string;
+    quantity: number;
+}
+
+export interface ItemsOptions {
+    show: boolean,
+    items: ItemData[]
+}
+
+
+export interface OrderItemsDetails {
+    wash: ItemsOptions;
+    iron: ItemsOptions;
+    washAndIron: ItemsOptions;
+    dry: ItemsOptions;
 }

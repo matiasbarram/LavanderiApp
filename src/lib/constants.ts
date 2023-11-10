@@ -6,6 +6,21 @@ export const PICK_A_DATE = "Selecciona una fecha"
 export const DATE_FORMAT = "dd LLL y"
 export const URL_DATE_FORMAT = "yyyy/MM/dd"
 export const URL_SPLITTER = "-"
+export const LAST_30_DAYS = "Últimos 30 días"
+
+
+export const detailQuantity = [
+    { name: '1', value: "1" },
+    { name: '2', value: "2" },
+    { name: '3', value: "3" },
+    { name: '4', value: "4" },
+    { name: '5', value: "5" },
+    { name: '6', value: "6" },
+    { name: '7', value: "7" },
+    { name: '8', value: "8" },
+    { name: '9', value: "9" },
+    { name: '10', value: "10" },
+] as const;
 
 export const months: Record<number, string> =
 {
@@ -44,8 +59,8 @@ export const CLEAR_FILTERS = "Limpiar filtros"
 export const RESET_FILTERS = "Reiniciar filtros"
 
 export const statusOptions: SelectorOption[] = [
-    { label: PAID_LABEL, value: PAID_VALUE },
     { label: PENDING_LABEL, value: PENDING_VALUE },
+    { label: PAID_LABEL, value: PAID_VALUE },
 ]
 
 

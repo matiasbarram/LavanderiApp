@@ -12,8 +12,8 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { DATE_FORMAT, PICK_A_DATE, URL_DATE_FORMAT, URL_SPLITTER } from "@/lib/constants"
-import { cn, firstAndLastDayOfMonth } from "@/lib/utils"
+import { DATE_FORMAT, LAST_30_DAYS, PICK_A_DATE, URL_DATE_FORMAT, URL_SPLITTER } from "@/lib/constants"
+import { cn, last30Days } from "@/lib/utils"
 import { es } from "date-fns/locale"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import CustomTooltip from "../Tooltip/tooltip"
@@ -44,21 +44,21 @@ export function DatePickerWithRange({
         const [from, to] = [e.from, e.to].map((date) => {
             return format(date, URL_DATE_FORMAT)
         })
-        router.push(pathname + `?range=${from}${URL_SPLITTER}${to}`)
+        const rangeParams = `?range=${from}${URL_SPLITTER}${to}`
+        router.replace(pathname + rangeParams, { scroll: false })
     }
 
     const setToday = () => {
         router.push(pathname)
-        const today = new Date()
-        const { firstDay, lastDay } = firstAndLastDayOfMonth(today)
-        setDate({ from: firstDay, to: lastDay })
+        const { from, to } = last30Days()
+        setDate({ from, to })
         setShowToday(false)
     }
 
     return (
         <div className="flex items-center gap-2">
             {showToday && (<Button variant={"outline"} onClick={() => setToday()}>
-                Mes actual completo
+                {LAST_30_DAYS}
             </Button>)}
             <div className={cn("grid gap-2", className)}>
                 <Popover open={isOpen} onOpenChange={setIsOpen}>
