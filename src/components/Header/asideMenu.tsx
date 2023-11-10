@@ -1,17 +1,17 @@
-'use client'
+"use client"
 
-import LeftMenuOption from './leftMenuOption'
-import HeaderLogo from './headerLogo'
-import { usePathname } from 'next/navigation'
-import AvatarMenu from '../Avatar/avatarMenu'
-import { HomeIcon, UsersIcon } from 'lucide-react'
+import LeftMenuOption from "./leftMenuOption"
+import HeaderLogo from "./headerLogo"
+import { usePathname } from "next/navigation"
+import AvatarMenu from "../Avatar/avatarMenu"
+import { HomeIcon, UsersIcon } from "lucide-react"
 
 export function Aside() {
     const pathname = usePathname()
 
     const menuOptions = [
-        { Icon: HomeIcon, text: 'Planilla', href: '/dashboard/planilla' },
-        { Icon: UsersIcon, text: 'Clientes', href: '/dashboard/clientes' },
+        { Icon: HomeIcon, text: "Planilla", href: "/dashboard/planilla" },
+        { Icon: UsersIcon, text: "Clientes", href: "/dashboard/clientes" },
     ]
 
     return (
@@ -33,8 +33,8 @@ export function Aside() {
                                     text={option.text}
                                     className={`${
                                         pathname === option.href
-                                            ? 'bg-secondary dark:bg-secondary'
-                                            : ''
+                                            ? "bg-secondary dark:bg-secondary"
+                                            : ""
                                     }`}
                                 />
                             ))}

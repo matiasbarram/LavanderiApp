@@ -1,25 +1,25 @@
-import SubmitAndCloseBtns from '@/components/Button/submitAndCloseModal'
-import OrderDetailsForm from '@/components/Sections/AddClientModal/orderDetails'
-import OrderPaymentForm from '@/components/Sections/AddClientModal/orderPayment'
+import SubmitAndCloseBtns from "@/components/Button/submitAndCloseModal"
+import OrderDetailsForm from "@/components/Sections/AddClientModal/orderDetails"
+import OrderPaymentForm from "@/components/Sections/AddClientModal/orderPayment"
 import {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle,
-} from '@/components/ui/dialog'
-import { Form } from '@/components/ui/form'
-import { PENDING_STATUS } from '@/lib/constants'
-import { sheetSchema } from '@/lib/schemas'
-import { type sheetCols } from '@/lib/types'
-import { toMoney } from '@/lib/utils'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { type FieldValues } from 'react-hook-form/dist/types'
-import CloseBtn from '../closeBtn'
+} from "@/components/ui/dialog"
+import { Form } from "@/components/ui/form"
+import { PENDING_STATUS } from "@/lib/constants"
+import { sheetSchema } from "@/lib/schemas"
+import { type sheetCols } from "@/lib/types"
+import { toMoney } from "@/lib/utils"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { type FieldValues } from "react-hook-form/dist/types"
+import CloseBtn from "../closeBtn"
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface EditSheetRowProps {
     isEditDialogOpen: boolean
@@ -42,15 +42,15 @@ export default function EditSheetRow({
         resolver: zodResolver(sheetSchema),
         defaultValues: {
             deliveryCost: row.delivery ? toMoney(row.delivery) : toMoney(0),
-            voucher: row.nInvoice ?? '',
-            status: row.status ?? '',
-            seco: row.washingDry ?? '',
+            voucher: row.nInvoice ?? "",
+            status: row.status ?? "",
+            seco: row.washingDry ?? "",
             checkin: row.dates.from,
             checkout: row.dates.to,
             paymentDate: row.payment,
-            invoice: row.invoice ?? '',
-            ticket: row.ticket ?? '',
-            total: row.paymentTotal ? toMoney(row.paymentTotal) : '',
+            invoice: row.invoice ?? "",
+            ticket: row.ticket ?? "",
+            total: row.paymentTotal ? toMoney(row.paymentTotal) : "",
             // paymentMethod
             // secoDetails
             // paymentDetails
@@ -69,7 +69,7 @@ export default function EditSheetRow({
     return (
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
             <DialogContent
-                className={'max-h-screen overflow-y-auto lg:max-w-screen-lg'}
+                className={"max-h-screen overflow-y-auto lg:max-w-screen-lg"}
             >
                 <DialogHeader>
                     <CloseBtn setOpen={setIsEditDialogOpen} open={false} />

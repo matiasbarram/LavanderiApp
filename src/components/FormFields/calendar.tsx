@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import {
     Form,
@@ -8,22 +8,22 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '@/components/ui/form'
+} from "@/components/ui/form"
 
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from '@/components/ui/popover'
+} from "@/components/ui/popover"
 
-import { Button } from '../ui/button'
-import { cn } from '@/lib/utils'
-import { CalendarIcon } from 'lucide-react'
-import { Calendar } from '../ui/calendar'
-import { format } from 'date-fns'
-import { useState } from 'react'
-import { type FieldProps } from '@/lib/types'
-import es from 'date-fns/locale/es'
+import { Button } from "../ui/button"
+import { cn } from "@/lib/utils"
+import { CalendarIcon } from "lucide-react"
+import { Calendar } from "../ui/calendar"
+import { format } from "date-fns"
+import { useState } from "react"
+import { type FieldProps } from "@/lib/types"
+import es from "date-fns/locale/es"
 
 export default function CalendarField({
     control,
@@ -47,15 +47,15 @@ export default function CalendarField({
                         <PopoverTrigger asChild>
                             <FormControl>
                                 <Button
-                                    variant={'outline'}
+                                    variant={"outline"}
                                     className={cn(
-                                        'w-[240px] pl-3 text-left font-normal',
-                                        !field.value && 'text-muted-foreground'
+                                        "w-[240px] pl-3 text-left font-normal",
+                                        !field.value && "text-muted-foreground"
                                     )}
                                 >
                                     {field.value &&
                                     field.value instanceof Date ? (
-                                        format(field.value, 'PPP', {
+                                        format(field.value, "PPP", {
                                             locale: es,
                                         })
                                     ) : (

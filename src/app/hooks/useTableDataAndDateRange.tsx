@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import { URL_DATE_FORMAT, URL_SPLITTER } from '@/lib/constants'
-import { getDatesFromRange, last30Days, rangeUrlFormat } from '@/lib/utils'
-import { format } from 'date-fns'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { URL_DATE_FORMAT, URL_SPLITTER } from "@/lib/constants"
+import { getDatesFromRange, last30Days, rangeUrlFormat } from "@/lib/utils"
+import { format } from "date-fns"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useRef, useState } from "react"
 
 interface DateRange {
     from: Date
@@ -17,7 +17,7 @@ interface UseDateRangeOptions {
 }
 
 function useDateRange({ updateSheets, month }: UseDateRangeOptions) {
-    const [searchMonth, setSearchMonth] = useState('')
+    const [searchMonth, setSearchMonth] = useState("")
     const params = useSearchParams()
     const prevParams = useRef(params.toString())
     const pathname = usePathname()
@@ -25,7 +25,7 @@ function useDateRange({ updateSheets, month }: UseDateRangeOptions) {
 
     useEffect(() => {
         if (params.toString() !== prevParams.current) {
-            const range = params.get('range')
+            const range = params.get("range")
             if (range !== null) {
                 setSearchMonth(rangeUrlFormat({ range, defaultMonth: month }))
                 const dates = getDatesFromRange(range)

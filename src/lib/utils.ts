@@ -1,9 +1,9 @@
-import { type Client } from '@prisma/client'
-import { clsx, type ClassValue } from 'clsx'
-import { formatRut } from 'rutlib'
-import { twMerge } from 'tailwind-merge'
-import { LAST_30_DAYS, URL_SPLITTER } from './constants'
-import { type SheetRow, type sheetCols } from './types'
+import { type Client } from "@prisma/client"
+import { clsx, type ClassValue } from "clsx"
+import { formatRut } from "rutlib"
+import { twMerge } from "tailwind-merge"
+import { LAST_30_DAYS, URL_SPLITTER } from "./constants"
+import { type SheetRow, type sheetCols } from "./types"
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
@@ -16,7 +16,7 @@ export const toClientList = (clients: Client[]) => {
     return clients.map((client) => {
         return {
             id: client.id,
-            name: client.fname + ' ' + client.lname,
+            name: client.fname + " " + client.lname,
             rut: client.rut,
             phone: client.phone,
             email: client.email,
@@ -25,7 +25,7 @@ export const toClientList = (clients: Client[]) => {
     })
 }
 
-type action = 'add' | 'substract'
+type action = "add" | "substract"
 interface modifyDatesProps {
     date: Date
     days: number
@@ -33,8 +33,8 @@ interface modifyDatesProps {
 }
 export const modifyDates = ({ date, days, action }: modifyDatesProps) => {
     const newDate = new Date(date)
-    if (action === 'add') newDate.setDate(newDate.getDate() + days)
-    if (action === 'substract') newDate.setDate(newDate.getDate() - days)
+    if (action === "add") newDate.setDate(newDate.getDate() + days)
+    if (action === "substract") newDate.setDate(newDate.getDate() - days)
     return newDate
 }
 
@@ -43,7 +43,7 @@ export const last30Days = () => {
     const thirtyDaysAgo = modifyDates({
         date: today,
         days: 30,
-        action: 'substract',
+        action: "substract",
     })
     const dateInWords = LAST_30_DAYS
     return { from: thirtyDaysAgo, to: today, title: dateInWords }
@@ -55,10 +55,10 @@ export const toRut = (rut: string) => {
 
 export function toLocaleDate(date: string | Date): string {
     const dateObj = new Date(date)
-    const dateInWords = dateObj.toLocaleDateString('es-CL', {
-        month: 'long',
-        day: 'numeric',
-        timeZone: 'UTC',
+    const dateInWords = dateObj.toLocaleDateString("es-CL", {
+        month: "long",
+        day: "numeric",
+        timeZone: "UTC",
     })
     return dateInWords.charAt(0).toUpperCase() + dateInWords.slice(1)
 }
@@ -82,27 +82,27 @@ export const rangeUrlFormat = ({
     const [from, to] = range.split(URL_SPLITTER)
     if (!from || !to) return defaultMonth
 
-    const fromFormated = from ? toLocaleDate(from) : ''
-    const toFormated = to ? toLocaleDate(to) : ''
+    const fromFormated = from ? toLocaleDate(from) : ""
+    const toFormated = to ? toLocaleDate(to) : ""
 
     return `${fromFormated} - ${toFormated}`
 }
 
-export const cleanNums = (value: string) => Number(value.replace(/[^0-9]/g, ''))
+export const cleanNums = (value: string) => Number(value.replace(/[^0-9]/g, ""))
 
 export const toMoney = (value: number | string) => {
-    if (typeof value === 'number') value = value.toString()
+    if (typeof value === "number") value = value.toString()
 
     value = cleanNums(value)
-    return new Intl.NumberFormat('es-CL', {
-        style: 'currency',
-        currency: 'CLP',
+    return new Intl.NumberFormat("es-CL", {
+        style: "currency",
+        currency: "CLP",
     }).format(value)
 }
 
 export const getDatesFromRange = (range: string): { from: Date; to: Date } => {
     const [from, to] = range.split(URL_SPLITTER)
-    if (!from || !to) throw new Error('Invalid range')
+    if (!from || !to) throw new Error("Invalid range")
     const fromDate = new Date(from)
     const toDate = new Date(to)
     return { from: fromDate, to: toDate }
@@ -133,7 +133,7 @@ export const transformRowsToSheetCols = (rows: SheetRow[]) =>
 export const toClientTable = (clients: Client[]) => {
     return clients.map((client) => {
         return {
-            name: client.fname + ' ' + client.lname,
+            name: client.fname + " " + client.lname,
             rut: client.rut,
             phone: client.phone,
             email: client.email,

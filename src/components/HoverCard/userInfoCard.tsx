@@ -1,15 +1,15 @@
-'use client'
+"use client"
 
-import { Skeleton } from '@/components/ui/skeleton'
-import { api } from '@/trpc/react'
-import { Mail, MapPin, Phone } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { Button } from '../ui/button'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
+import { Skeleton } from "@/components/ui/skeleton"
+import { api } from "@/trpc/react"
+import { Mail, MapPin, Phone } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Button } from "../ui/button"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card"
 
 export default function UserInfoCard({ name }: { name: string }) {
     const [open, setOpen] = useState(false)
-    const [fname, lname] = name.split(' ')
+    const [fname, lname] = name.split(" ")
 
     const {
         data: users,

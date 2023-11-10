@@ -1,12 +1,12 @@
-import { type FieldProps } from '@/lib/types'
+import { type FieldProps } from "@/lib/types"
 import {
     FormControl,
     FormDescription,
     FormField,
     FormItem,
     FormLabel,
-} from '../ui/form'
-import { Switch } from '../ui/switch'
+} from "../ui/form"
+import { Switch } from "../ui/switch"
 
 interface SwitchFieldProps extends FieldProps {
     value: boolean

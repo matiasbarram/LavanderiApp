@@ -1,7 +1,7 @@
-import { z } from 'zod'
+import { z } from "zod"
 
-import { clientSchema } from '@/lib/schemas'
-import { createTRPCRouter, publicProcedure } from '@/server/api/trpc'
+import { clientSchema } from "@/lib/schemas"
+import { createTRPCRouter, publicProcedure } from "@/server/api/trpc"
 
 export const clientRouter = createTRPCRouter({
     create: publicProcedure
@@ -51,7 +51,7 @@ export const clientRouter = createTRPCRouter({
     getAll: publicProcedure.query(({ ctx }) => {
         return ctx.db.client.findMany({
             orderBy: {
-                fname: 'asc',
+                fname: "asc",
             },
         })
     }),

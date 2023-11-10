@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import {
     Table,
@@ -7,7 +7,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/components/ui/table'
+} from "@/components/ui/table"
 import {
     flexRender,
     getCoreRowModel,
@@ -18,12 +18,12 @@ import {
     type ColumnFiltersState,
     type SortingState,
     type VisibilityState,
-} from '@tanstack/react-table'
-import { useState } from 'react'
+} from "@tanstack/react-table"
+import { useState } from "react"
 
-import { NONE_RESULTS } from '@/lib/constants'
-import SavingToast from '../Alert/saving'
-import { DataTableToolbar } from './dataTableToolbar'
+import { NONE_RESULTS } from "@/lib/constants"
+import SavingToast from "../Alert/saving"
+import { DataTableToolbar } from "./dataTableToolbar"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -92,7 +92,7 @@ export default function Datatable<TData, TValue>({
                                 <TableRow
                                     key={row.id}
                                     data-state={
-                                        row.getIsSelected() && 'selected'
+                                        row.getIsSelected() && "selected"
                                     }
                                 >
                                     {row.getVisibleCells().map((cell) => (

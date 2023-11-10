@@ -1,6 +1,6 @@
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
     Select,
     SelectContent,
@@ -8,12 +8,12 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select'
-import { detailQuantity } from '@/lib/constants'
-import { type ItemData } from '@/lib/types'
-import { capitalize } from '@/lib/utils'
-import { X } from 'lucide-react'
-import { useRef, useState } from 'react'
+} from "@/components/ui/select"
+import { detailQuantity } from "@/lib/constants"
+import { type ItemData } from "@/lib/types"
+import { capitalize } from "@/lib/utils"
+import { X } from "lucide-react"
+import { useRef, useState } from "react"
 
 interface OrderDetailsProps {
     title: string
@@ -32,7 +32,7 @@ export default function AddOrderDetails({
     const inputRef = useRef<HTMLInputElement | null>(null)
 
     const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
+        if (e.key === "Enter") {
             e.preventDefault()
             if (inputRef.current) {
                 setItems([
@@ -42,7 +42,7 @@ export default function AddOrderDetails({
                         quantity: quantity,
                     },
                 ])
-                inputRef.current.value = ''
+                inputRef.current.value = ""
                 setQuantity(1)
             }
         }

@@ -2,12 +2,12 @@ import {
     type Client,
     type OrderDetail,
     type OrderPayment,
-} from '@prisma/client'
+} from "@prisma/client"
 import {
     type Control,
     type FieldValues,
     type UseFormSetValue,
-} from 'react-hook-form/dist/types'
+} from "react-hook-form/dist/types"
 
 export type sheetCols = {
     name: string
@@ -57,11 +57,11 @@ export interface SelectFieldProps<T> extends CommonFieldProps<T> {
 }
 
 export interface InputFieldProps extends CommonFieldProps<string> {
-    type?: 'number'
+    type?: "number"
     formatAs?: formatAs
 }
 
-export type formatAs = 'currency' | 'rut'
+export type formatAs = "currency" | "rut"
 
 export type LastSheet = {
     checkin: string
@@ -96,7 +96,7 @@ export interface FormFieldsProps {
     formSetValue?: formSetValue
 }
 
-export type paymentMethods = 'cash' | 'creditCard' | 'debitCard' | 'transfer'
+export type paymentMethods = "cash" | "creditCard" | "debitCard" | "transfer"
 
 export interface SheetRow {
     Client: Client

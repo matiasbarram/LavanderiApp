@@ -1,5 +1,5 @@
-import { X } from 'lucide-react'
-import { DialogClose } from '../ui/dialog'
+import { X } from "lucide-react"
+import { DialogClose } from "../ui/dialog"
 
 export default function CloseBtn({
     setOpen,

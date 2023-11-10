@@ -1,11 +1,11 @@
-import { type LucideIcon } from 'lucide-react'
-import { Badge } from '../ui/badge'
+import { type LucideIcon } from "lucide-react"
+import { Badge } from "../ui/badge"
 
 const dateOptions = {
-    weekday: 'short',
-    year: 'numeric',
-    month: '2-digit',
-    day: 'numeric',
+    weekday: "short",
+    year: "numeric",
+    month: "2-digit",
+    day: "numeric",
 }
 
 export default function DateBadge({

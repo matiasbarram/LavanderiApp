@@ -3,15 +3,15 @@ import {
     type SelectorOption,
     type formSetValue,
     type formatAs,
-} from '@/lib/types'
-import CalendarField from './calendar'
-import InputField from './input'
-import SelectorField from './selector'
-import SwitchField from './switch'
-import TextAreaField from './textarea'
+} from "@/lib/types"
+import CalendarField from "./calendar"
+import InputField from "./input"
+import SelectorField from "./selector"
+import SwitchField from "./switch"
+import TextAreaField from "./textarea"
 
 interface CustomInputFieldProps<T> extends FormFieldsProps {
-    type: 'input' | 'select' | 'calendar' | 'textarea' | 'switch'
+    type: "input" | "select" | "calendar" | "textarea" | "switch"
     label: string
     formFieldName: string
     placeholder: string
@@ -41,7 +41,7 @@ export default function CustomInputField<T>({
     value,
 }: CustomInputFieldProps<T>) {
     switch (type) {
-        case 'input':
+        case "input":
             return (
                 <InputField
                     control={control}
@@ -53,7 +53,7 @@ export default function CustomInputField<T>({
                     readonly={readonly}
                 />
             )
-        case 'select':
+        case "select":
             return (
                 options && (
                     <SelectorField
@@ -69,7 +69,7 @@ export default function CustomInputField<T>({
                     />
                 )
             )
-        case 'calendar':
+        case "calendar":
             return (
                 <CalendarField
                     control={control}
@@ -78,7 +78,7 @@ export default function CustomInputField<T>({
                     description={description}
                 />
             )
-        case 'textarea':
+        case "textarea":
             return (
                 <TextAreaField
                     control={control}
@@ -88,7 +88,7 @@ export default function CustomInputField<T>({
                     description={description}
                 />
             )
-        case 'switch':
+        case "switch":
             const booleanValue = !!value
 
             return (

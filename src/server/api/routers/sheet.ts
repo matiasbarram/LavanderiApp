@@ -1,8 +1,8 @@
-import { z } from 'zod'
+import { z } from "zod"
 
-import { sheetSchema } from '@/lib/schemas'
-import { createTRPCRouter, publicProcedure } from '@/server/api/trpc'
-import { type PrismaClient } from '@prisma/client'
+import { sheetSchema } from "@/lib/schemas"
+import { createTRPCRouter, publicProcedure } from "@/server/api/trpc"
+import { type PrismaClient } from "@prisma/client"
 
 export const sheetRouter = createTRPCRouter({
     create: publicProcedure
@@ -19,7 +19,7 @@ export const sheetRouter = createTRPCRouter({
                 })
 
                 if (!client) {
-                    throw new Error('No existe el cliente.')
+                    throw new Error("No existe el cliente.")
                 }
 
                 const orderData = await createOrderDetail({

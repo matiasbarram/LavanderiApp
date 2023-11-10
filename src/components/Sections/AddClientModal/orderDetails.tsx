@@ -1,7 +1,7 @@
-import CustomInputField from '@/components/FormFields/customInputField'
-import NumerIcon from '@/components/Icon/numerIcon'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { type FormFieldsProps } from '@/lib/types'
+import CustomInputField from "@/components/FormFields/customInputField"
+import NumerIcon from "@/components/Icon/numerIcon"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { type FormFieldsProps } from "@/lib/types"
 
 interface OrderDetailsFormProps extends FormFieldsProps {
     setShowSeco: (value: boolean) => void

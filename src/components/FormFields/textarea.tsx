@@ -1,4 +1,4 @@
-import { type FieldProps } from '@/lib/types'
+import { type FieldProps } from "@/lib/types"
 import {
     FormControl,
     FormDescription,
@@ -6,8 +6,8 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '../ui/form'
-import { Textarea } from '../ui/textarea'
+} from "../ui/form"
+import { Textarea } from "../ui/textarea"
 
 export default function TextAreaField({
     control,

@@ -1,5 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import Spinner from '../Spinner/spinner'
+import { AnimatePresence, motion } from "framer-motion"
+import Spinner from "../Spinner/spinner"
 
 export default function Savingtoast({
     saving,
@@ -23,7 +23,7 @@ export default function Savingtoast({
                                 <Spinner />
                             </div>
                             <p className="text-sm text-white">
-                                {title ?? 'Guardando...'}
+                                {title ?? "Guardando..."}
                             </p>
                         </div>
                     </div>

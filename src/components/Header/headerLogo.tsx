@@ -1,5 +1,5 @@
-import { APPNAME } from '@/lib/constants'
-import Link from 'next/link'
+import { APPNAME } from "@/lib/constants"
+import Link from "next/link"
 
 export default function HeaderLogo() {
     return (

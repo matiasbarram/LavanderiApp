@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import {
     FormControl,
@@ -7,12 +7,12 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '@/components/ui/form'
-import { type InputFieldProps } from '@/lib/types'
-import { toMoney } from '@/lib/utils'
-import { type ChangeEvent } from 'react'
-import { formatRut } from 'rutlib'
-import { Input } from '../ui/input'
+} from "@/components/ui/form"
+import { type InputFieldProps } from "@/lib/types"
+import { toMoney } from "@/lib/utils"
+import { type ChangeEvent } from "react"
+import { formatRut } from "rutlib"
+import { Input } from "../ui/input"
 
 export default function InputField({
     control,
@@ -40,16 +40,16 @@ export default function InputField({
                             onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                 const currentValue: string = e.target.value
                                 switch (formatAs) {
-                                    case 'currency':
-                                        if (currentValue === '$')
-                                            field.onChange('')
+                                    case "currency":
+                                        if (currentValue === "$")
+                                            field.onChange("")
                                         else {
                                             const formattedValue =
                                                 toMoney(currentValue)
                                             field.onChange(formattedValue)
                                         }
                                         break
-                                    case 'rut':
+                                    case "rut":
                                         const formattedValue =
                                             formatRut(currentValue)
                                         field.onChange(formattedValue)

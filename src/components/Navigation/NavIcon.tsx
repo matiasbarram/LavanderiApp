@@ -1,12 +1,12 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 export default function NavIcon({
     direction,
 }: {
-    direction: 'left' | 'right'
+    direction: "left" | "right"
 }) {
     const icon =
-        direction === 'left' ? (
+        direction === "left" ? (
             <ChevronLeft className="h-4 w-4" />
         ) : (
             <ChevronRight className="h-4 w-4" />

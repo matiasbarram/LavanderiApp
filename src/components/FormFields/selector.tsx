@@ -5,7 +5,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '@/components/ui/form'
+} from "@/components/ui/form"
 
 import {
     Command,
@@ -13,19 +13,19 @@ import {
     CommandGroup,
     CommandInput,
     CommandItem,
-} from '@/components/ui/command'
+} from "@/components/ui/command"
 
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from '@/components/ui/popover'
-import { NONE_RESULTS } from '@/lib/constants'
-import { type SelectFieldProps } from '@/lib/types'
-import { cn } from '@/lib/utils'
-import { Check, ChevronsUpDown } from 'lucide-react'
-import { useState } from 'react'
-import { Button } from '../ui/button'
+} from "@/components/ui/popover"
+import { NONE_RESULTS } from "@/lib/constants"
+import { type SelectFieldProps } from "@/lib/types"
+import { cn } from "@/lib/utils"
+import { Check, ChevronsUpDown } from "lucide-react"
+import { useState } from "react"
+import { Button } from "../ui/button"
 
 export default function SelectorField<T>({
     formSetValue,
@@ -54,8 +54,8 @@ export default function SelectorField<T>({
                                     variant="outline"
                                     role="combobox"
                                     className={cn(
-                                        'w-[240px] justify-between',
-                                        !field.value && 'text-muted-foreground'
+                                        "w-[240px] justify-between",
+                                        !field.value && "text-muted-foreground"
                                     )}
                                 >
                                     {field.value
@@ -64,7 +64,7 @@ export default function SelectorField<T>({
                                                   option.value === field.value
                                           )?.label
                                         : placeholder ??
-                                          'Seleccione una opción'}
+                                          "Seleccione una opción"}
 
                                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                 </Button>
@@ -94,10 +94,10 @@ export default function SelectorField<T>({
                                         >
                                             <Check
                                                 className={cn(
-                                                    'mr-2 h-4 w-4',
+                                                    "mr-2 h-4 w-4",
                                                     option.value === field.value
-                                                        ? 'opacity-100'
-                                                        : 'opacity-0'
+                                                        ? "opacity-100"
+                                                        : "opacity-0"
                                                 )}
                                             />
                                             {option.label}

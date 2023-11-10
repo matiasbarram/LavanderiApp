@@ -1,15 +1,15 @@
-'use client'
+"use client"
 
-import CustomInputField from '@/components/FormFields/customInputField'
-import NumerIcon from '@/components/Icon/numerIcon'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import CustomInputField from "@/components/FormFields/customInputField"
+import NumerIcon from "@/components/Icon/numerIcon"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
     PENDING_STATUS,
     invoiceOptions,
     paymentMethods,
     statusOptions,
-} from '@/lib/constants'
-import { type FormFieldsProps } from '@/lib/types'
+} from "@/lib/constants"
+import { type FormFieldsProps } from "@/lib/types"
 
 interface Props extends FormFieldsProps {
     isPaid: string

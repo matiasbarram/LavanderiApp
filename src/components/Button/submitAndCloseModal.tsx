@@ -1,5 +1,5 @@
-import { Button } from '../ui/button'
-import { DialogClose, DialogFooter } from '../ui/dialog'
+import { Button } from "../ui/button"
+import { DialogClose, DialogFooter } from "../ui/dialog"
 
 interface Props {
     setOpen: (open: boolean) => void
@@ -16,7 +16,7 @@ export default function SubmitAndCloseBtns({
         <DialogFooter>
             <div className="flex w-full flex-col gap-4">
                 <Button type="submit">
-                    {isLoading ? 'Cargando...' : 'Guardar'}
+                    {isLoading ? "Cargando..." : "Guardar"}
                 </Button>
                 <DialogClose onClick={() => setOpen(false)} asChild>
                     <Button variant="outline">Cancelar</Button>

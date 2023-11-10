@@ -1,9 +1,9 @@
-'use client'
+"use client"
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm, type FieldValues } from 'react-hook-form'
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm, type FieldValues } from "react-hook-form"
 
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
@@ -11,27 +11,27 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog"
 
-import OrderItemsForm from '@/components/Sections/AddClientModal/orderItems'
-import { Form } from '@/components/ui/form'
-import { PENDING_STATUS } from '@/lib/constants'
-import { sheetSchema as formSchema, sheetSchema } from '@/lib/schemas'
+import OrderItemsForm from "@/components/Sections/AddClientModal/orderItems"
+import { Form } from "@/components/ui/form"
+import { PENDING_STATUS } from "@/lib/constants"
+import { sheetSchema as formSchema, sheetSchema } from "@/lib/schemas"
 import {
     type ItemData,
     type OrderItemsDetails,
     type SelectorOption,
-} from '@/lib/types'
-import { api } from '@/trpc/react'
-import { type Client } from '@prisma/client'
-import { useEffect, useState } from 'react'
-import SubmitAndCloseBtns from '../../Button/submitAndCloseModal'
-import CustomInputField from '../../FormFields/customInputField'
-import OrderDetailsForm from '../../Sections/AddClientModal/orderDetails'
-import OrderPaymentForm from '../../Sections/AddClientModal/orderPayment'
-import { useToast } from '../../ui/use-toast'
-import AddClientModal from '../addClientModal'
-import CloseBtn from '../closeBtn'
+} from "@/lib/types"
+import { api } from "@/trpc/react"
+import { type Client } from "@prisma/client"
+import { useEffect, useState } from "react"
+import SubmitAndCloseBtns from "../../Button/submitAndCloseModal"
+import CustomInputField from "../../FormFields/customInputField"
+import OrderDetailsForm from "../../Sections/AddClientModal/orderDetails"
+import OrderPaymentForm from "../../Sections/AddClientModal/orderPayment"
+import { useToast } from "../../ui/use-toast"
+import AddClientModal from "../addClientModal"
+import CloseBtn from "../closeBtn"
 
 export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     const [selectedClient, setSelectedClient] = useState<Client | null>()
@@ -63,7 +63,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     const allClients = getClients.data ? getClients.data : []
     const clients: SelectorOption[] = allClients.map((client) => {
         return {
-            label: client.fname + ' ' + client.lname,
+            label: client.fname + " " + client.lname,
             value: client.email,
         }
     })
@@ -71,8 +71,8 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     const form = useForm<FieldValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            deliveryCost: '$5.000',
-            voucher: '',
+            deliveryCost: "$5.000",
+            voucher: "",
             status: PENDING_STATUS,
             seco: false,
         },
@@ -85,10 +85,10 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
             )
         ) {
             toast({
-                title: 'Ha ocurrido un error',
-                description: 'No se ha seleccionado ningún item',
+                title: "Ha ocurrido un error",
+                description: "No se ha seleccionado ningún item",
                 duration: 2000,
-                variant: 'destructive',
+                variant: "destructive",
             })
             return
         }
@@ -96,15 +96,15 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
         addSheet(sheetData, {
             onError: (error) => {
                 toast({
-                    title: 'Error',
-                    description: 'No se pudo agregar la planilla',
+                    title: "Error",
+                    description: "No se pudo agregar la planilla",
                     duration: 2000,
                 })
             },
             onSuccess: (data) => {
                 toast({
-                    title: 'Planilla agregada',
-                    description: 'Se ha agregado la planilla',
+                    title: "Planilla agregada",
+                    description: "Se ha agregado la planilla",
                     duration: 2000,
                 })
             },
@@ -122,25 +122,25 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
 
     const handleSelectedUser = (client: string) => {
         setPaymentStatus(PENDING_STATUS)
-        form.setValue('status', PENDING_STATUS)
+        form.setValue("status", PENDING_STATUS)
         const currentClient = allClients.find((clnt) => client === clnt.email)
         setSelectedClient(currentClient)
         toast({
-            title: 'Cliente seleccionado',
+            title: "Cliente seleccionado",
             description:
-                'Se han cargado los datos de la última planilla del cliente',
+                "Se han cargado los datos de la última planilla del cliente",
             duration: 2000,
         })
     }
 
     useEffect(() => {
         if (paymentStatus === PENDING_STATUS) {
-            form.setValue('paymentMethod', '')
-            form.setValue('voucher', '')
-            form.setValue('paymentDetails', '')
-            form.setValue('invoice', '')
-            form.resetField('paymentDate')
-            form.resetField('seco')
+            form.setValue("paymentMethod", "")
+            form.setValue("voucher", "")
+            form.setValue("paymentDetails", "")
+            form.setValue("invoice", "")
+            form.resetField("paymentDate")
+            form.resetField("seco")
             form.clearErrors()
         }
     }, [form, paymentStatus])
@@ -151,7 +151,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                 <Button variant="default">{btnTitle}</Button>
             </DialogTrigger>
             <DialogContent
-                className={'max-h-screen overflow-y-auto lg:max-w-screen-lg'}
+                className={"max-h-screen overflow-y-auto lg:max-w-screen-lg"}
                 onInteractOutside={(e) => {
                     e.preventDefault()
                 }}
@@ -168,7 +168,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="space-y-8"
                     >
-                        <div className={'flex items-center gap-4'}>
+                        <div className={"flex items-center gap-4"}>
                             <CustomInputField
                                 formSetValue={form.setValue}
                                 control={form.control}
@@ -196,7 +196,6 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                         </div>
                         {selectedClient && (
                             <>
-                                {/* <OrderClientInfo selectedClient={selectedClient} /> */}
                                 <div className="grid grid-cols-2 gap-4">
                                     <OrderDetailsForm
                                         className="col-span-1"

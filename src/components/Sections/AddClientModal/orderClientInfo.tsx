@@ -1,7 +1,7 @@
-import { ReadOnlyInput } from '@/components/FormFields/readOnlyInput'
-import NumerIcon from '@/components/Icon/numerIcon'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { type Client } from '@prisma/client'
+import { ReadOnlyInput } from "@/components/FormFields/readOnlyInput"
+import NumerIcon from "@/components/Icon/numerIcon"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { type Client } from "@prisma/client"
 
 export default function OrderClientInfo({
     selectedClient,

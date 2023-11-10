@@ -1,6 +1,6 @@
-'use client'
+"use client"
 
-import AvatarMenu from '../Avatar/avatarMenu'
+import AvatarMenu from "../Avatar/avatarMenu"
 
 export default function Header() {
     return (
