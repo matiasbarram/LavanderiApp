@@ -48,15 +48,40 @@ export const columns: ColumnDef<sheetCols>[] = [
         },
     },
     {
-        accessorKey: "dates",
-        header: "Fechas de ingreso y entrega",
+        accessorKey: "checkin",
+        header: ({ column }) => {
+            return (
+                <DataTableColumnHeader
+                    column={column}
+                    title="Fechas de ingreso"
+                />
+            )
+        },
         cell: ({ row }) => {
-            const dates: dateRange = row.getValue("dates")
-            const from = toLocaleDate(dates.from)
-            const to = toLocaleDate(dates.to)
+            const dates: Date = row.getValue("checkin")
+            const from = toLocaleDate(dates)
             return (
                 <div className="flex flex-col gap-1">
                     <DateBadge date={from} Icon={ArrowDownLeft} />
+                </div>
+            )
+        },
+    },
+    {
+        accessorKey: "checkout",
+        header: ({ column }) => {
+            return (
+                <DataTableColumnHeader
+                    column={column}
+                    title="Fechas de entrega"
+                />
+            )
+        },
+        cell: ({ row }) => {
+            const dates: Date = row.getValue("checkout")
+            const to = toLocaleDate(dates)
+            return (
+                <div className="flex flex-col gap-1">
                     <DateBadge date={to} Icon={ArrowUpRight} />
                 </div>
             )

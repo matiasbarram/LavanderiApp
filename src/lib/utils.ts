@@ -112,7 +112,8 @@ export function transformRowToSheetCols(row: SheetRow) {
     const name = `${row.Client.fname} ${row.Client.lname}`
     return {
         name: name,
-        dates: { from: row.OrderData.checkin, to: row.OrderData.checkout },
+        checkin: row.OrderData.checkin,
+        checkout: row.OrderData.checkout,
         delivery: row.OrderPayment.shippingCost,
         payment: row.OrderPayment.paymentDate,
         paymentTotal: row.OrderPayment.amount,

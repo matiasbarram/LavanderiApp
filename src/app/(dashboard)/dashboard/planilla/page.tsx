@@ -26,7 +26,7 @@ export default async function PlanillaPage({
         firstDay = new Date(from)
         lastDay = new Date(to)
     } else {
-        const { from, to, title } = last30Days()
+        const { from, to } = last30Days()
         firstDay = from
         lastDay = to
     }

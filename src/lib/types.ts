@@ -11,10 +11,8 @@ import {
 
 export type sheetCols = {
     name: string
-    dates: {
-        from: Date
-        to: Date | null
-    }
+    checkin: Date
+    checkout: Date
     delivery: number | null
     payment: Date | null
     paymentTotal: number | null

@@ -40,16 +40,6 @@ export const sheetRouter = createTRPCRouter({
             })
         }),
 
-    rows: publicProcedure.query(async ({ ctx }) => {
-        return ctx.db.order.findMany({
-            include: {
-                OrderData: true,
-                OrderPayment: true,
-                Client: true,
-            },
-        })
-    }),
-
     rowsByDateRange: publicProcedure
         .input(
             z.object({
@@ -71,6 +61,11 @@ export const sheetRouter = createTRPCRouter({
                     OrderData: true,
                     OrderPayment: true,
                     Client: true,
+                },
+                orderBy: {
+                    OrderData: {
+                        checkin: "desc",
+                    },
                 },
             })
         }),
