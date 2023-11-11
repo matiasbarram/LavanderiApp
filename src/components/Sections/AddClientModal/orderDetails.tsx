@@ -42,7 +42,7 @@ export default function OrderDetailsForm({
                     <CustomInputField
                         control={control}
                         type="input"
-                        formFieldName="total"
+                        formFieldName="amount"
                         label="Total a pagar"
                         placeholder="Ingrese el total..."
                         formatAs="currency"
@@ -59,8 +59,8 @@ export default function OrderDetailsForm({
                         control={control}
                         type="input"
                         formFieldName="ticket"
-                        label="N° de ticket"
-                        placeholder="Ingrese el N° de ticket..."
+                        label="Ticket de ingreso"
+                        placeholder="Ingrese el N° de ticket ..."
                     />
                     <CustomInputField
                         control={control}

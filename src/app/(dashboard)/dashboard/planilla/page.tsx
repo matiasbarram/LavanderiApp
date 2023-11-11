@@ -2,12 +2,7 @@ import { DatePickerWithRange } from "@/components/DatePicker/DatePicker"
 import ClientDataTable from "@/components/Sections/Plantilla/ClientTable"
 import SheetInfo from "@/components/Sections/Plantilla/SheetInfo"
 import { URL_SPLITTER } from "@/lib/constants"
-import { type SheetRow } from "@/lib/types"
-import {
-    last30Days,
-    rangeUrlFormat,
-    transformRowsToSheetCols,
-} from "@/lib/utils"
+import { last30Days, rangeUrlFormat } from "@/lib/utils"
 import { api } from "@/trpc/server"
 
 export default async function PlanillaPage({
@@ -34,25 +29,21 @@ export default async function PlanillaPage({
         const { from, to, title } = last30Days()
         firstDay = from
         lastDay = to
-        dateInWords = title
     }
 
-    const rows = (await api.sheets.rowsByDateRange.query({
-        from: firstDay,
-        to: lastDay,
-    })) as SheetRow[]
+    const range = { from: firstDay, to: lastDay }
 
-    const initialData = transformRowsToSheetCols(rows)
+    const rows = await api.sheets.rowsByDateRange.query(range)
 
     return (
         <>
             <div className="mb-4 flex items-center justify-between">
-                <SheetInfo month={dateInWords} />
+                <SheetInfo range={range} />
                 <div className="flex items-center gap-2">
                     <DatePickerWithRange from={firstDay} to={lastDay} />
                 </div>
             </div>
-            <ClientDataTable data={initialData} />
+            <ClientDataTable rows={rows} range={range} />
         </>
     )
 }

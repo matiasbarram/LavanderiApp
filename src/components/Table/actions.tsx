@@ -30,6 +30,11 @@ export default function ActionsColum({ row }: { row: sheetCols }) {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuSeparator />
+                    {row.status === "pending" && (
+                        <DropdownMenuItem>
+                            <span className="font-medium">Agregar pago</span>
+                        </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
                         Editar
                     </DropdownMenuItem>

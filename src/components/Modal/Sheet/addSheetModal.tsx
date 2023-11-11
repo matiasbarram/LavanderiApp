@@ -13,10 +13,12 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 
+import addSearchParam from "@/app/hooks/useSearchParams"
+import OrderDetailsForm from "@/components/Sections/AddClientModal/orderDetails"
 import OrderItemsForm from "@/components/Sections/AddClientModal/orderItems"
 import { Form } from "@/components/ui/form"
 import { PENDING_STATUS } from "@/lib/constants"
-import { sheetSchema as formSchema, sheetSchema } from "@/lib/schemas"
+import { combinedOrderSchema } from "@/lib/schemas"
 import {
     type ItemData,
     type OrderItemsDetails,
@@ -27,19 +29,21 @@ import { type Client } from "@prisma/client"
 import { useEffect, useState } from "react"
 import SubmitAndCloseBtns from "../../Button/submitAndCloseModal"
 import CustomInputField from "../../FormFields/customInputField"
-import OrderDetailsForm from "../../Sections/AddClientModal/orderDetails"
 import OrderPaymentForm from "../../Sections/AddClientModal/orderPayment"
 import { useToast } from "../../ui/use-toast"
 import AddClientModal from "../addClientModal"
 import CloseBtn from "../closeBtn"
 
 export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
+    const utils = api.useUtils()
+    const sp = addSearchParam()
+
     const [selectedClient, setSelectedClient] = useState<Client | null>()
     const [showSeco, setShowSeco] = useState(false)
     const [paymentStatus, setPaymentStatus] = useState<string>(PENDING_STATUS)
     const [details, setDetails] = useState<OrderItemsDetails>({
         wash: {
-            show: false,
+            show: true,
             items: [],
         },
         iron: {
@@ -69,7 +73,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     })
 
     const form = useForm<FieldValues>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(combinedOrderSchema),
         defaultValues: {
             deliveryCost: "$5.000",
             voucher: "",
@@ -92,7 +96,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
             })
             return
         }
-        const sheetData = sheetSchema.parse(values)
+        const sheetData = combinedOrderSchema.parse(values)
         addSheet(sheetData, {
             onError: (error) => {
                 toast({
@@ -101,7 +105,9 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                     duration: 2000,
                 })
             },
+
             onSuccess: (data) => {
+                sp.addSearchParam("update", "true")
                 toast({
                     title: "Planilla agregada",
                     description: "Se ha agregado la planilla",
@@ -151,7 +157,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                 <Button variant="default">{btnTitle}</Button>
             </DialogTrigger>
             <DialogContent
-                className={"max-h-screen overflow-y-auto lg:max-w-screen-lg"}
+                className={"max-h-screen overflow-y-auto lg:max-w-screen-2xl"}
                 onInteractOutside={(e) => {
                     e.preventDefault()
                 }}
@@ -196,7 +202,9 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                         </div>
                         {selectedClient && (
                             <>
-                                <div className="grid grid-cols-2 gap-4">
+                                <p>dssdsadas</p>
+                                {JSON.stringify(form.formState.errors)}
+                                <div className="grid grid-cols-3 gap-4">
                                     <OrderDetailsForm
                                         className="col-span-1"
                                         number={1}
@@ -213,7 +221,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                                         setDetails={setDetails}
                                     />
                                     <OrderPaymentForm
-                                        className="col-span-2"
+                                        className="col-span-1"
                                         number={3}
                                         formSetValue={form.setValue}
                                         control={form.control}

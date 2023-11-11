@@ -1,6 +1,7 @@
 import { sheetRouter } from "@/server/api/routers/sheet"
 import { createTRPCRouter } from "@/server/api/trpc"
 import { clientRouter } from "./routers/client"
+import { deliveryRouter } from "./routers/delivery"
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { clientRouter } from "./routers/client"
 export const appRouter = createTRPCRouter({
     sheets: sheetRouter,
     clients: clientRouter,
+    delivery: deliveryRouter
 })
 
 // export type definition of API

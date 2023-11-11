@@ -1,10 +1,10 @@
 "use client"
 
-import LeftMenuOption from "./leftMenuOption"
-import HeaderLogo from "./headerLogo"
+import { HomeIcon, UsersIcon } from "lucide-react"
 import { usePathname } from "next/navigation"
 import AvatarMenu from "../Avatar/avatarMenu"
-import { HomeIcon, UsersIcon } from "lucide-react"
+import HeaderLogo from "./headerLogo"
+import LeftMenuOption from "./leftMenuOption"
 
 export function Aside() {
     const pathname = usePathname()
@@ -19,7 +19,7 @@ export function Aside() {
             {
                 <aside
                     id="sidebar"
-                    className="left-0 top-0 z-40 h-screen w-64 transition-transform"
+                    className="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full transition-transform sm:translate-x-0"
                     aria-label="Sidebar"
                 >
                     <div className="flex h-full flex-col overflow-y-auto border-r border-slate-200 bg-white px-3 py-4 dark:border-slate-700 dark:bg-slate-900">

@@ -71,6 +71,7 @@ model OrderPayment {
     paymentDate    DateTime?
     paymentMethod  String?
     paymentType    String?
+    paymentTicket  String
     status         String
     invoiceNumber  String?
     paymentDetails String?

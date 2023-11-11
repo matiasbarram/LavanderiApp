@@ -25,6 +25,7 @@ type AddUserModalProps = {
 }
 
 export default function AddClientModal({ title }: AddUserModalProps) {
+    const utils = api.useUtils()
     const btnTitle = title ? title : "Agregar cliente"
     const addClient = api.clients.create.useMutation()
     const { toast } = useToast()
@@ -59,7 +60,16 @@ export default function AddClientModal({ title }: AddUserModalProps) {
                     description: error.message,
                 })
             },
-            onSettled: () => setOpen(false),
+            onSettled: () => {
+                setOpen(false)
+                utils.clients.getAll.invalidate().catch(() => {
+                    toast({
+                        title: "Error al actualizar lista de clientes",
+                        description:
+                            "No se pudo actualizar la lista de clientes",
+                    })
+                })
+            },
         })
     }
 

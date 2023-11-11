@@ -16,6 +16,10 @@ module.exports = {
       },
     },
     extend: {
+      maxWidth: {
+        "8xl": "120rem",
+      },
+      
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

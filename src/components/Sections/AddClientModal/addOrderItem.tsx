@@ -29,22 +29,21 @@ export default function AddOrderDetails({
     setItems,
 }: OrderDetailsProps) {
     const [quantity, setQuantity] = useState<number>(1)
-    const inputRef = useRef<HTMLInputElement | null>(null)
+    const [inputValue, setInputValue] = useState<string>("")
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             e.preventDefault()
-            if (inputRef.current) {
-                setItems([
-                    ...items,
-                    {
-                        name: capitalize(inputRef.current.value),
-                        quantity: quantity,
-                    },
-                ])
-                inputRef.current.value = ""
-                setQuantity(1)
-            }
+            setItems([
+                ...items,
+                {
+                    name: capitalize(inputValue),
+                    quantity: quantity,
+                },
+            ])
+            setInputValue("")
+            setQuantity(1)
         }
     }
     const handleQuantity = (value: string) => {
@@ -80,6 +79,8 @@ export default function AddOrderDetails({
                     <Input
                         type="text"
                         placeholder={placeholder}
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={handleKeyUp}
                         ref={inputRef}
                     />

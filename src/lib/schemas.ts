@@ -1,74 +1,60 @@
-import { cleanRut, validateRut } from "rutlib"
-import { z } from "zod"
-import { cleanNums } from "./utils"
+import { cleanRut, validateRut } from "rutlib";
+import { z } from "zod";
+import { cleanNums } from "./utils";
 
-export const sheetSchema = z.object({
+export const orderDetailSchema = z.object({
+
     clientName: z
         .string({ required_error: "Debe ingresar el nombre del cliente." })
         .min(2, {
             message: "Debe ingresar el nombre del cliente.",
         }),
-
+        
     checkin: z.date({
-        required_error: "Seleccione la fecha de recepcion.",
+        required_error: "Seleccione la fecha de recepción.",
     }),
 
-    checkout: z
-        .date({
-            required_error: "Seleccione la fecha de entrega.",
-        })
-        .optional(),
-
-    deliveryCost: z
-        .string({ required_error: "Debe ingresar el costo de envío." })
-        .refine((value) => {
-            const num = cleanNums(value)
-            return !isNaN(num) && num >= 0
-        }, "Debe ingresar un número válido")
-        .transform((value) => {
-            return cleanNums(value).toString()
-        }),
-
-    paymentDate: z.date().optional(),
-
-    total: z
-        .string({ required_error: "Debe ingresar el total." })
-        .refine((value) => {
-            const num = cleanNums(value)
-            return !isNaN(num) && num >= 0
-        }, "Debe ingresar un número válido")
-        .transform((value) => {
-            return cleanNums(value).toString()
-        }),
-
-    seco: z.boolean(),
-
-    paymentMethod: z
-        .string({
-            required_error: "Debe seleccionar el método de pago.",
-        })
-        .optional(),
-
-    status: z.string({
-        required_error: "Debe seleccionar el estado del pedido.",
-    }),
-
-    invoice: z
-        .string({
-            required_error: "Debe seleccionar el tipo de facturación.",
-        })
-        .optional(),
-
-    voucher: z.string().optional(),
-
-    details: z.string().optional(),
+    checkout: z.date().optional(),
 
     ticket: z.string(),
 
-    secoDetails: z.string().optional(),
+    details: z.string().optional(),
+
+    external: z.boolean().default(false),
+
+    externalDetails: z.string().optional(),
+});
+
+// OrderPayment schema
+export const orderPaymentSchema = z.object({
+    amount: z
+        .string({ required_error: "Debe ingresar el monto." })
+        .refine((value) => {
+            const num = cleanNums(value);
+            return !isNaN(num) && num >= 0;
+        }, "Debe ingresar un número válido")
+        .transform((value) => {
+            return cleanNums(value).toString();
+        }),
+
+    shippingCost: z.string().optional(),
+
+    paymentDate: z.date().optional(),
+
+    paymentMethod: z.string().optional(),
+
+    status: z.string({
+        required_error: "Debe seleccionar el estado del pago.",
+    }),
+
+    invoiceNumber: z.string().optional(),
 
     paymentDetails: z.string().optional(),
-})
+
+    paymentTicket: z.string().optional()
+});
+
+export const combinedOrderSchema = orderDetailSchema.merge(orderPaymentSchema);
 
 export const clientSchema = z.object({
     firstname: z.string().min(2, {

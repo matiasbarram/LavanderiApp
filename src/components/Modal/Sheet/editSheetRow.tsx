@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
 import { PENDING_STATUS } from "@/lib/constants"
-import { sheetSchema } from "@/lib/schemas"
+import { combinedOrderSchema } from "@/lib/schemas"
 import { type sheetCols } from "@/lib/types"
 import { toMoney } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -39,7 +39,7 @@ export default function EditSheetRow({
     const [isLoading, setIsLoading] = useState(false)
 
     const form = useForm<FieldValues>({
-        resolver: zodResolver(sheetSchema),
+        resolver: zodResolver(combinedOrderSchema),
         defaultValues: {
             deliveryCost: row.delivery ? toMoney(row.delivery) : toMoney(0),
             voucher: row.nInvoice ?? "",

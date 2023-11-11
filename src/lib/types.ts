@@ -18,7 +18,7 @@ export type sheetCols = {
     delivery: number | null
     payment: Date | null
     paymentTotal: number | null
-    status: string
+    status: "pending" | "paid" | "delivered" | "canceled"
     invoice: string | null
     nInvoice: string | null
     washingDry: boolean
@@ -124,4 +124,27 @@ export interface OrderItemsDetails {
     iron: ItemsOptions
     washAndIron: ItemsOptions
     dry: ItemsOptions
+}
+
+
+export interface DateRange {
+    from: Date
+    to: Date
+}
+
+export interface UseDateRangeOptions {
+    month: string
+}
+
+export interface UpdateSheetColsOptions {
+    month: string
+    setSearchMonth: (month: string) => void
+    range?: string | null
+}
+
+export interface GetDatesFromRangeOptions {
+    range: string | null
+    month: string
+    setSearchMonth: (month: string) => void
+    prevParams: { current: string }
 }

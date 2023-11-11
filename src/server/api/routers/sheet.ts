@@ -1,12 +1,12 @@
 import { z } from "zod"
 
-import { sheetSchema } from "@/lib/schemas"
+import { combinedOrderSchema } from "@/lib/schemas"
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc"
 import { type PrismaClient } from "@prisma/client"
 
 export const sheetRouter = createTRPCRouter({
     create: publicProcedure
-        .input(sheetSchema)
+        .input(combinedOrderSchema)
         .mutation(async ({ ctx, input }) => {
             return ctx.db.$transaction(async (prisma) => {
                 const client = await prisma.client.findUnique({
@@ -122,16 +122,16 @@ async function createOrderDetail({
     input,
 }: {
     prisma: PrismaClient
-    input: z.infer<typeof sheetSchema>
+    input: z.infer<typeof combinedOrderSchema>
 }) {
     return prisma.orderDetail.create({
         data: {
             checkin: input.checkin,
             checkout: input.checkout,
-            details: input.secoDetails,
+            // details: input.secoDetails,
             ticket: input.ticket,
-            external: input.seco,
-            externalDetails: input.secoDetails,
+            // external: input.seco,
+            // externalDetails: input.secoDetails,
         },
     })
 }
@@ -141,17 +141,17 @@ async function createOrderPayment({
     input,
 }: {
     prisma: PrismaClient
-    input: z.infer<typeof sheetSchema>
+    input: z.infer<typeof combinedOrderSchema>
 }) {
     return prisma.orderPayment.create({
         data: {
-            amount: Number(input.total),
-            shippingCost: Number(input.deliveryCost),
+            amount: Number(input.amount),
+            shippingCost: Number(input.shippingCost),
             paymentDate: input.paymentDate,
             paymentMethod: input.paymentMethod,
             status: input.status,
-            paymentType: input.invoice,
-            invoiceNumber: input.voucher,
+            paymentType: input.paymentMethod,
+            invoiceNumber: input.invoiceNumber,
             paymentDetails: input.paymentDetails,
         },
     })
