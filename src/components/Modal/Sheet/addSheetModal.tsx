@@ -13,7 +13,6 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 
-import addSearchParam from "@/app/hooks/useSearchParams"
 import OrderDetailsForm from "@/components/Sections/AddClientModal/orderDetails"
 import OrderItemsForm from "@/components/Sections/AddClientModal/orderItems"
 import { Form } from "@/components/ui/form"
@@ -36,7 +35,6 @@ import CloseBtn from "../closeBtn"
 
 export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     const utils = api.useUtils()
-    const sp = addSearchParam()
 
     const [selectedClient, setSelectedClient] = useState<Client | null>()
     const [showSeco, setShowSeco] = useState(false)
@@ -107,7 +105,6 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
             },
 
             onSuccess: (data) => {
-                sp.addSearchParam("update", "true")
                 toast({
                     title: "Planilla agregada",
                     description: "Se ha agregado la planilla",
