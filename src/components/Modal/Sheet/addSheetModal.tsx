@@ -199,8 +199,6 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                         </div>
                         {selectedClient && (
                             <>
-                                <p>dssdsadas</p>
-                                {JSON.stringify(form.formState.errors)}
                                 <div className="grid grid-cols-3 gap-4">
                                     <OrderDetailsForm
                                         className="col-span-1"
