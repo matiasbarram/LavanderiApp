@@ -59,7 +59,7 @@ export interface InputFieldProps extends CommonFieldProps<string> {
     formatAs?: formatAs
 }
 
-export type formatAs = "currency" | "rut"
+export type formatAs = "currency" | "rut" | "phone"
 
 export type LastSheet = {
     checkin: string

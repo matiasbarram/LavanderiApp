@@ -38,7 +38,7 @@ export default function AddClientModal({ title }: AddUserModalProps) {
             address: "",
             lastname: "",
             rut: "",
-            phone: "",
+            phone: "+569",
             email: "",
             description: "",
         },
@@ -128,6 +128,7 @@ export default function AddClientModal({ title }: AddUserModalProps) {
                                 type="input"
                                 formFieldName="phone"
                                 label="Telefono"
+                                formatAs="phone"
                                 placeholder="Telefono..."
                             />
                             <CustomInputField

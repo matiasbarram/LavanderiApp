@@ -1,6 +1,6 @@
 import { cleanRut, validateRut } from "rutlib";
 import { z } from "zod";
-import { cleanNums } from "./utils";
+import { cleanNums, validatePhone } from "./utils";
 
 export const orderDetailSchema = z.object({
 
@@ -84,8 +84,7 @@ export const clientSchema = z.object({
             message: "Debe ingresar el teléfono del cliente.",
         })
         .refine((value) => {
-            const num = cleanNums(value)
-            return !isNaN(num) && num >= 0
+            return validatePhone(value)
         }, "Debe ingresar un número válido")
         .transform((value) => {
             return cleanNums(value).toString()

@@ -143,4 +143,24 @@ export const toClientTable = (clients: Client[]) => {
     })
 }
 
+export const formatPhone = (phone: string) => {
+    // phone number format is +569 1234 5678
+    const phoneCode = "+569"
+    const splited = phone.split(phoneCode)
+    if (splited.length === 1) {
+        return phoneCode
+    }
+    else{
+        phone = phone.replace(/[^0-9+]/g, "")
+        if (phone.length > 12) {
+            return phone.slice(0, 12)
+        }
+        return phone
+    }
+}
+
+export const validatePhone = (phone: string) => {
+    const regex = /(\+?56)?(\s?)(0?9)(\s?)[98765432]\d{7}/
+    return regex.test(phone)
+}
 

@@ -9,7 +9,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { type InputFieldProps } from "@/lib/types"
-import { toMoney } from "@/lib/utils"
+import { formatPhone, toMoney } from "@/lib/utils"
 import { type ChangeEvent } from "react"
 import { formatRut } from "rutlib"
 import { Input } from "../ui/input"
@@ -53,6 +53,12 @@ export default function InputField({
                                         const formattedValue =
                                             formatRut(currentValue)
                                         field.onChange(formattedValue)
+                                        break
+                                    case "phone":
+                                        // chilean phone start with +569 and have 8 digits
+                                        const formattedPhone =
+                                            formatPhone(currentValue)
+                                        field.onChange(formattedPhone)
                                         break
                                     default:
                                         field.onChange(currentValue)
