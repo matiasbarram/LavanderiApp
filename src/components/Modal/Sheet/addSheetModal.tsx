@@ -15,22 +15,17 @@ import {
 
 import OrderDetailsForm from "@/components/Sections/AddClientModal/orderDetails"
 import OrderItemsForm from "@/components/Sections/AddClientModal/orderItems"
+import OrderSelectClient from "@/components/Sections/AddClientModal/orderSelectClient"
 import { Form } from "@/components/ui/form"
-import { PENDING_STATUS } from "@/lib/constants"
+import { PENDING_STATUS, initialItems } from "@/lib/constants"
 import { combinedOrderSchema } from "@/lib/schemas"
-import {
-    type ItemData,
-    type OrderItemsDetails,
-    type SelectorOption,
-} from "@/lib/types"
+import { type ItemData, type OrderItemsDetails } from "@/lib/types"
 import { api } from "@/trpc/react"
 import { type Client } from "@prisma/client"
 import { useEffect, useState } from "react"
 import SubmitAndCloseBtns from "../../Button/submitAndCloseModal"
-import CustomInputField from "../../FormFields/customInputField"
 import OrderPaymentForm from "../../Sections/AddClientModal/orderPayment"
 import { useToast } from "../../ui/use-toast"
-import AddClientModal from "../addClientModal"
 import CloseBtn from "../closeBtn"
 
 export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
@@ -39,36 +34,10 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     const [selectedClient, setSelectedClient] = useState<Client | null>()
     const [showSeco, setShowSeco] = useState(false)
     const [paymentStatus, setPaymentStatus] = useState<string>(PENDING_STATUS)
-    const [details, setDetails] = useState<OrderItemsDetails>({
-        wash: {
-            show: true,
-            items: [],
-        },
-        iron: {
-            show: false,
-            items: [],
-        },
-        washAndIron: {
-            show: false,
-            items: [],
-        },
-        dry: {
-            show: false,
-            items: [],
-        },
-    })
+    const [details, setDetails] = useState<OrderItemsDetails>(initialItems)
 
     const { toast } = useToast()
     const { mutate: addSheet, isLoading } = api.sheets.create.useMutation()
-
-    const getClients = api.clients.getAll.useQuery()
-    const allClients = getClients.data ? getClients.data : []
-    const clients: SelectorOption[] = allClients.map((client) => {
-        return {
-            label: client.fname + " " + client.lname,
-            value: client.email,
-        }
-    })
 
     const form = useForm<FieldValues>({
         resolver: zodResolver(combinedOrderSchema),
@@ -81,11 +50,11 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     })
 
     function onSubmit(values: FieldValues) {
-        if (
-            Object.values(details).every(
-                (item: ItemData[]) => item.length === 0
-            )
-        ) {
+        const emptyDetails = Object.values(details).every(
+            (item: ItemData[]) => item.length === 0
+        )
+
+        if (emptyDetails) {
             toast({
                 title: "Ha ocurrido un error",
                 description: "No se ha seleccionado ningún item",
@@ -123,19 +92,6 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
         setSelectedClient(null)
     }
 
-    const handleSelectedUser = (client: string) => {
-        setPaymentStatus(PENDING_STATUS)
-        form.setValue("status", PENDING_STATUS)
-        const currentClient = allClients.find((clnt) => client === clnt.email)
-        setSelectedClient(currentClient)
-        toast({
-            title: "Cliente seleccionado",
-            description:
-                "Se han cargado los datos de la última planilla del cliente",
-            duration: 2000,
-        })
-    }
-
     useEffect(() => {
         if (paymentStatus === PENDING_STATUS) {
             form.setValue("paymentMethod", "")
@@ -171,32 +127,14 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="space-y-8"
                     >
-                        <div className={"flex items-center gap-4"}>
-                            <CustomInputField
-                                formSetValue={form.setValue}
-                                control={form.control}
-                                options={clients}
-                                formFieldName="clientName"
-                                type="select"
-                                search={true}
-                                label="Cliente"
-                                placeholder="Seleccione el cliente..."
-                                setValue={handleSelectedUser}
-                            />
-                            {!selectedClient && (
-                                <AddClientModal title="Nuevo cliente" />
-                            )}
-                            {selectedClient && (
-                                <Button
-                                    variant="destructive"
-                                    type="button"
-                                    onClick={() => cleanModal(false)}
-                                    className="float-right"
-                                >
-                                    Limpiar
-                                </Button>
-                            )}
-                        </div>
+                        <OrderSelectClient
+                            setValue={form.setValue}
+                            control={form.control}
+                            setPaymentStatus={setPaymentStatus}
+                            setSelectedClient={setSelectedClient}
+                            selectedClient={selectedClient}
+                            cleanModal={cleanModal}
+                        />
                         {selectedClient && (
                             <>
                                 <div className="grid grid-cols-3 gap-4">

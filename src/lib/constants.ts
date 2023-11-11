@@ -1,4 +1,4 @@
-import { type PaymentOptions, type SelectorOption } from "./types"
+import { type OrderItemsDetails, type PaymentOptions, type SelectorOption } from "./types"
 
 export const APPNAME = "Lavandería"
 export const PENDING_STATUS = "pending"
@@ -72,3 +72,23 @@ export const paymentMethods: PaymentOptions[] = [
     { label: "Tarjeta de Débito", value: "debitCard" },
     { label: "Transferencia", value: "transfer" },
 ]
+
+
+export const initialItems = {
+    wash: {
+        show: true,
+        items: [],
+    },
+    iron: {
+        show: false,
+        items: [],
+    },
+    washAndIron: {
+        show: false,
+        items: [],
+    },
+    dry: {
+        show: false,
+        items: [],
+    },
+} as OrderItemsDetails
