@@ -42,40 +42,39 @@ model Order {
     clientId       String
     createdAt      DateTime      @default(now())
     updatedAt      DateTime      @updatedAt
-    OrderData      OrderDetail?  @relation(fields: [orderDataId], references: [id], onDelete: Cascade)
     OrderPayment   OrderPayment? @relation(fields: [orderPaymentId], references: [id], onDelete: Cascade)
-    orderDataId    String?
-    orderPaymentId String?
-    Client         Client        @relation(fields: [clientId], references: [id])
+    orderPaymentId String?       @unique
+    OrderDetail    OrderDetail   @relation(fields: [orderDetailId], references: [id], onDelete: Cascade)
+    orderDetailId  String        @unique
+    Client         Client        @relation(fields: [clientId], references: [id], onDelete: NoAction)
+    deleted        Boolean       @default(false)
 }
 
 model OrderDetail {
-    id              String    @id @default(cuid())
-    // orderId         String
+    id              String   @id @default(cuid())
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
     checkin         DateTime
-    checkout        DateTime?
+    checkout        DateTime
+    shippingCost    Int
+    orderAmount     Int
     ticket          String
     details         String?
-    external        Boolean   @default(false)
+    external        Boolean  @default(false)
     externalDetails String?
-    createdAt       DateTime  @default(now())
-    updatedAt       DateTime  @updatedAt
-    Order           Order[]
+    Order           Order?
 }
 
 model OrderPayment {
-    id             String    @id @default(cuid())
-    // orderId        String
-    amount         Int
-    shippingCost   Int?
-    paymentDate    DateTime?
-    paymentMethod  String?
-    paymentType    String?
-    paymentTicket  String
+    id             String   @id @default(cuid())
     status         String
-    invoiceNumber  String?
+    paymentDate    DateTime
+    paymentMethod  String
+    paymentTicket  String
+    invoiceNumber  String
+    invoiceType    String
     paymentDetails String?
-    createdAt      DateTime  @default(now())
-    updatedAt      DateTime  @updatedAt
-    Order          Order[]
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+    Order          Order?
 }

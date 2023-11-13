@@ -37,8 +37,9 @@ CREATE TABLE "Order" (
     "clientId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "orderDataId" TEXT,
     "orderPaymentId" TEXT,
+    "orderDetailId" TEXT NOT NULL,
+    "deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );
@@ -46,15 +47,16 @@ CREATE TABLE "Order" (
 -- CreateTable
 CREATE TABLE "OrderDetail" (
     "id" TEXT NOT NULL,
-    "orderId" TEXT NOT NULL,
-    "checkin" TIMESTAMP(3) NOT NULL,
-    "checkout" TIMESTAMP(3) NOT NULL,
-    "ticket" TEXT NOT NULL,
-    "details" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "updatedBy" TEXT NOT NULL,
-    "orderDataId" TEXT NOT NULL,
+    "checkin" TIMESTAMP(3) NOT NULL,
+    "checkout" TIMESTAMP(3) NOT NULL,
+    "shippingCost" INTEGER NOT NULL,
+    "orderAmount" INTEGER NOT NULL,
+    "ticket" TEXT NOT NULL,
+    "details" TEXT,
+    "external" BOOLEAN NOT NULL DEFAULT false,
+    "externalDetails" TEXT,
 
     CONSTRAINT "OrderDetail_pkey" PRIMARY KEY ("id")
 );
@@ -62,18 +64,15 @@ CREATE TABLE "OrderDetail" (
 -- CreateTable
 CREATE TABLE "OrderPayment" (
     "id" TEXT NOT NULL,
-    "orderId" TEXT NOT NULL,
-    "amount" INTEGER NOT NULL,
-    "shippingCost" INTEGER NOT NULL,
+    "status" TEXT NOT NULL,
     "paymentDate" TIMESTAMP(3) NOT NULL,
     "paymentMethod" TEXT NOT NULL,
-    "paymentDetails" TEXT NOT NULL,
-    "paymentType" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
+    "paymentTicket" TEXT NOT NULL,
     "invoiceNumber" TEXT NOT NULL,
+    "invoiceType" TEXT NOT NULL,
+    "paymentDetails" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "orderPaymentId" TEXT NOT NULL,
 
     CONSTRAINT "OrderPayment_pkey" PRIMARY KEY ("id")
 );
@@ -85,19 +84,19 @@ CREATE UNIQUE INDEX "Role_name_key" ON "Role"("name");
 CREATE UNIQUE INDEX "Client_email_key" ON "Client"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "OrderDetail_orderDataId_key" ON "OrderDetail"("orderDataId");
+CREATE UNIQUE INDEX "Order_orderPaymentId_key" ON "Order"("orderPaymentId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "OrderPayment_orderPaymentId_key" ON "OrderPayment"("orderPaymentId");
+CREATE UNIQUE INDEX "Order_orderDetailId_key" ON "Order"("orderDetailId");
 
 -- AddForeignKey
 ALTER TABLE "UserRol" ADD CONSTRAINT "UserRol_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Order" ADD CONSTRAINT "Order_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "Client"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Order" ADD CONSTRAINT "Order_orderPaymentId_fkey" FOREIGN KEY ("orderPaymentId") REFERENCES "OrderPayment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Order" ADD CONSTRAINT "Order_orderDataId_fkey" FOREIGN KEY ("orderDataId") REFERENCES "OrderDetail"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Order" ADD CONSTRAINT "Order_orderDetailId_fkey" FOREIGN KEY ("orderDetailId") REFERENCES "OrderDetail"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Order" ADD CONSTRAINT "Order_orderPaymentId_fkey" FOREIGN KEY ("orderPaymentId") REFERENCES "OrderPayment"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Order" ADD CONSTRAINT "Order_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "Client"("id") ON DELETE NO ACTION ON UPDATE CASCADE;

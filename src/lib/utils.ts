@@ -2,7 +2,7 @@ import { type Client } from "@prisma/client"
 import { clsx, type ClassValue } from "clsx"
 import { formatRut } from "rutlib"
 import { twMerge } from "tailwind-merge"
-import { LAST_30_DAYS, URL_SPLITTER } from "./constants"
+import { LAST_30_DAYS, URL_SPLITTER, dbOrderStatus } from "./constants"
 import { type SheetRow, type sheetCols } from "./types"
 
 export function cn(...inputs: ClassValue[]) {
@@ -38,14 +38,19 @@ export const modifyDates = ({ date, days, action }: modifyDatesProps) => {
     return newDate
 }
 
+const setNullTime = (date: Date) => {
+    date.setHours(0, 0, 0, 0)
+    return date
+}
+
 export const last30Days = () => {
-    const today = new Date()
-    const thirtyDaysAgo = modifyDates({
+    const today = setNullTime(new Date())
+    const thirtyDaysAgo = setNullTime(modifyDates({
         date: today,
         days: 30,
         action: "substract",
-    })
-    const dateInWords = LAST_30_DAYS
+    }))
+    const dateInWords: string = LAST_30_DAYS
     return { from: thirtyDaysAgo, to: today, title: dateInWords }
 }
 
@@ -109,23 +114,44 @@ export const getDatesFromRange = (range: string): { from: Date; to: Date } => {
 }
 
 export function transformRowToSheetCols(row: SheetRow) {
-    const name = `${row.Client.fname} ${row.Client.lname}`
-    return {
-        name: name,
-        checkin: row.OrderData.checkin,
-        checkout: row.OrderData.checkout,
-        delivery: row.OrderPayment.shippingCost,
-        payment: row.OrderPayment.paymentDate,
-        paymentTotal: row.OrderPayment.amount,
-        paymentMethod: row.OrderPayment.paymentMethod,
-        status: row.OrderPayment.status,
-        invoice: row.OrderPayment.paymentType,
-        nInvoice: row.OrderPayment.invoiceNumber,
-        washingDry: row.OrderData.external,
-        ticket: row.OrderData.ticket,
-        secoDetails: row.OrderData.externalDetails,
-        paymentDetails: row.OrderPayment.paymentDetails,
+    const { Client, OrderDetail, OrderPayment } = row;
+    const name = `${Client.fname} ${Client.lname}`;
+    if (!OrderPayment) {
+        return {
+            id: row.id,
+            name,
+            checkin: OrderDetail.checkin,
+            checkout: OrderDetail.checkout,
+            paymentTotal: OrderDetail.orderAmount,
+            delivery: OrderDetail.shippingCost,
+            payment: null,
+            paymentMethod: null,
+            status: dbOrderStatus.pending,
+            invoice: null,
+            nInvoice: null,
+            washingDry: OrderDetail.external,
+            ticket: OrderDetail.ticket,
+            secoDetails: OrderDetail.externalDetails,
+            paymentDetails: null,
+        };
     }
+    return {
+        id: row.id,
+        name,
+        checkin: OrderDetail.checkin,
+        checkout: OrderDetail.checkout,
+        paymentTotal: OrderDetail.orderAmount,
+        delivery: OrderDetail.shippingCost,
+        payment: OrderPayment.paymentDate,
+        paymentMethod: OrderPayment.paymentMethod,
+        status: OrderPayment.status,
+        invoice: OrderPayment.invoiceType,
+        nInvoice: OrderPayment.invoiceNumber,
+        washingDry: OrderDetail.external,
+        ticket: OrderDetail.ticket,
+        secoDetails: OrderDetail.externalDetails,
+        paymentDetails: OrderPayment.paymentDetails,
+    };
 }
 
 export const transformRowsToSheetCols = (rows: SheetRow[]) =>

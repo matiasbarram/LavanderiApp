@@ -2,7 +2,7 @@ import { DatePickerWithRange } from "@/components/DatePicker/DatePicker"
 import ClientDataTable from "@/components/Sections/Plantilla/ClientTable"
 import SheetInfo from "@/components/Sections/Plantilla/SheetInfo"
 import { URL_SPLITTER } from "@/lib/constants"
-import { last30Days, rangeUrlFormat } from "@/lib/utils"
+import { last30Days } from "@/lib/utils"
 import { api } from "@/trpc/server"
 
 export default async function PlanillaPage({
@@ -10,15 +10,10 @@ export default async function PlanillaPage({
 }: {
     searchParams: { range: string }
 }) {
-    let dateInWords: null | string = null
     let firstDay: Date | null = null
     let lastDay: Date | null = null
 
     if (searchParams.range) {
-        dateInWords = rangeUrlFormat({
-            range: searchParams.range,
-            defaultMonth: "null",
-        })
         const [from, to] = searchParams.range.split(URL_SPLITTER)
         if (!from || !to) {
             throw new Error("Invalid range")
@@ -32,7 +27,6 @@ export default async function PlanillaPage({
     }
 
     const range = { from: firstDay, to: lastDay }
-
     const rows = await api.sheets.rowsByDateRange.query(range)
 
     return (

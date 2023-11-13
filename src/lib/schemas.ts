@@ -9,24 +9,24 @@ export const orderDetailSchema = z.object({
         .min(2, {
             message: "Debe ingresar el nombre del cliente.",
         }),
-        
+            
     checkin: z.date({
         required_error: "Seleccione la fecha de recepción.",
     }),
 
-    checkout: z.date().optional(),
+    checkout: z.date(),
 
-    ticket: z.string(),
+    ticket: z.string()
+        .min(2, {
+            message: "Debe ingresar el ticket.",
+        }),
 
     details: z.string().optional(),
 
     external: z.boolean().default(false),
 
     externalDetails: z.string().optional(),
-});
 
-// OrderPayment schema
-export const orderPaymentSchema = z.object({
     amount: z
         .string({ required_error: "Debe ingresar el monto." })
         .refine((value) => {
@@ -37,21 +37,28 @@ export const orderPaymentSchema = z.object({
             return cleanNums(value).toString();
         }),
 
-    shippingCost: z.string().optional(),
-
-    paymentDate: z.date().optional(),
-
-    paymentMethod: z.string().optional(),
-
-    status: z.string({
-        required_error: "Debe seleccionar el estado del pago.",
+    shippingCost: z.string()
+    .transform((value) => {
+        return cleanNums(value).toString();
     }),
 
-    invoiceNumber: z.string().optional(),
+});
+
+export const orderPaymentSchema = z.object({
+    paymentDate: z.date(),
+
+    paymentMethod: z.string(),
+
+    invoiceType: z.union([
+        z.literal("bill"),
+        z.literal("invoice"),
+    ]),
+
+    invoiceNumber: z.string(),
 
     paymentDetails: z.string().optional(),
 
-    paymentTicket: z.string().optional()
+    paymentTicket: z.string()
 });
 
 export const combinedOrderSchema = orderDetailSchema.merge(orderPaymentSchema);

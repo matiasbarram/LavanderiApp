@@ -49,6 +49,7 @@ export default function ActionsColum({ row }: { row: sheetCols }) {
             </DropdownMenu>
 
             <DeleteSheetRow
+                row={row}
                 isEditDialogOpen={isDeleteDialogOpen}
                 setIsEditDialogOpen={setIsDeleteDialogOpen}
             />

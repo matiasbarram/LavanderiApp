@@ -90,7 +90,6 @@ export default function CustomInputField<T>({
             )
         case "switch":
             const booleanValue = !!value
-
             return (
                 <SwitchField
                     control={control}

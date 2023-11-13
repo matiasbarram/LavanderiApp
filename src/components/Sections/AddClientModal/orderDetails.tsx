@@ -50,7 +50,7 @@ export default function OrderDetailsForm({
                     <CustomInputField
                         control={control}
                         type="input"
-                        formFieldName="deliveryCost"
+                        formFieldName="shippingCost"
                         label="Costo de entrega"
                         placeholder="Ingrese el costo..."
                         formatAs="currency"
@@ -62,18 +62,11 @@ export default function OrderDetailsForm({
                         label="Ticket de ingreso"
                         placeholder="Ingrese el N° de ticket ..."
                     />
-                    <CustomInputField
-                        control={control}
-                        type="textarea"
-                        formFieldName="detalle"
-                        label="Detalle"
-                        placeholder="Ingrese el detalle del pedido..."
-                    />
                     <div className="flex items-center space-x-2">
                         <CustomInputField
                             control={control}
                             type="switch"
-                            formFieldName="seco"
+                            formFieldName="external"
                             label="¿Va al seco?"
                             placeholder="Marque si va al seco..."
                             value={showSeco}
@@ -84,7 +77,7 @@ export default function OrderDetailsForm({
                         <CustomInputField
                             control={control}
                             type="textarea"
-                            formFieldName="secoDetails"
+                            formFieldName="externalDetails"
                             label="Seco"
                             placeholder="Ingrese el detalle del pedido..."
                         />

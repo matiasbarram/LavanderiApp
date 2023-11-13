@@ -2,10 +2,11 @@ import CustomInputField from "@/components/FormFields/customInputField"
 import AddClientModal from "@/components/Modal/addClientModal"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
-import { PENDING_STATUS } from "@/lib/constants"
+import { dbOrderStatus } from "@/lib/constants"
 import { type SelectorOption } from "@/lib/types"
 import { api } from "@/trpc/react"
 import { type Client } from "@prisma/client"
+import { useState } from "react"
 import {
     type Control,
     type FieldValues,
@@ -16,7 +17,6 @@ interface Props {
     setValue: UseFormSetValue<FieldValues>
     control: Control
 
-    setPaymentStatus: (value: string) => void
     setSelectedClient: (value: Client | undefined) => void
     selectedClient: Client | null | undefined
     cleanModal: (value: boolean) => void
@@ -25,25 +25,27 @@ interface Props {
 export default function OrderSelectClient({
     setValue,
     control,
-    setPaymentStatus,
     setSelectedClient,
     selectedClient,
     cleanModal,
 }: Props) {
-    const utils = api.useUtils()
     const { toast } = useToast()
+    const [isLoading, setIsLoading] = useState(false)
 
-    const allClients = utils.clients.getAll.getData() ?? []
-    const clients: SelectorOption[] = allClients.map((client) => {
-        return {
-            label: client.fname + " " + client.lname,
-            value: client.email,
-        }
-    })
+    const utils = api.useUtils()
+    const clients = utils.clients.getAll.getData()
+
+    const clientsOpts: SelectorOption[] =
+        clients?.map((client) => {
+            return {
+                label: client.fname + " " + client.lname,
+                value: client.email,
+            }
+        }) ?? []
+
     const handleSelectedUser = (client: string) => {
-        setPaymentStatus(PENDING_STATUS)
-        setValue("status", PENDING_STATUS)
-        const currentClient = allClients.find((clnt) => client === clnt.email)
+        setValue("status", dbOrderStatus.pending)
+        const currentClient = clients?.find((clnt) => client === clnt.email)
         setSelectedClient(currentClient)
         toast({
             title: "Cliente seleccionado",
@@ -58,7 +60,7 @@ export default function OrderSelectClient({
             <CustomInputField
                 formSetValue={setValue}
                 control={control}
-                options={clients}
+                options={clientsOpts}
                 formFieldName="clientName"
                 type="select"
                 search={true}

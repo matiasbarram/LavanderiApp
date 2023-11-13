@@ -1,12 +1,16 @@
 import { type OrderItemsDetails, type PaymentOptions, type SelectorOption } from "./types"
 
 export const APPNAME = "Lavandería"
-export const PENDING_STATUS = "pending"
 export const PICK_A_DATE = "Selecciona una fecha"
 export const DATE_FORMAT = "dd LLL y"
 export const URL_DATE_FORMAT = "yyyy/MM/dd"
 export const URL_SPLITTER = "-"
 export const LAST_30_DAYS = "Últimos 30 días"
+
+export const dbOrderStatus = {
+    pending: "pending",
+    paid: "paid",
+} as const
 
 export const detailQuantity = [
     { name: "1", value: "1" },

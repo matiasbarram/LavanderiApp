@@ -1,14 +1,21 @@
 import { Aside } from "@/components/Header/asideMenu"
 import Header from "@/components/Header/header"
+import { api } from "@/trpc/server"
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+    children,
+}: {
+    children: React.ReactNode
+}) {
+    const clients = await api.clients.getAll.query()
+
     return (
         <>
             <div className="">
                 <Aside />
                 <div className="p-4 sm:ml-64">
-                    <div className="xl:max-w-8xl mx-auto md:max-w-7xl">
-                        <Header />
+                    <div className="mx-auto md:max-w-7xl xl:max-w-8xl">
+                        <Header clients={clients} />
                         <main>{children}</main>
                     </div>
                 </div>

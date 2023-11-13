@@ -10,6 +10,7 @@ import {
 } from "react-hook-form/dist/types"
 
 export type sheetCols = {
+    id: string
     name: string
     checkin: Date
     checkout: Date
@@ -97,9 +98,10 @@ export interface FormFieldsProps {
 export type paymentMethods = "cash" | "creditCard" | "debitCard" | "transfer"
 
 export interface SheetRow {
+    id: string
     Client: Client
-    OrderData: OrderDetail
-    OrderPayment: OrderPayment
+    OrderDetail: OrderDetail
+    OrderPayment: OrderPayment | null
 }
 
 export interface PaymentOptions {

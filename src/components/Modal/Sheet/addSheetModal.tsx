@@ -17,12 +17,14 @@ import OrderDetailsForm from "@/components/Sections/AddClientModal/orderDetails"
 import OrderItemsForm from "@/components/Sections/AddClientModal/orderItems"
 import OrderSelectClient from "@/components/Sections/AddClientModal/orderSelectClient"
 import { Form } from "@/components/ui/form"
-import { PENDING_STATUS, initialItems } from "@/lib/constants"
-import { combinedOrderSchema } from "@/lib/schemas"
+import { initialItems } from "@/lib/constants"
+import { combinedOrderSchema, orderDetailSchema } from "@/lib/schemas"
 import { type ItemData, type OrderItemsDetails } from "@/lib/types"
+import { last30Days } from "@/lib/utils"
 import { api } from "@/trpc/react"
 import { type Client } from "@prisma/client"
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import { type z } from "zod"
 import SubmitAndCloseBtns from "../../Button/submitAndCloseModal"
 import OrderPaymentForm from "../../Sections/AddClientModal/orderPayment"
 import { useToast } from "../../ui/use-toast"
@@ -30,22 +32,22 @@ import CloseBtn from "../closeBtn"
 
 export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     const utils = api.useUtils()
-
     const [selectedClient, setSelectedClient] = useState<Client | null>()
+    const [includePayment, setIncludePayment] = useState(false)
     const [showSeco, setShowSeco] = useState(false)
-    const [paymentStatus, setPaymentStatus] = useState<string>(PENDING_STATUS)
     const [details, setDetails] = useState<OrderItemsDetails>(initialItems)
 
     const { toast } = useToast()
-    const { mutate: addSheet, isLoading } = api.sheets.create.useMutation()
+    const { mutate: addSheetWPayment } =
+        api.sheets.createWithPayment.useMutation()
+    const { mutate: addSheet } = api.sheets.createWithoutPayment.useMutation()
+    const schema = includePayment ? combinedOrderSchema : orderDetailSchema
 
     const form = useForm<FieldValues>({
-        resolver: zodResolver(combinedOrderSchema),
+        resolver: zodResolver(schema),
         defaultValues: {
-            deliveryCost: "$5.000",
+            shippingCost: "$5.000",
             voucher: "",
-            status: PENDING_STATUS,
-            seco: false,
         },
     })
 
@@ -63,27 +65,73 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
             })
             return
         }
-        const sheetData = combinedOrderSchema.parse(values)
-        addSheet(sheetData, {
-            onError: (error) => {
-                toast({
-                    title: "Error",
-                    description: "No se pudo agregar la planilla",
-                    duration: 2000,
+        try {
+            const sheetData = schema.parse(values)
+            sheetData.details = "Testing this must add items order"
+            if (includePayment) {
+                addSheetWPayment(
+                    sheetData as z.infer<typeof combinedOrderSchema>,
+                    {
+                        onError: (error) => {
+                            toast({
+                                title: "Error",
+                                description: "No se pudo agregar la planilla",
+                                duration: 2000,
+                            })
+                        },
+                        onSuccess: (data) => {
+                            toast({
+                                title: "Planilla agregada",
+                                description: "Se ha agregado la planilla",
+                                duration: 2000,
+                            })
+                        },
+                        onSettled: () => {
+                            cleanModal(false)
+                        },
+                    }
+                )
+            } else {
+                addSheet(sheetData, {
+                    onError: (error) => {
+                        toast({
+                            title: "Error",
+                            description: "No se pudo agregar la planilla",
+                            duration: 2000,
+                        })
+                    },
+                    onSuccess: (data) => {
+                        const today = last30Days()
+                        toast({
+                            title: "Planilla agregada",
+                            description: "Se ha agregado la planilla",
+                            duration: 2000,
+                        })
+                        utils.sheets.rowsByDateRange
+                            .invalidate({
+                                from: today.from,
+                                to: today.to,
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                            })
+                            .finally(() => {
+                                console.log("invalidate")
+                            })
+                    },
+                    onSettled: () => {
+                        cleanModal(false)
+                    },
                 })
-            },
-
-            onSuccess: (data) => {
-                toast({
-                    title: "Planilla agregada",
-                    description: "Se ha agregado la planilla",
-                    duration: 2000,
-                })
-            },
-            onSettled: () => {
-                cleanModal(false)
-            },
-        })
+            }
+        } catch (error) {
+            console.log(error)
+            toast({
+                title: "Error",
+                description: "No se pudo agregar la planilla",
+                duration: 2000,
+            })
+        }
     }
 
     const cleanModal = (open: boolean) => {
@@ -91,18 +139,6 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
         form.reset()
         setSelectedClient(null)
     }
-
-    useEffect(() => {
-        if (paymentStatus === PENDING_STATUS) {
-            form.setValue("paymentMethod", "")
-            form.setValue("voucher", "")
-            form.setValue("paymentDetails", "")
-            form.setValue("invoice", "")
-            form.resetField("paymentDate")
-            form.resetField("seco")
-            form.clearErrors()
-        }
-    }, [form, paymentStatus])
 
     return (
         <Dialog onOpenChange={(open) => cleanModal(open)}>
@@ -130,13 +166,13 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                         <OrderSelectClient
                             setValue={form.setValue}
                             control={form.control}
-                            setPaymentStatus={setPaymentStatus}
                             setSelectedClient={setSelectedClient}
                             selectedClient={selectedClient}
                             cleanModal={cleanModal}
                         />
                         {selectedClient && (
                             <>
+                                {JSON.stringify(form.formState.errors)}
                                 <div className="grid grid-cols-3 gap-4">
                                     <OrderDetailsForm
                                         className="col-span-1"
@@ -158,14 +194,13 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
                                         number={3}
                                         formSetValue={form.setValue}
                                         control={form.control}
-                                        isPaid={paymentStatus}
-                                        setIsPaid={setPaymentStatus}
+                                        includePayment={includePayment}
+                                        setIncludePayment={setIncludePayment}
                                     />
                                 </div>
                                 <SubmitAndCloseBtns
                                     setOpen={cleanModal}
                                     open={false}
-                                    isLoading={isLoading}
                                 />
                             </>
                         )}

@@ -1,6 +1,5 @@
 import SubmitAndCloseBtns from "@/components/Button/submitAndCloseModal"
 import OrderDetailsForm from "@/components/Sections/AddClientModal/orderDetails"
-import OrderPaymentForm from "@/components/Sections/AddClientModal/orderPayment"
 import {
     Dialog,
     DialogContent,
@@ -9,7 +8,6 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
-import { PENDING_STATUS } from "@/lib/constants"
 import { combinedOrderSchema } from "@/lib/schemas"
 import { type sheetCols } from "@/lib/types"
 import { toMoney } from "@/lib/utils"
@@ -20,6 +18,7 @@ import { type FieldValues } from "react-hook-form/dist/types"
 import CloseBtn from "../closeBtn"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { dbOrderStatus } from "@/lib/constants"
 
 interface EditSheetRowProps {
     isEditDialogOpen: boolean
@@ -34,7 +33,7 @@ export default function EditSheetRow({
 }: EditSheetRowProps) {
     const [showSeco, setShowSeco] = useState(false)
     const [paymentStatus, setPaymentStatus] = useState<string>(
-        row.status ? row.status : PENDING_STATUS
+        row.status ? row.status : dbOrderStatus.pending
     )
     const [isLoading, setIsLoading] = useState(false)
 
@@ -101,14 +100,12 @@ export default function EditSheetRow({
                                 />
                             </TabsContent>
                             <TabsContent value="payment">
-                                <OrderPaymentForm
+                                {/* <OrderPaymentForm
                                     className="min-h-[400px]"
                                     number={2}
                                     formSetValue={form.setValue}
                                     control={form.control}
-                                    isPaid={paymentStatus}
-                                    setIsPaid={setPaymentStatus}
-                                />
+                                /> */}
                             </TabsContent>
                             <SubmitAndCloseBtns
                                 setOpen={cleanModal}

@@ -23,20 +23,12 @@ import { toLocaleDate, toMoney } from "@/lib/utils"
 import { type ColumnDef } from "@tanstack/react-table"
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react"
 
-type invoiceVariant = "default" | "outline"
-interface invoiceData {
-    title: string
-    variant: invoiceVariant
-}
-
 type statusVariant = "default" | "outline" | "secondary" | "destructive"
 
-type dateRange = {
-    from: Date
-    to: Date
-}
-
 export const columns: ColumnDef<sheetCols>[] = [
+    {
+        accessorKey: "id",
+    },
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -118,8 +110,16 @@ export const columns: ColumnDef<sheetCols>[] = [
         },
     },
     {
-        accessorKey: "ticket",
-        header: "Ticket",
+        accessorKey: "paymentTotal",
+        header: ({ column }) => {
+            return <DataTableColumnHeader column={column} title="Total" />
+        },
+        cell: ({ row }) => {
+            const amount: number | null = row.getValue("paymentTotal")
+            if (!amount) return ""
+            const formatted = toMoney(amount)
+            return formatted
+        },
     },
     {
         accessorKey: "delivery",
@@ -128,6 +128,30 @@ export const columns: ColumnDef<sheetCols>[] = [
             const amount = parseFloat(row.getValue("delivery"))
             const formatted = toMoney(amount)
             return formatted
+        },
+    },
+    {
+        accessorKey: "ticket",
+        header: "Ticket",
+    },
+    {
+        accessorKey: "washingDry",
+        header: "¿Va al seco?",
+        filterFn: (row, id, value: unknown[]) => {
+            const findValue: boolean[] = []
+            const posibleValues = [NEGATIVE_BOOLEAN, POSITIVE_BOOLEAN]
+            const currentRow: boolean = row.getValue(id)
+            value.forEach((val) => {
+                const vl = val === POSITIVE_BOOLEAN ? true : false
+                if (vl === currentRow) {
+                    findValue.push(vl)
+                }
+            })
+            return findValue.includes(currentRow)
+        },
+        cell: ({ row }) => {
+            const seco: boolean = row.getValue("washingDry")
+            return seco ? "Si" : "No"
         },
     },
     {
@@ -141,18 +165,6 @@ export const columns: ColumnDef<sheetCols>[] = [
             const date: string = row.getValue("payment")
             if (!date) return null
             const formatted = toLocaleDate(date)
-            return formatted
-        },
-    },
-    {
-        accessorKey: "paymentTotal",
-        header: ({ column }) => {
-            return <DataTableColumnHeader column={column} title="Total" />
-        },
-        cell: ({ row }) => {
-            const amount: number | null = row.getValue("paymentTotal")
-            if (!amount) return "Pago pendiente"
-            const formatted = toMoney(amount)
             return formatted
         },
     },
@@ -198,26 +210,6 @@ export const columns: ColumnDef<sheetCols>[] = [
     {
         accessorKey: "nInvoice",
         header: "N° de comprobante",
-    },
-    {
-        accessorKey: "washingDry",
-        header: "¿Va al seco?",
-        filterFn: (row, id, value: unknown[]) => {
-            const findValue: boolean[] = []
-            const posibleValues = [NEGATIVE_BOOLEAN, POSITIVE_BOOLEAN]
-            const currentRow: boolean = row.getValue(id)
-            value.forEach((val) => {
-                const vl = val === POSITIVE_BOOLEAN ? true : false
-                if (vl === currentRow) {
-                    findValue.push(vl)
-                }
-            })
-            return findValue.includes(currentRow)
-        },
-        cell: ({ row }) => {
-            const seco: boolean = row.getValue("washingDry")
-            return seco ? "Si" : "No"
-        },
     },
     {
         id: "actions",

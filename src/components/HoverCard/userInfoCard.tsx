@@ -14,8 +14,6 @@ export default function UserInfoCard({ name }: { name: string }) {
     const clients = utils.clients.getAll.getData()
     const client = clients?.find((c) => c.fname === fname && c.lname === lname)
 
-    if (!client) return null
-
     return (
         <HoverCard open={open} onOpenChange={setOpen}>
             <HoverCardTrigger asChild>
@@ -23,7 +21,7 @@ export default function UserInfoCard({ name }: { name: string }) {
             </HoverCardTrigger>
             <HoverCardContent>
                 <div className="flex flex-col gap-1">
-                    {
+                    {client && (
                         <>
                             <p className="text-xs font-semibold">
                                 <Mail className="mr-1 inline" size={12} />
@@ -38,7 +36,7 @@ export default function UserInfoCard({ name }: { name: string }) {
                                 {client.address}
                             </p>
                         </>
-                    }
+                    )}
                 </div>
             </HoverCardContent>
         </HoverCard>

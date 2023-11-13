@@ -48,7 +48,8 @@ export const clientRouter = createTRPCRouter({
                 },
             })
         }),
-    getAll: publicProcedure.query(({ ctx }) => {
+    getAll: publicProcedure
+    .query(({ ctx }) => {
         return ctx.db.client.findMany({
             orderBy: {
                 fname: "asc",
