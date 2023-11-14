@@ -77,6 +77,25 @@ export const paymentMethods: PaymentOptions[] = [
     { label: "Transferencia", value: "transfer" },
 ]
 
+export const categories = ["WASH", "IRON", "WASH_IRON", "DRY_CLEANING"]
+export const categoriesLabels = {
+    WASH: {
+        long: "Lavado",
+        short: "L",
+    },
+    IRON: {
+        long: "Planchado",
+        short: "P",
+    },
+    WASH_IRON: {
+        long: "Lavado y Planchado",
+        short: "L&P",
+    },
+    DRY_CLEANING: {
+        long: "Limpieza en Seco",
+        short: "LS",
+    }
+} as const
 
 export const initialItems = {
     WASH: {
@@ -96,3 +115,10 @@ export const initialItems = {
         items: [],
     },
 } as OrderItemsDetails
+
+export const categoriesColors = {
+    WASH: "wash",
+    IRON: "iron",
+    WASH_IRON: "washIron",
+    DRY_CLEANING: "cleaning",
+}

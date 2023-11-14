@@ -2,8 +2,8 @@ import { type Client } from "@prisma/client"
 import { clsx, type ClassValue } from "clsx"
 import { formatRut } from "rutlib"
 import { twMerge } from "tailwind-merge"
-import { LAST_30_DAYS, URL_SPLITTER, dbOrderStatus } from "./constants"
-import { type SheetRow, type sheetCols } from "./types"
+import { LAST_30_DAYS, URL_SPLITTER, categoriesColors, dbOrderStatus } from "./constants"
+import { type ClothesVariants, type SheetRow, type sheetCols } from "./types"
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
@@ -191,3 +191,7 @@ export const validatePhone = (phone: string) => {
     return regex.test(phone)
 }
 
+
+export const getClothesCategoryColor = (category: string): ClothesVariants => {
+    return categoriesColors[category as keyof typeof categoriesColors] as ClothesVariants
+}

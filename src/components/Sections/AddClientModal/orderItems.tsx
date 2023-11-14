@@ -9,11 +9,13 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Toggle } from "@/components/ui/toggle"
+import { categories } from "@/lib/constants"
 import {
     type FormFieldsProps,
     type ItemData,
     type OrderItemsDetails,
 } from "@/lib/types"
+import { getClothesCategoryColor } from "@/lib/utils"
 import AddOrderDetails from "./addOrderItem"
 
 interface OrderDetailsFormProps extends FormFieldsProps {
@@ -58,8 +60,7 @@ export default function OrderItemsForm({
     setDetails,
 }: OrderDetailsFormProps) {
     const toggleDetails = (type: string) => {
-        const types = ["WASH", "IRON", "WASH_IRON", "DRY_CLEANING"]
-        if (!types.includes(type)) return
+        if (!categories.includes(type)) return
         const orderItem = type as keyof OrderItemsDetails
         setDetails({
             ...details,
@@ -95,11 +96,11 @@ export default function OrderItemsForm({
                 <CardContent>
                     <div className="mb-4 flex items-center justify-start space-x-2">
                         {toggleOptions.map(({ key, label }) => {
+                            const variant = getClothesCategoryColor(key)
                             return (
                                 <Toggle
                                     key={key}
-                                    className={`bg-primary-foreground/30 px-2 py-1 text-xs data-[state=on]:bg-primary data-[state=on]:text-white`}
-                                    variant="outline"
+                                    variant={variant}
                                     defaultPressed={
                                         details[key as keyof OrderItemsDetails]
                                             .show

@@ -21,6 +21,23 @@ module.exports = {
       },
       
       colors: {
+        wash: {
+          DEFAULT: "hsl(var(--wash))",
+          foreground: "hsl(var(--wash-foreground))",
+        },
+        
+        iron: {
+          DEFAULT: "hsl(var(--iron))",
+          foreground: "hsl(var(--iron-foreground))",
+        },
+        washIron: {
+          DEFAULT: "hsl(var(--wash-iron))",
+          foreground: "hsl(var(--wash-iron-foreground))",
+        },
+        cleaning: {
+          DEFAULT: "hsl(var(--dry-cleaning))",
+          foreground: "hsl(var(--dry-cleaning-foreground))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

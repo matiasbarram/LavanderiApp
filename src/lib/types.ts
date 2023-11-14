@@ -159,3 +159,5 @@ export interface PrismaFormatClothes {
     quantity: number
     category: ClothingCategory
 }
+
+export type ClothesVariants = "wash" | "iron" | "washIron" |"cleaning" 

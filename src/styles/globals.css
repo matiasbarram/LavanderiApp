@@ -24,6 +24,14 @@
         --input: 214.3 31.8% 91.4%;
         --ring: 221.2 83.2% 53.3%;
         --radius: 0.3rem;
+        --wash: 45, 100%, 51%;
+        --wash-foreground: 0, 0%, 13%;
+        --iron: 214, 68%, 56%;
+        --iron-foreground: 0, 0%, 100%;
+        --wash-iron: 138, 47%, 38%;
+        --wash-iron-foreground: 0, 0%, 100%;
+        --dry-cleaning: 318, 44%, 48%;
+        --dry-cleaning-foreground: 0, 0%, 100%;
     }
 
     .dark {

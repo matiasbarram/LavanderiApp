@@ -19,12 +19,20 @@ import {
     type paymentMethods,
     type sheetCols,
 } from "@/lib/types"
-import { cn, toLocaleDate, toMoney } from "@/lib/utils"
+import { getClothesCategoryColor, toLocaleDate, toMoney } from "@/lib/utils"
 import { type Clothing } from "@prisma/client"
 import { type ColumnDef } from "@tanstack/react-table"
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react"
 
-type statusVariant = "default" | "outline" | "secondary" | "destructive"
+type statusVariant =
+    | "default"
+    | "outline"
+    | "secondary"
+    | "destructive"
+    | "wash"
+    | "iron"
+    | "washIron"
+    | "cleaning"
 
 export const columns: ColumnDef<sheetCols>[] = [
     {
@@ -163,11 +171,14 @@ export const columns: ColumnDef<sheetCols>[] = [
             return (
                 <div className="flex flex-col gap-1">
                     {clothes.map((cloth) => {
+                        const variant = getClothesCategoryColor(
+                            cloth.category
+                        ) as statusVariant
                         return (
                             <Badge
                                 key={cloth.id}
-                                variant="default"
-                                className={cn("w-fit text-xs")}
+                                variant={variant}
+                                className={"w-fit text-xs"}
                             >
                                 <span>
                                     {cloth.quantity} - {cloth.description}
