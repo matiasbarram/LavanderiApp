@@ -16,6 +16,7 @@ import {
     type OrderItemsDetails,
 } from "@/lib/types"
 import { getClothesCategoryColor } from "@/lib/utils"
+import { Fragment } from "react"
 import AddOrderDetails from "./addOrderItem"
 
 interface OrderDetailsFormProps extends FormFieldsProps {
@@ -116,18 +117,21 @@ export default function OrderItemsForm({
                     {itemsOptions.map(
                         ({ key, title, placeholder }) =>
                             details[key as keyof OrderItemsDetails].show && (
-                                <AddOrderDetails
-                                    key={key}
-                                    title={title}
-                                    placeholder={placeholder}
-                                    items={
-                                        details[key as keyof OrderItemsDetails]
-                                            .items
-                                    }
-                                    setItems={(items) =>
-                                        setDetailsItems(key, items)
-                                    }
-                                />
+                                <Fragment key={key}>
+                                    <AddOrderDetails
+                                        category={key}
+                                        title={title}
+                                        placeholder={placeholder}
+                                        items={
+                                            details[
+                                                key as keyof OrderItemsDetails
+                                            ].items
+                                        }
+                                        setItems={(items) =>
+                                            setDetailsItems(key, items)
+                                        }
+                                    />
+                                </Fragment>
                             )
                     )}
                 </CardContent>

@@ -127,7 +127,7 @@ export const columns: ColumnDef<sheetCols>[] = [
             const amount: number | null = row.getValue("paymentTotal")
             if (!amount) return ""
             const formatted = toMoney(amount)
-            return formatted
+            return <span className="font-semibold">{formatted}</span>
         },
     },
     {
@@ -136,7 +136,7 @@ export const columns: ColumnDef<sheetCols>[] = [
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue("delivery"))
             const formatted = toMoney(amount)
-            return formatted
+            return <span className="font-medium">{formatted}</span>
         },
     },
     {

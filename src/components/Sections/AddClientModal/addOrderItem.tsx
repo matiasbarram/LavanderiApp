@@ -9,13 +9,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { detailQuantity } from "@/lib/constants"
-import { type ItemData } from "@/lib/types"
+import { categoriesColors, detailQuantity } from "@/lib/constants"
+import { type ClothesVariants, type ItemData } from "@/lib/types"
 import { capitalize } from "@/lib/utils"
 import { X } from "lucide-react"
 import { useRef, useState } from "react"
 
 interface OrderDetailsProps {
+    category: string
     title: string
     placeholder: string
     items: ItemData[]
@@ -23,6 +24,7 @@ interface OrderDetailsProps {
 }
 
 export default function AddOrderDetails({
+    category,
     title,
     placeholder,
     items,
@@ -31,10 +33,12 @@ export default function AddOrderDetails({
     const [quantity, setQuantity] = useState<number>(1)
     const [inputValue, setInputValue] = useState<string>("")
     const inputRef = useRef<HTMLInputElement>(null)
+    const variant = categoriesColors[category as keyof typeof categoriesColors]
 
     const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             e.preventDefault()
+            if (!inputValue) return
             setItems([
                 ...items,
                 {
@@ -87,20 +91,28 @@ export default function AddOrderDetails({
                 </div>
             </div>
             <div className="my-4 flex flex-wrap gap-1">
-                {items.map((item, index) => (
-                    <Badge key={index} className="mr-2 cursor-pointer">
-                        <span className="p-1">
-                            {item.quantity} - {item.name}
-                        </span>
-                        <X
-                            className="ml-2"
-                            size={16}
-                            onClick={() =>
-                                setItems(items.filter((_, i) => i !== index))
-                            }
-                        />
-                    </Badge>
-                ))}
+                {items.map((item, index) => {
+                    return (
+                        <Badge
+                            key={index}
+                            className="mr-2 cursor-pointer"
+                            variant={variant as ClothesVariants}
+                        >
+                            <span className="p-1">
+                                {item.quantity} - {item.name}
+                            </span>
+                            <X
+                                className="ml-2"
+                                size={16}
+                                onClick={() =>
+                                    setItems(
+                                        items.filter((_, i) => i !== index)
+                                    )
+                                }
+                            />
+                        </Badge>
+                    )
+                })}
             </div>
         </div>
     )

@@ -12,12 +12,12 @@ const toggleVariants = cva(
                 default: "bg-transparent",
                 outline:
                     "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
-                wash: "data-[state=on]:bg-wash data-[state=on]:text-wash-foreground",
-                iron: "data-[state=on]:bg-iron data-[state=on]:text-iron-foreground",
+                wash: "text-xs border border-input data-[state=on]:bg-wash data-[state=on]:text-wash-foreground",
+                iron: "text-xs border border-input data-[state=on]:bg-iron data-[state=on]:text-iron-foreground",
                 washIron:
-                    "data-[state=on]:bg-washIron data-[state=on]:text-washIron-foreground",
+                    "text-xs border border-input data-[state=on]:bg-washIron data-[state=on]:text-washIron-foreground",
                 cleaning:
-                    "data-[state=on]:bg-cleaning data-[state=on]:text-cleaning-foreground",
+                    "text-xs border border-input data-[state=on]:bg-cleaning data-[state=on]:text-cleaning-foreground",
             },
             size: {
                 default: "h-10 px-3",
