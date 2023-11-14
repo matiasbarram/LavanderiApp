@@ -38,7 +38,7 @@ export const modifyDates = ({ date, days, action }: modifyDatesProps) => {
     return newDate
 }
 
-const setNullTime = (date: Date) => {
+export const setNullTime = (date: Date) => {
     date.setHours(0, 0, 0, 0)
     return date
 }
@@ -114,43 +114,44 @@ export const getDatesFromRange = (range: string): { from: Date; to: Date } => {
 }
 
 export function transformRowToSheetCols(row: SheetRow) {
-    const { Client, OrderDetail, OrderPayment } = row;
+    const { Client, OrderDetail, OrderPayment, Clothing } = row;
     const name = `${Client.fname} ${Client.lname}`;
+
+    const details = {
+        checkin: OrderDetail.checkin,
+        checkout: OrderDetail.checkout,
+        paymentTotal: OrderDetail.orderAmount,
+        delivery: OrderDetail.shippingCost,
+        washingDry: OrderDetail.external,
+        secoDetails: OrderDetail.externalDetails,
+        ticket: OrderDetail.ticket,
+    }
+
     if (!OrderPayment) {
         return {
             id: row.id,
             name,
-            checkin: OrderDetail.checkin,
-            checkout: OrderDetail.checkout,
-            paymentTotal: OrderDetail.orderAmount,
-            delivery: OrderDetail.shippingCost,
+            ...details,
             payment: null,
             paymentMethod: null,
-            status: dbOrderStatus.pending,
             invoice: null,
             nInvoice: null,
-            washingDry: OrderDetail.external,
-            ticket: OrderDetail.ticket,
-            secoDetails: OrderDetail.externalDetails,
             paymentDetails: null,
+            status: dbOrderStatus.pending,
+            clothes: Clothing
         };
     }
     return {
         id: row.id,
         name,
-        checkin: OrderDetail.checkin,
-        checkout: OrderDetail.checkout,
-        paymentTotal: OrderDetail.orderAmount,
-        delivery: OrderDetail.shippingCost,
+        ...details,
         payment: OrderPayment.paymentDate,
         paymentMethod: OrderPayment.paymentMethod,
         status: OrderPayment.status,
         invoice: OrderPayment.invoiceType,
         nInvoice: OrderPayment.invoiceNumber,
-        washingDry: OrderDetail.external,
-        ticket: OrderDetail.ticket,
-        secoDetails: OrderDetail.externalDetails,
         paymentDetails: OrderPayment.paymentDetails,
+        clothes: Clothing
     };
 }
 

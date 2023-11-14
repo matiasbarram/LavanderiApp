@@ -79,19 +79,19 @@ export const paymentMethods: PaymentOptions[] = [
 
 
 export const initialItems = {
-    wash: {
+    WASH: {
         show: true,
         items: [],
     },
-    iron: {
+    IRON: {
         show: false,
         items: [],
     },
-    washAndIron: {
+    WASH_IRON: {
         show: false,
         items: [],
     },
-    dry: {
+    DRY_CLEANING: {
         show: false,
         items: [],
     },

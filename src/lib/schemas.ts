@@ -112,3 +112,31 @@ export const clientSchema = z.object({
 
     description: z.string().optional(),
 })
+
+const ItemDataSchema = z.object({
+    name: z.string(),
+    quantity: z.number(),
+});
+const ItemsOptionsSchema = z.object({
+    show: z.boolean(),
+    items: z.array(ItemDataSchema)
+  });
+  
+export const OrderItemsDetailsSchema = z.object({
+    WASH: ItemsOptionsSchema,
+    IRON: ItemsOptionsSchema,
+    WASH_IRON: ItemsOptionsSchema,
+    DRY_CLEANING: ItemsOptionsSchema,
+});
+
+
+
+export const createOrderSchema = z.object({
+    order: orderDetailSchema,
+    items: OrderItemsDetailsSchema,
+});
+
+export const createOrderWithPaymentSchema = z.object({
+    order: combinedOrderSchema,
+    items: OrderItemsDetailsSchema,
+});

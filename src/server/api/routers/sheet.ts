@@ -1,55 +1,66 @@
 import { z } from "zod"
 
 import { dbOrderStatus } from "@/lib/constants"
-import { combinedOrderSchema, orderDetailSchema, type orderPaymentSchema } from "@/lib/schemas"
+import { createOrderSchema, createOrderWithPaymentSchema, type OrderItemsDetailsSchema, type orderDetailSchema, type orderPaymentSchema } from "@/lib/schemas"
+import { type PrismaFormatClothes } from "@/lib/types"
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc"
 import { type PrismaClient } from "@prisma/client"
 
 export const sheetRouter = createTRPCRouter({
     createWithPayment: publicProcedure
-        .input(combinedOrderSchema)
+        .input(createOrderWithPaymentSchema)
         .mutation(async ({ ctx, input }) => {
 
             const client = await findClientByEmail({
                 prisma: ctx.db,
-                email: input.clientName,
+                email: input.order.clientName,
             })
 
             const orderDetails = await createOrderDetail({
                 prisma: ctx.db,
-                input,
+                input: input.order
             })
 
             const orderPayment = await createOrderPayment({
                 prisma: ctx.db,
-                input,
+                input: input.order,
             })
-
-            return await createOrder({
+            const order = await createOrder({
                 prisma: ctx.db,
                 clientId: client.id,
                 orderDataId: orderDetails.id,
                 orderPaymentId: orderPayment.id,
             })
+
+            const clothes = createClothes({
+                prisma: ctx.db,
+                input: input.items,
+                orderId: order.id,
+            })
         }),
 
 
     createWithoutPayment: publicProcedure
-    .input(orderDetailSchema)
+    .input(createOrderSchema)
     .mutation(async ({ ctx, input }) => {
         const client = await findClientByEmail({
             prisma: ctx.db,
-            email: input.clientName,
+            email: input.order.clientName,
         })
 
         const orderDetails = await createOrderDetail({
             prisma: ctx.db,
-            input,
+            input: input.order
         })
-        return await createOrder({
+        const order = await createOrder({
             prisma: ctx.db,
             clientId: client.id,
             orderDataId: orderDetails.id,
+        })
+        const clothes = createClothes({
+            prisma: ctx.db,
+            input: input.items,
+            orderId: order.id,
         })
     }),
 
@@ -75,6 +86,7 @@ export const sheetRouter = createTRPCRouter({
                     OrderDetail: true,
                     OrderPayment: true,
                     Client: true,
+                    Clothing: true,
                 },
                 orderBy: {
                     OrderDetail: {
@@ -226,4 +238,36 @@ async function findClientByEmail({
     }
 
     return client
+}
+
+async function createClothes({
+    prisma,
+    input,
+    orderId,
+}: {
+    prisma: PrismaClient
+    input: z.infer<typeof OrderItemsDetailsSchema>
+    orderId: string
+}) {
+    const items = transformItems(input, orderId)
+    const newClothes = await prisma.clothing.createMany({
+        data: items,
+        skipDuplicates: true,
+    })
+}
+
+
+function transformItems(itemsDetails: z.infer<typeof OrderItemsDetailsSchema>, orderId: string): PrismaFormatClothes[] {
+    return Object.keys(itemsDetails).flatMap((key) => {
+        const k = key as keyof typeof itemsDetails
+        const category_items = itemsDetails[k]
+        return category_items.items.flatMap((item) => {
+            return {
+                orderId: orderId,
+                description: item.name,
+                quantity: item.quantity,
+                category: k
+            }
+        })
+     })
 }

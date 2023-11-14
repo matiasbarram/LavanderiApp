@@ -18,17 +18,33 @@ import OrderItemsForm from "@/components/Sections/AddClientModal/orderItems"
 import OrderSelectClient from "@/components/Sections/AddClientModal/orderSelectClient"
 import { Form } from "@/components/ui/form"
 import { initialItems } from "@/lib/constants"
-import { combinedOrderSchema, orderDetailSchema } from "@/lib/schemas"
-import { type ItemData, type OrderItemsDetails } from "@/lib/types"
+import {
+    OrderItemsDetailsSchema,
+    combinedOrderSchema,
+    orderDetailSchema,
+} from "@/lib/schemas"
+import { type ItemsOptions, type OrderItemsDetails } from "@/lib/types"
 import { last30Days } from "@/lib/utils"
 import { api } from "@/trpc/react"
 import { type Client } from "@prisma/client"
 import { useState } from "react"
-import { type z } from "zod"
+import { ZodError, type z } from "zod"
 import SubmitAndCloseBtns from "../../Button/submitAndCloseModal"
 import OrderPaymentForm from "../../Sections/AddClientModal/orderPayment"
 import { useToast } from "../../ui/use-toast"
 import CloseBtn from "../closeBtn"
+
+// is more readable use foreach istead every
+function areAllItemsEmpty(itemsDetails: OrderItemsDetails): boolean {
+    let isEmpty = true
+    Object.values(itemsDetails).forEach((item: ItemsOptions) => {
+        if (item.show && item.items.length > 0) {
+            isEmpty = false
+            return
+        }
+    })
+    return isEmpty
+}
 
 export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     const utils = api.useUtils()
@@ -52,47 +68,58 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     })
 
     function onSubmit(values: FieldValues) {
-        const emptyDetails = Object.values(details).every(
-            (item: ItemData[]) => item.length === 0
-        )
-
+        const emptyDetails = areAllItemsEmpty(details)
         if (emptyDetails) {
             toast({
-                title: "Ha ocurrido un error",
-                description: "No se ha seleccionado ningún item",
-                duration: 2000,
+                title: "Error",
+                description: "Debes agregar al menos una prenda",
                 variant: "destructive",
             })
             return
         }
         try {
+            OrderItemsDetailsSchema.parse(details)
+            console.log("La estructura es válida.")
+        } catch (error) {
+            if (error instanceof ZodError) {
+                console.log("Error de validación:", error.errors)
+            }
+        }
+
+        try {
             const sheetData = schema.parse(values)
+
             sheetData.details = "Testing this must add items order"
             if (includePayment) {
-                addSheetWPayment(
-                    sheetData as z.infer<typeof combinedOrderSchema>,
-                    {
-                        onError: (error) => {
-                            toast({
-                                title: "Error",
-                                description: "No se pudo agregar la planilla",
-                                duration: 2000,
-                            })
-                        },
-                        onSuccess: (data) => {
-                            toast({
-                                title: "Planilla agregada",
-                                description: "Se ha agregado la planilla",
-                                duration: 2000,
-                            })
-                        },
-                        onSettled: () => {
-                            cleanModal(false)
-                        },
-                    }
-                )
+                const apiFormat = {
+                    order: sheetData as z.infer<typeof combinedOrderSchema>,
+                    items: details,
+                }
+                addSheetWPayment(apiFormat, {
+                    onError: (error) => {
+                        toast({
+                            title: "Error",
+                            description: "No se pudo agregar la planilla",
+                            duration: 2000,
+                        })
+                    },
+                    onSuccess: (data) => {
+                        toast({
+                            title: "Planilla agregada",
+                            description: "Se ha agregado la planilla",
+                            duration: 2000,
+                        })
+                    },
+                    onSettled: () => {
+                        cleanModal(false)
+                    },
+                })
             } else {
-                addSheet(sheetData, {
+                const apiFormat = {
+                    order: sheetData,
+                    items: details,
+                }
+                addSheet(apiFormat, {
                     onError: (error) => {
                         toast({
                             title: "Error",

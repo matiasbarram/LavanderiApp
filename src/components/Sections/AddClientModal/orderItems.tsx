@@ -22,30 +22,30 @@ interface OrderDetailsFormProps extends FormFieldsProps {
 }
 
 const toggleOptions = [
-    { key: "wash", label: "Lavado" },
-    { key: "iron", label: "Planchado" },
-    { key: "washAndIron", label: "Lavado y planchado" },
-    { key: "dry", label: "Seco" },
+    { key: "WASH", label: "Lavado" },
+    { key: "IRON", label: "Planchado" },
+    { key: "WASH_IRON", label: "Lavado y planchado" },
+    { key: "DRY_CLEANING", label: "Seco" },
 ]
 
 const itemsOptions = [
     {
-        key: "wash",
+        key: "WASH",
         title: "Lavado",
         placeholder: "Ingrese los detalles del lavado...",
     },
     {
-        key: "iron",
+        key: "IRON",
         title: "Planchado",
         placeholder: "Ingrese los detalles del planchado...",
     },
     {
-        key: "washAndIron",
+        key: "WASH_IRON",
         title: "Lavado y Planchado",
         placeholder: "Ingrese los detalles del lavado y planchado...",
     },
     {
-        key: "dry",
+        key: "DRY_CLEANING",
         title: "Seco",
         placeholder: "Ingrese los detalles del secado...",
     },
@@ -58,7 +58,7 @@ export default function OrderItemsForm({
     setDetails,
 }: OrderDetailsFormProps) {
     const toggleDetails = (type: string) => {
-        const types = ["wash", "iron", "washAndIron", "dry"]
+        const types = ["WASH", "IRON", "WASH_IRON", "DRY_CLEANING"]
         if (!types.includes(type)) return
         const orderItem = type as keyof OrderItemsDetails
         setDetails({
@@ -94,19 +94,22 @@ export default function OrderItemsForm({
                 </CardHeader>
                 <CardContent>
                     <div className="mb-4 flex items-center justify-start space-x-2">
-                        {toggleOptions.map(({ key, label }) => (
-                            <Toggle
-                                key={key}
-                                className={`bg-primary-foreground/30 px-2 py-1 text-xs data-[state=on]:bg-primary data-[state=on]:text-white`}
-                                variant="outline"
-                                defaultPressed={
-                                    details[key as keyof OrderItemsDetails].show
-                                }
-                                onClick={() => toggleDetails(key)}
-                            >
-                                {label}
-                            </Toggle>
-                        ))}
+                        {toggleOptions.map(({ key, label }) => {
+                            return (
+                                <Toggle
+                                    key={key}
+                                    className={`bg-primary-foreground/30 px-2 py-1 text-xs data-[state=on]:bg-primary data-[state=on]:text-white`}
+                                    variant="outline"
+                                    defaultPressed={
+                                        details[key as keyof OrderItemsDetails]
+                                            .show
+                                    }
+                                    onClick={() => toggleDetails(key)}
+                                >
+                                    {label}
+                                </Toggle>
+                            )
+                        })}
                     </div>
 
                     {itemsOptions.map(

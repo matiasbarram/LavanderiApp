@@ -19,7 +19,8 @@ import {
     type paymentMethods,
     type sheetCols,
 } from "@/lib/types"
-import { toLocaleDate, toMoney } from "@/lib/utils"
+import { cn, toLocaleDate, toMoney } from "@/lib/utils"
+import { type Clothing } from "@prisma/client"
 import { type ColumnDef } from "@tanstack/react-table"
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react"
 
@@ -152,6 +153,30 @@ export const columns: ColumnDef<sheetCols>[] = [
         cell: ({ row }) => {
             const seco: boolean = row.getValue("washingDry")
             return seco ? "Si" : "No"
+        },
+    },
+    {
+        accessorKey: "clothes",
+        header: "Prendas",
+        cell: ({ row }) => {
+            const clothes: Clothing[] = row.getValue("clothes")
+            return (
+                <div className="flex flex-col gap-1">
+                    {clothes.map((cloth) => {
+                        return (
+                            <Badge
+                                key={cloth.id}
+                                variant="default"
+                                className={cn("w-fit text-xs")}
+                            >
+                                <span>
+                                    {cloth.quantity} - {cloth.description}
+                                </span>
+                            </Badge>
+                        )
+                    })}
+                </div>
+            )
         },
     },
     {

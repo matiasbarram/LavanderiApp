@@ -70,11 +70,24 @@ CREATE TABLE "OrderPayment" (
     "paymentTicket" TEXT NOT NULL,
     "invoiceNumber" TEXT NOT NULL,
     "invoiceType" TEXT NOT NULL,
-    "paymentDetails" TEXT NOT NULL,
+    "paymentDetails" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "OrderPayment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Clothing" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "category" TEXT NOT NULL,
+    "description" TEXT,
+    "quantity" INTEGER NOT NULL,
+    "orderId" TEXT NOT NULL,
+
+    CONSTRAINT "Clothing_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -100,3 +113,6 @@ ALTER TABLE "Order" ADD CONSTRAINT "Order_orderDetailId_fkey" FOREIGN KEY ("orde
 
 -- AddForeignKey
 ALTER TABLE "Order" ADD CONSTRAINT "Order_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "Client"("id") ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Clothing" ADD CONSTRAINT "Clothing_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -1,5 +1,6 @@
 import {
     type Client,
+    type Clothing,
     type OrderDetail,
     type OrderPayment,
 } from "@prisma/client"
@@ -102,6 +103,7 @@ export interface SheetRow {
     Client: Client
     OrderDetail: OrderDetail
     OrderPayment: OrderPayment | null
+    Clothing: Clothing[]
 }
 
 export interface PaymentOptions {
@@ -120,10 +122,10 @@ export interface ItemsOptions {
 }
 
 export interface OrderItemsDetails {
-    wash: ItemsOptions
-    iron: ItemsOptions
-    washAndIron: ItemsOptions
-    dry: ItemsOptions
+    WASH: ItemsOptions
+    IRON: ItemsOptions
+    WASH_IRON: ItemsOptions
+    DRY_CLEANING: ItemsOptions
 }
 
 
@@ -147,4 +149,13 @@ export interface GetDatesFromRangeOptions {
     month: string
     setSearchMonth: (month: string) => void
     prevParams: { current: string }
+}
+
+export type ClothingCategory = "WASH" | "IRON" | "WASH_IRON" | "DRY_CLEANING"
+
+export interface PrismaFormatClothes {
+    orderId: string
+    description: string
+    quantity: number
+    category: ClothingCategory
 }

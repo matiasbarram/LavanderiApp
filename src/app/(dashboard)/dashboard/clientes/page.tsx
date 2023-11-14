@@ -12,7 +12,6 @@ export default function ClientesPage() {
     const clients = useClients.data
 
     const initialData = clients ? toClientTable(clients) : []
-    console.log("initial data: ", initialData)
 
     return (
         <>
