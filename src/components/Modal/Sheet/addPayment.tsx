@@ -46,6 +46,7 @@ export default function AddPayment({
                 utils.sheets.rowsByDateRange
                     .invalidate()
                     .catch(() => console.log("error"))
+                form.reset()
             },
         }
     )
