@@ -140,3 +140,8 @@ export const createOrderWithPaymentSchema = z.object({
     order: combinedOrderSchema,
     items: OrderItemsDetailsSchema,
 });
+
+export const addPaymentSchema = z.object({
+    payment: orderPaymentSchema,
+    orderId: z.string(),
+})

@@ -3,6 +3,7 @@
 import { type sheetCols } from "@/lib/types"
 import { MoreHorizontal } from "lucide-react"
 import { useState } from "react"
+import AddPayment from "../Modal/Sheet/addPayment"
 import DeleteSheetRow from "../Modal/Sheet/deleteSheet"
 import EditSheetRow from "../Modal/Sheet/editSheetRow"
 import { Button } from "../ui/button"
@@ -18,6 +19,7 @@ import {
 export default function ActionsColum({ row }: { row: sheetCols }) {
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+    const [isAddPaymentDialogOpen, setIsAddPaymentDialogOpen] = useState(false)
 
     return (
         <div>
@@ -31,7 +33,9 @@ export default function ActionsColum({ row }: { row: sheetCols }) {
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {row.status === "pending" && (
-                        <DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => setIsAddPaymentDialogOpen(true)}
+                        >
                             <span className="font-medium">Agregar pago</span>
                         </DropdownMenuItem>
                     )}
@@ -56,6 +60,11 @@ export default function ActionsColum({ row }: { row: sheetCols }) {
             <EditSheetRow
                 isEditDialogOpen={isEditDialogOpen}
                 setIsEditDialogOpen={setIsEditDialogOpen}
+                row={row}
+            />
+            <AddPayment
+                isEditDialogOpen={isAddPaymentDialogOpen}
+                setIsEditDialogOpen={setIsAddPaymentDialogOpen}
                 row={row}
             />
         </div>

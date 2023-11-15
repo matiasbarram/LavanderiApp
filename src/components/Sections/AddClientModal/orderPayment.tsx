@@ -11,7 +11,7 @@ import { type Control, type UseFormSetValue } from "react-hook-form"
 
 interface Props extends FormFieldsProps {
     includePayment: boolean
-    setIncludePayment: (includePayment: boolean) => void
+    setIncludePayment?: (includePayment: boolean) => void
 }
 
 interface FormFieldProps {

@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 import { dbOrderStatus } from "@/lib/constants"
-import { createOrderSchema, createOrderWithPaymentSchema, type OrderItemsDetailsSchema, type orderDetailSchema, type orderPaymentSchema } from "@/lib/schemas"
+import { addPaymentSchema, createOrderSchema, createOrderWithPaymentSchema, type OrderItemsDetailsSchema, type orderDetailSchema, type orderPaymentSchema } from "@/lib/schemas"
 import { type PrismaFormatClothes } from "@/lib/types"
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc"
 import { type PrismaClient } from "@prisma/client"
@@ -64,6 +64,28 @@ export const sheetRouter = createTRPCRouter({
         })
     }),
 
+    addPayment: publicProcedure
+    .input(addPaymentSchema)
+    .mutation(async ({ ctx, input }) => {
+        const payment = input.payment
+        return ctx.db.orderPayment.create({
+            data: {
+                paymentDate: payment.paymentDate,
+                paymentMethod: payment.paymentMethod,
+                status: dbOrderStatus.paid,
+                invoiceType: payment.invoiceType,
+                invoiceNumber: payment.invoiceNumber,
+                paymentDetails: payment.paymentDetails,
+                paymentTicket: payment.paymentTicket,
+                Order:{
+                    connect: {
+                        id: input.orderId,
+                    }
+                }
+            },
+        })
+    }),
+        
     rowsByDateRange: publicProcedure
         .input(
             z.object({
