@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 import { dbOrderStatus } from "@/lib/constants"
-import { addPaymentSchema, createOrderSchema, createOrderWithPaymentSchema, type OrderItemsDetailsSchema, type orderDetailSchema, type orderPaymentSchema } from "@/lib/schemas"
+import { CreateEditOrderSchema, addPaymentSchema, createOrderSchema, createOrderWithPaymentSchema, type OrderItemsDetailsSchema, type orderDetailSchema, type orderPaymentSchema } from "@/lib/schemas"
 import { type PrismaFormatClothes } from "@/lib/types"
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc"
 import { type PrismaClient } from "@prisma/client"
@@ -118,47 +118,6 @@ export const sheetRouter = createTRPCRouter({
             })
         }),
 
-    updateRows: publicProcedure
-        .input(
-            z.object({
-                from: z.date(),
-                to: z.date(),
-            })
-        )
-        .mutation(async ({ ctx, input }) => {
-            return ctx.db.order.findMany({
-                where: {
-                    OrderDetail: {
-                        checkin: {
-                            gte: input.from,
-                            lte: input.to,
-                        },
-                    },
-                },
-                include: {
-                    OrderDetail: true,
-                    OrderPayment: true,
-                    Client: true,
-                },
-            })
-        }),
-
-    userInfo: publicProcedure
-        .input(
-            z.object({
-                fname: z.string(),
-                lname: z.string(),
-            })
-        )
-        .mutation(async ({ ctx, input }) => {
-            return ctx.db.client.findMany({
-                where: {
-                    fname: input.fname,
-                    lname: input.lname,
-                },
-            })
-        }),
-
     deleteRow: publicProcedure
     .input(
         z.object({
@@ -174,9 +133,71 @@ export const sheetRouter = createTRPCRouter({
                 deleted: true,
             },
         })
-})
-    
+}),
+
+    getById: publicProcedure
+    .input(z.object({
+        id: z.string(),
+    }))
+    .query(async ({ ctx, input }) => {
+        return ctx.db.order.findUnique({
+            where: {
+                deleted: false,
+                id: input.id,
+
+            },
+            include: {
+                OrderDetail: true,
+                OrderPayment: true,
+                Client: true,
+                Clothing: true,
+            },
+        })
+    }),
+
+    editOrder: publicProcedure
+    .input(CreateEditOrderSchema)
+    .mutation(async ({ ctx, input }) => {
+        const editPayment = {
+            OrderPayment: {
+                update: {
+                    paymentDate: input.order.paymentDate,
+                    paymentMethod: input.order.paymentMethod,
+                    status: input.pendingPayment ? dbOrderStatus.pending : dbOrderStatus.paid,
+                    invoiceType: input.order.invoiceType,
+                    invoiceNumber: input.order.invoiceNumber,
+                    paymentDetails: input.order.paymentDetails,
+                    paymentTicket: input.order.paymentTicket,
+                }
+            }
+        }
+
+        const order = await ctx.db.order.update({
+            where: {
+                id: input.orderId,
+            },
+            data: {
+                OrderDetail: {
+                    update: {
+                        orderAmount: Number(input.order.amount),
+                        checkin: input.order.checkin,
+                        checkout: input.order.checkout,
+                        shippingCost: Number(input.order.shippingCost),
+                        ticket: input.order.ticket,
+                        external: input.order.external,
+                    }
+                },
+                ...input.pendingPayment ? {} :  editPayment
+            },
+        })
+        return {
+            order,
+            inputxd: input.pendingPayment
+
+        }
     })
+})
+
 
 async function createOrderDetail({
     prisma,
@@ -188,7 +209,6 @@ async function createOrderDetail({
     return prisma.orderDetail.create({
     data: {
         orderAmount: Number(input.amount),
-        details: input.details,
         checkin: input.checkin,
         checkout: input.checkout,
         shippingCost: Number(input.shippingCost),

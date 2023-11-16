@@ -1,9 +1,10 @@
-import { type Client } from "@prisma/client"
+import { type Client, type Clothing, type OrderPayment } from "@prisma/client"
 import { clsx, type ClassValue } from "clsx"
+import { cloneDeep } from "lodash"
 import { formatRut } from "rutlib"
 import { twMerge } from "tailwind-merge"
-import { LAST_30_DAYS, URL_SPLITTER, categoriesColors, dbOrderStatus } from "./constants"
-import { type ClothesVariants, type SheetRow, type sheetCols } from "./types"
+import { LAST_30_DAYS, URL_SPLITTER, categoriesColors, dbOrderStatus, initialItems } from "./constants"
+import { type ClothesVariants, type ItemData, type OrderItemsDetails, type SheetRow, type sheetCols } from "./types"
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
@@ -194,4 +195,30 @@ export const validatePhone = (phone: string) => {
 
 export const getClothesCategoryColor = (category: string): ClothesVariants => {
     return categoriesColors[category as keyof typeof categoriesColors] as ClothesVariants
+}
+
+
+export const getOrderItems = (clothes: Clothing[] | undefined): OrderItemsDetails => {
+    if (!clothes) return initialItems
+    const orderItems: OrderItemsDetails = cloneDeep(initialItems)
+    Object.keys(orderItems).forEach((key) => {
+        orderItems[key as keyof typeof orderItems].show = false
+    })
+    clothes.map((clothe) => {
+        const itemData = {
+            name: clothe.description,
+            quantity: clothe.quantity,
+        } as ItemData
+        const category = clothe.category
+        orderItems[category as keyof typeof orderItems].show = true
+        orderItems[category as keyof typeof orderItems].items.push(itemData)
+    })
+    return orderItems
+}
+
+
+export const isPendingPayment = (OrderPayment: OrderPayment | null): boolean => {
+    return (
+        OrderPayment?.status === dbOrderStatus.pending || OrderPayment === null
+    )
 }

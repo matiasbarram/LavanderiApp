@@ -114,7 +114,7 @@ export const initialItems = {
         show: false,
         items: [],
     },
-} as OrderItemsDetails
+}  as OrderItemsDetails
 
 export const categoriesColors = {
     WASH: "wash",

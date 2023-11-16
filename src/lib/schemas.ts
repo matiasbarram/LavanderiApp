@@ -3,12 +3,6 @@ import { z } from "zod";
 import { cleanNums, validatePhone } from "./utils";
 
 export const orderDetailSchema = z.object({
-
-    clientName: z
-        .string({ required_error: "Debe ingresar el nombre del cliente." })
-        .min(2, {
-            message: "Debe ingresar el nombre del cliente.",
-        }),
             
     checkin: z.date({
         required_error: "Seleccione la fecha de recepción.",
@@ -20,8 +14,6 @@ export const orderDetailSchema = z.object({
         .min(2, {
             message: "Debe ingresar el ticket.",
         }),
-
-    details: z.string().optional(),
 
     external: z.boolean().default(false),
 
@@ -61,7 +53,19 @@ export const orderPaymentSchema = z.object({
     paymentTicket: z.string()
 });
 
-export const combinedOrderSchema = orderDetailSchema.merge(orderPaymentSchema);
+const clientNameSchema = z.object({
+    clientName: z
+    .string({ required_error: "Debe ingresar el nombre del cliente." })
+    .min(2, {
+        message: "Debe ingresar el nombre del cliente.",
+    }),
+})
+
+export const formOrderSchema = orderDetailSchema.merge(clientNameSchema);
+
+export const combinedOrderSchema = orderDetailSchema.merge(orderPaymentSchema).merge(clientNameSchema);
+
+export const EditOrderSchema = orderDetailSchema.merge(orderPaymentSchema);
 
 export const clientSchema = z.object({
     firstname: z.string().min(2, {
@@ -130,9 +134,8 @@ export const OrderItemsDetailsSchema = z.object({
 });
 
 
-
 export const createOrderSchema = z.object({
-    order: orderDetailSchema,
+    order: orderDetailSchema.merge(clientNameSchema),
     items: OrderItemsDetailsSchema,
 });
 
@@ -145,3 +148,10 @@ export const addPaymentSchema = z.object({
     payment: orderPaymentSchema,
     orderId: z.string(),
 })
+
+export const CreateEditOrderSchema = z.object({
+    order: EditOrderSchema,
+    orderId: z.string(),
+    pendingPayment: z.boolean(),
+    // items: OrderItemsDetailsSchema,
+});

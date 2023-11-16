@@ -21,7 +21,7 @@ import { initialItems } from "@/lib/constants"
 import {
     OrderItemsDetailsSchema,
     combinedOrderSchema,
-    orderDetailSchema,
+    formOrderSchema,
 } from "@/lib/schemas"
 import { type ItemsOptions, type OrderItemsDetails } from "@/lib/types"
 import { last30Days } from "@/lib/utils"
@@ -57,7 +57,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     const { mutate: addSheetWPayment } =
         api.sheets.createWithPayment.useMutation()
     const { mutate: addSheet } = api.sheets.createWithoutPayment.useMutation()
-    const schema = includePayment ? combinedOrderSchema : orderDetailSchema
+    const schema = includePayment ? combinedOrderSchema : formOrderSchema
 
     const form = useForm<FieldValues>({
         resolver: zodResolver(schema),
@@ -89,7 +89,6 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
         try {
             const sheetData = schema.parse(values)
 
-            sheetData.details = "Testing this must add items order"
             if (includePayment) {
                 const apiFormat = {
                     order: sheetData as z.infer<typeof combinedOrderSchema>,
@@ -164,6 +163,7 @@ export default function AddPlanilla({ btnTitle }: { btnTitle: string }) {
     const cleanModal = (open: boolean) => {
         if (open) return
         form.reset()
+        setDetails(initialItems)
         setSelectedClient(null)
     }
 
