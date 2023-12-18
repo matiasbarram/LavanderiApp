@@ -1,0 +1,21 @@
+name: Create PR from entrenamiento to main when pr is merged in entrenamiento
+
+on:
+  pull_request:
+    branches:
+      - dev
+    types:
+      - closed
+
+jobs:
+  create_pr:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Chekout
+        uses: actions/checkout@v3
+
+      - name: Create Pull Request
+        run: gh pr create -B dev -H main -t "Merge entrenamiento to main" -b "Merge entrenamiento to main" -R
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
